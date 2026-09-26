@@ -1,0 +1,9 @@
+.git
+.gitignore
+/data
+.env*
+*.db
+*.sqlite*
+*.log
+docs
+config

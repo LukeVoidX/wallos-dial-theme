@@ -1,0 +1,1041 @@
+/* Dial-inspired desktop presentation for Wallos 5.8.1.
+   Existing Wallos controls and secondary dashboard sections stay available. */
+:root {
+  --dial-signal: #d90b1c;
+  --main-color: #191817;
+  --main-color-rgb: 25, 24, 23;
+  --accent-color: #d90b1c;
+  --accent-color-rgb: 217, 11, 28;
+  --hover-color: #3b3934;
+  --hover-color-rgb: 59, 57, 52;
+  --surface-hover: #ece8dc;
+  --surface-hover-rgb: 236, 232, 220;
+  --background-color: #f6f3e9;
+  --background-color-rgb: 246, 243, 233;
+  --header-background-color: #f6f3e9;
+  --header-background-color-rgb: 246, 243, 233;
+  --box-background-color: #f6f3e9;
+  --box-background-color-rgb: 246, 243, 233;
+  --box-border-color: #c9c5b9;
+  --box-border-color-rgb: 201, 197, 185;
+  --text-color: #191817;
+  --text-color-rgb: 25, 24, 23;
+  --text-muted: #65615a;
+  --text-muted-rgb: 101, 97, 90;
+  --input-background-color: #fbf9f1;
+  --input-background-color-rgb: 251, 249, 241;
+  --input-border-color: #c9c5b9;
+  --input-border-color-rgb: 201, 197, 185;
+  --box-shadow: none;
+  --dial-stat-surface: #eeebe2;
+  --dial-weight-copy: 400;
+  --dial-weight-number: 500;
+  --dial-weight-heading: 600;
+  --dial-weight-brand: 700;
+}
+
+body.wallos-dial {
+  background: var(--background-color);
+  color: var(--text-color);
+  font-family: Barlow, "Helvetica Neue", Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--dial-weight-copy);
+}
+
+/* One typography hierarchy across dashboard, lists, calendar, statistics and forms. */
+.wallos-dial :is(h1, h2, .calendar-monthly-stats h3) {
+  font-weight: var(--dial-weight-heading);
+  letter-spacing: 0;
+}
+
+.wallos-dial :is(.button, .secondary-button, label, .graph > header) {
+  font-weight: var(--dial-weight-number);
+}
+
+.wallos-dial .subscription .price,
+.wallos-dial .subscriptions.grid-view .subscription-main > .price {
+  font-weight: var(--dial-weight-number);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.015em;
+}
+
+.wallos-dial .subscriptions.grid-view .subscription-main > .name {
+  font-weight: var(--dial-weight-heading);
+}
+
+body.wallos-dial.dark {
+  --main-color: #e8e4d8;
+  --main-color-rgb: 232, 228, 216;
+  --hover-color: #c8c2b4;
+  --hover-color-rgb: 200, 194, 180;
+  --background-color: #1c1c1a;
+  --background-color-rgb: 28, 28, 26;
+  --header-background-color: #1c1c1a;
+  --header-background-color-rgb: 28, 28, 26;
+  --box-background-color: #242420;
+  --box-background-color-rgb: 36, 36, 32;
+  --box-border-color: #555148;
+  --box-border-color-rgb: 85, 81, 72;
+  --text-color: #f6f3e9;
+  --text-color-rgb: 246, 243, 233;
+  --text-muted: #bdb7a9;
+  --text-muted-rgb: 189, 183, 169;
+  --input-background-color: #2c2b27;
+  --input-background-color-rgb: 44, 43, 39;
+  --input-border-color: #555148;
+  --input-border-color-rgb: 85, 81, 72;
+  --dial-stat-surface: #272722;
+}
+
+.wallos-dial :is(.stats-section, .calendar-monthly-stats) .statistics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.wallos-dial :is(.stats-section, .calendar-monthly-stats) .statistic {
+  min-width: 0;
+  min-height: 164px;
+  padding: 24px 26px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--dial-stat-surface);
+  align-items: flex-start;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+.wallos-dial :is(.stats-section, .calendar-monthly-stats) .statistic > .title {
+  order: 1;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.wallos-dial :is(.stats-section, .calendar-monthly-stats) .statistic > span {
+  order: 2;
+  max-width: 100%;
+  margin-top: auto;
+  color: var(--text-color);
+  font-size: clamp(34px, 3vw, 48px);
+  font-weight: var(--dial-weight-number);
+  line-height: 1.02;
+  letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.wallos-dial :is(.stats-section, .calendar-monthly-stats) .dial-stat-money {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.wallos-dial :is(.stats-section, .calendar-monthly-stats) .dial-stat-currency {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: var(--dial-weight-number);
+  letter-spacing: .12em;
+  line-height: 1;
+}
+
+.wallos-dial :is(.stats-section, .calendar-monthly-stats) .dial-stat-digits {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+.wallos-dial :is(.stats-section, .calendar-monthly-stats) .statistic > .subtitle,
+.wallos-dial :is(.stats-section, .calendar-monthly-stats) .statistic > .period-range {
+  order: 3;
+  margin: 10px 0 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.3;
+  text-align: left;
+}
+.wallos-dial .stats-section .statistic > .subtitle.capitalize { color: var(--dial-signal); }
+
+body.wallos-dial > .dial-site-header {
+  background: var(--header-background-color);
+  border-bottom: 1px solid var(--box-border-color);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+body.wallos-dial > .dial-site-header > .dial-header-inner {
+  width: 100%;
+  max-width: none;
+  min-height: 102px;
+  padding: 0 3.9%;
+  display: grid;
+  grid-template-columns: minmax(240px, 23.5%) 1fr auto;
+  gap: 16px;
+  align-items: center;
+}
+
+.wallos-dial .dial-wordmark {
+  color: var(--text-color);
+  text-decoration: none;
+  display: inline-block;
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: .035em;
+  line-height: 1;
+  transition: opacity .18s ease;
+}
+
+.wallos-dial .dial-wordmark:hover { opacity: .68; }
+.wallos-dial .dial-primary-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(28px, 4.1vw, 64px);
+  align-self: stretch;
+}
+
+.wallos-dial .dial-primary-nav a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 400;
+  white-space: nowrap;
+  transform-origin: center;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: color .18s ease, transform .22s cubic-bezier(.2, .7, .2, 1);
+}
+
+.wallos-dial .dial-primary-nav a:hover,
+.wallos-dial .dial-primary-nav a.is-active {
+  color: var(--text-color);
+}
+
+.wallos-dial .dial-primary-nav a:hover,
+.wallos-dial .dial-primary-nav a:focus-visible {
+  transform: translateY(-2px) scale(1.08);
+}
+
+.wallos-dial .dial-primary-nav a.is-active {
+  font-weight: var(--dial-weight-heading);
+}
+
+.wallos-dial .dial-primary-nav a.is-active::before {
+  content: "";
+  position: absolute;
+  left: -13px;
+  width: 5px;
+  height: 5px;
+  background: var(--dial-signal);
+}
+
+.wallos-dial .dial-primary-nav a:focus-visible,
+.wallos-dial .dial-wordmark:focus-visible { outline: 2px solid currentColor; outline-offset: 6px; }
+
+.wallos-dial .dial-utility-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.wallos-dial .dial-search-link {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  color: var(--text-color);
+  text-decoration: none;
+  border-left: 1px solid var(--box-border-color);
+  padding-left: 24px;
+  box-sizing: content-box;
+  font-size: 22px;
+  transition: color .18s ease, background-color .18s ease;
+}
+
+.wallos-dial .dial-search-link:hover,
+.wallos-dial .dial-search-link:focus-visible { color: var(--dial-signal); background: var(--surface-hover); }
+.wallos-dial .dial-search-link i { transition: transform .2s ease; }
+.wallos-dial .dial-search-link:hover i { transform: scale(1.12); }
+
+.wallos-dial .dial-settings-button {
+  padding: 0;
+  width: 36px;
+  height: 38px;
+  justify-content: center;
+  color: var(--text-color);
+  font-size: 24px;
+  transition: color .18s ease, background-color .18s ease;
+}
+
+.wallos-dial .dial-settings-button:hover,
+.wallos-dial .dropdown.is-open .dial-settings-button { color: var(--dial-signal); background: var(--surface-hover); }
+.wallos-dial .dial-settings-button i { transition: transform .28s ease; }
+.wallos-dial .dial-settings-button:hover i,
+.wallos-dial .dropdown.is-open .dial-settings-button i { transform: rotate(35deg); }
+
+.wallos-dial .dial-settings-button::after { content: none; }
+.wallos-dial .dial-site-header .dropdown-content {
+  border-radius: 2px;
+  box-shadow: 0 12px 28px rgba(25, 24, 23, .11);
+  animation: dial-menu-in .18s ease both;
+}
+.wallos-dial .dial-site-header .dropdown-content a { transition: background-color .16s ease, padding-left .16s ease; }
+.wallos-dial .dial-site-header .dropdown-content a:hover,
+.wallos-dial .dial-site-header .dropdown-content a:focus-visible { background: var(--surface-hover); padding-left: 23px; }
+@keyframes dial-menu-in { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Give existing controls on every page the same restrained visual language. */
+.wallos-dial .button,
+.wallos-dial .secondary-button,
+.wallos-dial input,
+.wallos-dial select,
+.wallos-dial textarea,
+.wallos-dial .subscription,
+.wallos-dial .subscription-details,
+.wallos-dial .subscription-form {
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+.wallos-dial .button {
+  color: var(--background-color);
+  transition: background-color .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.wallos-dial .button:not(:disabled):hover { transform: translateY(-2px); }
+.wallos-dial .button:not(:disabled):active { transform: translateY(0); }
+.wallos-dial .secondary-button:not(:disabled):hover,
+.wallos-dial .image-button:not(:disabled):hover { background: var(--surface-hover); }
+
+.wallos-dial a:focus-visible,
+.wallos-dial button:focus-visible,
+.wallos-dial [role="button"]:focus-visible {
+  outline: 2px solid var(--dial-signal);
+  outline-offset: 3px;
+}
+
+.wallos-dial .subscription:hover {
+  border-color: var(--text-color);
+  transform: translateY(-2px);
+}
+
+/* Calendar events are actual controls with a readable detail on hover and focus. */
+.wallos-dial .calendar { overflow: visible; border-radius: 2px; }
+.wallos-dial .calendar .calendar-body .calendar-cell { position: relative; overflow: visible; }
+.wallos-dial .calendar .calendar-body .calendar-cell:hover,
+.wallos-dial .calendar .calendar-body .calendar-cell:focus-within { z-index: 3; }
+.wallos-dial .calendar .calendar-event {
+  display: block;
+  position: relative;
+  width: 100%;
+  min-height: 26px;
+  padding: 5px 7px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--surface-hover);
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.3;
+  overflow: visible;
+}
+.wallos-dial .calendar .calendar-event-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wallos-dial .calendar .calendar-event:hover,
+.wallos-dial .calendar .calendar-event:focus-visible { background: var(--box-border-color); }
+.wallos-dial .calendar .calendar-event::after {
+  content: attr(data-detail);
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 5px);
+  z-index: 5;
+  display: block;
+  width: max-content;
+  max-width: min(270px, 38vw);
+  padding: 8px 10px;
+  background: var(--text-color);
+  color: var(--background-color);
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity .16s ease, transform .16s ease;
+}
+.wallos-dial .calendar .calendar-cell:last-child .calendar-event::after { left: auto; right: 0; }
+.wallos-dial .calendar .calendar-event:hover::after,
+.wallos-dial .calendar .calendar-event:focus-visible::after { opacity: 1; transform: translateY(0); }
+
+/* Give the form a clear foreground plane while preserving its native controls. */
+.wallos-dial .subscription-form {
+  background: var(--input-background-color);
+  border-color: var(--box-border-color);
+  box-shadow: 0 26px 72px rgba(25, 24, 23, .24);
+}
+.wallos-dial .dial-form-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 19;
+  background: rgba(25, 24, 23, .34);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .2s ease, visibility 0s linear .2s;
+}
+.wallos-dial .subscription-form.is-open + .dial-form-backdrop {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .2s ease;
+}
+.wallos-dial.dark .dial-form-backdrop { background: rgba(0, 0, 0, .56); }
+.wallos-dial.dark .subscription-form { box-shadow: 0 26px 72px rgba(0, 0, 0, .42); }
+
+/* Crisp, purpose-drawn card symbols; original uploads remain in the data. */
+.wallos-dial .subscription-main > .logo { overflow: visible; }
+.wallos-dial .dial-logo-tile {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.wallos-dial .dial-logo-tile > img,
+.wallos-dial .dial-logo-tile > svg {
+  grid-area: 1 / 1;
+  width: 50px;
+  height: 50px;
+  max-width: 50px;
+  max-height: 50px;
+  min-width: 0;
+  object-fit: contain;
+  object-position: center;
+}
+.wallos-dial .dial-redrawn-logo { transform: scale(var(--dial-optical-scale, 1)); }
+/* Compensate for very different amounts of whitespace inside the SVG canvases. */
+.wallos-dial.dark .dial-redrawn-logo { filter: brightness(0) invert(1); }
+.wallos-dial .dial-logo-tile--fallback {
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #d9d5cb;
+  border-radius: 2px;
+}
+.wallos-dial .dial-logo-tile--fallback > img,
+.wallos-dial .dial-logo-tile--fallback > svg { width: 44px; height: 44px; }
+.wallos-dial .subscriptions.grid-view .subscription-main > .logo {
+  height: 60px;
+  max-width: 60px;
+}
+.wallos-dial .subscriptions.grid-view .subscription-main > .logo img { object-position: center; }
+.wallos-dial .subscription-main > .payment_method {
+  width: auto;
+  min-width: 56px;
+  height: 28px;
+  padding: 0;
+  background: none;
+  border: 0;
+  justify-content: flex-end;
+}
+.wallos-dial .dial-payment-label {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: var(--dial-weight-heading);
+  letter-spacing: .075em;
+  white-space: nowrap;
+}
+.wallos-dial .subscription-main > .payment_method img,
+.wallos-dial .subscriptions.grid-view .subscription-main > .payment_method img {
+  width: 100%;
+  height: 100%;
+  max-width: 46px;
+  max-height: 22px;
+  object-fit: contain;
+}
+
+/* Category boards keep each subscription's existing actions and view mode. */
+.wallos-dial .dial-group-toggle { gap: 10px; min-width: 104px; padding: 0 16px; white-space: nowrap; color: var(--text-color); background: transparent; border-color: var(--box-border-color); }
+.wallos-dial .dial-group-toggle:not(.selected):hover { color: var(--text-color); background: var(--surface-hover); border-color: var(--text-color); }
+.wallos-dial .dial-group-toggle.selected { background: var(--text-color); color: var(--background-color); border-color: var(--text-color); }
+.wallos-dial button.dial-group-toggle.selected:hover { background: var(--hover-color); color: var(--background-color); border-color: var(--hover-color); }
+
+.wallos-dial .subscriptions.dial-grouped,
+.wallos-dial .subscriptions.dial-grouped.grid-view { display: flex; flex-direction: column; gap: 36px; align-items: stretch; }
+.wallos-dial .dial-category-group { width: 100%; border-top: 1px solid var(--text-color); }
+.wallos-dial .dial-category-group[hidden],
+.wallos-dial .dial-search-empty[hidden] { display: none !important; }
+.wallos-dial .dial-category-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 19px;
+  padding: 18px 4px 22px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--text-color);
+}
+.wallos-dial .dial-category-heading::-webkit-details-marker { display: none; }
+.wallos-dial .dial-category-heading:hover .dial-category-name { color: var(--dial-signal); }
+.wallos-dial .dial-category-heading:focus-visible { outline: 2px solid var(--dial-signal); outline-offset: 2px; }
+.wallos-dial .dial-category-index { color: var(--dial-signal); font-size: 13px; font-weight: var(--dial-weight-heading); letter-spacing: .08em; }
+.wallos-dial .dial-category-name { flex: 1; font-size: 25px; font-weight: var(--dial-weight-heading); letter-spacing: 0; transition: color .18s ease; }
+.wallos-dial .dial-category-count { min-width: 32px; text-align: center; color: var(--text-muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+.wallos-dial .dial-category-heading i { color: var(--text-muted); font-size: 12px; transition: transform .2s ease; }
+.wallos-dial .dial-category-group:not([open]) .dial-category-heading i { transform: rotate(-90deg); }
+.wallos-dial .dial-category-items { display: flex; flex-direction: column; gap: 12px; padding-bottom: 4px; }
+.wallos-dial .subscriptions.dial-grouped.grid-view .dial-category-items { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
+.wallos-dial .dial-search-empty { margin: 20px 0; padding: 28px; border-top: 1px solid var(--box-border-color); color: var(--text-muted); text-align: center; }
+.wallos-dial .subscriptions.grid-view .dial-search-empty { grid-column: 1 / -1; }
+
+.wallos-dial main > .dashboard.contain {
+  max-width: none;
+  width: 100%;
+  padding: 0 3.9%;
+}
+
+.wallos-dial .dial-dashboard {
+  width: 100%;
+}
+
+.wallos-dial .dial-hero {
+  padding: 56px 9px 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.wallos-dial .dial-eyebrow {
+  margin: 0 0 10px;
+  color: var(--text-color);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: .22em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.wallos-dial .dial-monthly-value {
+  margin: 0;
+  color: var(--text-color);
+  font-size: clamp(76px, 7.6vw, 116px);
+  line-height: 1;
+  font-weight: var(--dial-weight-heading);
+  letter-spacing: -.035em;
+  white-space: nowrap;
+  display: flex;
+  align-items: baseline;
+  gap: .14em;
+}
+
+.wallos-dial .dial-monthly-value small {
+  color: var(--text-muted);
+  font-size: .24em;
+  font-weight: var(--dial-weight-number);
+  letter-spacing: .11em;
+}
+
+.wallos-dial .dial-hero-aside {
+  width: 150px;
+  flex: 0 0 150px;
+  padding-top: 2px;
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.wallos-dial .dial-hero-aside time {
+  color: var(--text-color);
+  display: block;
+  margin: 0 0 8px;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.wallos-dial .dial-hero-aside p { margin: 0; }
+.wallos-dial .dial-aside-rule { display: block; width: 24px; height: 1px; margin-top: 26px; background: var(--text-muted); }
+
+.wallos-dial .dial-timeline {
+  position: relative;
+  margin: 61px 9px 0;
+  height: 175px;
+  min-width: 0;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.wallos-dial .dial-timeline-days {
+  display: grid;
+  grid-template-columns: repeat(var(--timeline-days), minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.wallos-dial .dial-tick { position: relative; min-width: 0; }
+.wallos-dial .dial-tick-link,
+.wallos-dial .dial-tick-static { position: absolute; inset: 0; display: block; color: inherit; }
+.wallos-dial .dial-tick-link { cursor: pointer; text-decoration: none; }
+.wallos-dial .dial-tick-link:focus-visible { outline-offset: -4px; --dial-scale: 1.26; --dial-label-scale: 1.12; }
+
+.wallos-dial .dial-tick-mark {
+  position: absolute;
+  left: 0;
+  top: 45px;
+  height: 28px;
+  width: 1px;
+  background: var(--text-color);
+  transform: translateX(var(--dial-shift, 0px)) scaleY(var(--dial-scale, 1));
+  transform-origin: center bottom;
+  transition: background-color .18s ease, transform .19s cubic-bezier(.2, .7, .2, 1);
+}
+
+.wallos-dial .dial-tick-link:hover .dial-tick-mark,
+.wallos-dial .dial-tick-link:focus-visible .dial-tick-mark { background: var(--dial-signal); }
+
+.wallos-dial .dial-tick--major .dial-tick-mark,
+.wallos-dial .dial-tick--month .dial-tick-mark {
+  top: 18px;
+  height: 68px;
+  width: 2px;
+}
+
+.wallos-dial .dial-tick--today .dial-tick-mark {
+  top: 18px;
+  height: 68px;
+  width: 2px;
+  background: var(--dial-signal);
+}
+
+.wallos-dial .dial-tick--today .dial-tick-mark::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: -8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--dial-signal);
+}
+
+.wallos-dial .dial-month-label {
+  position: absolute;
+  left: 0;
+  top: -12px;
+  color: var(--text-color);
+  font-size: 14px;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+
+.wallos-dial .dial-day-label {
+  position: absolute;
+  left: 0;
+  top: 100px;
+  transform: translateX(-25%) scale(var(--dial-label-scale, 1));
+  transform-origin: left center;
+  transition: transform .19s cubic-bezier(.2, .7, .2, 1);
+  color: var(--text-color);
+  font-size: 13px;
+}
+
+.wallos-dial .dial-tick--today .dial-day-label {
+  color: var(--dial-signal);
+  font-size: 17px;
+  font-weight: var(--dial-weight-heading);
+  top: 96px;
+}
+
+.wallos-dial .dial-tick-tooltip {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  top: 123px;
+  min-width: 126px;
+  padding: 9px 11px;
+  background: var(--text-color);
+  color: var(--background-color);
+  font-size: 12px;
+  line-height: 1.3;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity .17s ease, transform .17s ease;
+}
+.wallos-dial .dial-tick-tooltip small { display: block; margin-top: 3px; opacity: .72; font-size: 11px; }
+.wallos-dial .dial-tick-link:hover .dial-tick-tooltip,
+.wallos-dial .dial-tick-link:focus-visible .dial-tick-tooltip { opacity: 1; transform: translateY(0); }
+.wallos-dial .dial-tick:nth-last-child(-n+6) .dial-tick-tooltip { left: auto; right: 0; }
+
+.wallos-dial .dial-readout {
+  position: absolute;
+  z-index: 4;
+  top: 124px;
+  left: 50%;
+  min-width: 100px;
+  padding: 7px 10px;
+  box-sizing: border-box;
+  background: var(--text-color);
+  color: var(--background-color);
+  font-size: 12px;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -5px);
+  transition: opacity .18s ease, transform .18s ease;
+}
+.wallos-dial .dial-timeline.is-dial-active .dial-readout { opacity: 1; transform: translate(-50%, 0); }
+.wallos-dial .dial-timeline.is-dial-active .dial-tick-tooltip { opacity: 0; }
+
+.wallos-dial .dial-payments-heading {
+  margin: 0 8px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+}
+
+.wallos-dial .dial-payments-heading h1 {
+  margin: 0;
+  font-size: 35px;
+  font-weight: var(--dial-weight-heading);
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+
+.wallos-dial .dial-add-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 51px;
+  min-width: 230px;
+  padding: 0 20px;
+  border: 2px solid var(--text-color);
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 17px;
+  white-space: nowrap;
+  transition: background-color .2s ease, color .2s ease, transform .2s ease;
+}
+
+.wallos-dial .dial-add-link i { font-size: 24px; transition: transform .23s ease; }
+.wallos-dial .dial-add-link:hover,
+.wallos-dial .dial-add-link:focus-visible { background: var(--text-color); color: var(--background-color); transform: translateY(-2px); }
+.wallos-dial .dial-add-link:hover i,
+.wallos-dial .dial-add-link:focus-visible i { transform: rotate(90deg); }
+.wallos-dial .dial-add-link:active { transform: translateY(0); }
+
+.wallos-dial .dial-table-head,
+.wallos-dial .dial-payment-row {
+  display: grid;
+  grid-template-columns: minmax(290px, 1.65fr) minmax(180px, 1.1fr) minmax(120px, .9fr) minmax(130px, 1.1fr) 34px;
+  align-items: center;
+  column-gap: 8px;
+  padding: 0 8px;
+}
+
+.wallos-dial .dial-table-head {
+  height: 41px;
+  border-bottom: 1px solid #99958c;
+  color: var(--text-color);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.wallos-dial .dial-payment-row {
+  width: 100%;
+  min-height: 78px;
+  border-bottom: 1px solid var(--box-border-color);
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: 20px;
+  line-height: 1.2;
+  position: relative;
+  transition: background-color .18s ease;
+}
+
+.wallos-dial .dial-payment-row::before { content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 2px; background: var(--dial-signal); transform: scaleY(0); transition: transform .2s ease; }
+.wallos-dial .dial-payment-row:hover,
+.wallos-dial .dial-payment-row:focus-visible { background: var(--surface-hover); }
+.wallos-dial .dial-payment-row:hover::before,
+.wallos-dial .dial-payment-row:focus-visible::before { transform: scaleY(1); }
+.wallos-dial .dial-payment-row:active { background: rgba(var(--main-color-rgb), .11); }
+.wallos-dial .dial-payment-row:focus-visible { outline: 2px solid var(--dial-signal); outline-offset: -2px; }
+.wallos-dial .dial-service { display: flex; align-items: center; gap: 28px; min-width: 0; }
+.wallos-dial .dial-service-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--dial-weight-heading); }
+.wallos-dial .dial-service-logo { flex: 0 0 54px; width: 54px; height: 54px; display: grid; place-items: center; }
+.wallos-dial .dial-logo-image { max-width: 54px; max-height: 54px; object-fit: contain; transition: transform .2s ease; }
+.wallos-dial .dial-service-logo .dial-redrawn-logo { width: 48px; height: 48px; object-fit: contain; transition: transform .2s ease; }
+.wallos-dial .dial-payment-row:hover .dial-service-logo img { transform: translateY(-2px) scale(var(--dial-optical-scale, 1)); }
+.wallos-dial .dial-row-price { white-space: nowrap; font-weight: var(--dial-weight-number); letter-spacing: -.015em; }
+.wallos-dial .dial-row-frequency { white-space: nowrap; }
+.wallos-dial .dial-row-more { justify-self: end; font-size: 20px; transition: color .18s ease, transform .18s ease; }
+.wallos-dial .dial-payment-row:hover .dial-row-more,
+.wallos-dial .dial-payment-row:focus-visible .dial-row-more { color: var(--dial-signal); transform: translateX(-3px); }
+.wallos-dial .dial-empty { padding: 28px 8px; color: var(--text-muted); border-bottom: 1px solid var(--box-border-color); }
+
+.wallos-dial .dashboard > .dial-dashboard-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  min-height: 160px;
+  margin: 76px 9px 0;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.wallos-dial .dial-dashboard-footer p { margin: 0; }
+.wallos-dial .dial-dashboard-footer p span { display: block; width: 24px; height: 1px; margin-bottom: 16px; background: var(--text-muted); }
+.wallos-dial .dial-dashboard-footer p:last-child { text-align: right; font-size: 12px; }
+.wallos-dial .dial-dashboard-footer p:last-child span { margin-left: auto; margin-bottom: 53px; }
+
+/* Continue the dashboard as a full-width ledger below the reference viewport. */
+.wallos-dial .dashboard > .dial-summary {
+  width: 100%;
+  margin: 46px 0 0;
+  padding: 0 9px;
+  box-sizing: border-box;
+}
+
+.wallos-dial .dial-summary-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 0;
+}
+
+.wallos-dial .dial-summary-heading h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: var(--dial-weight-heading);
+  letter-spacing: 0;
+}
+
+.wallos-dial .dial-summary-all {
+  color: var(--text-muted);
+  font-size: 15px;
+  text-decoration: none;
+  transition: color .18s ease;
+}
+.wallos-dial .dial-summary-all i { margin-left: 8px; font-size: 12px; }
+.wallos-dial .dial-summary-all:hover,
+.wallos-dial .dial-summary-all:focus-visible { color: var(--dial-signal); }
+
+.wallos-dial .dial-summary-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 27px;
+  border-bottom: 1px solid var(--box-border-color);
+}
+
+.wallos-dial .dial-summary-metric {
+  min-width: 0;
+  min-height: 146px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 22px 34px 24px 0;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: background-color .18s ease, padding-left .18s ease;
+}
+
+.wallos-dial .dial-summary-metric + .dial-summary-metric {
+  border-left: 1px solid var(--box-border-color);
+  padding-left: 34px;
+}
+
+.wallos-dial .dial-summary-metric:hover,
+.wallos-dial .dial-summary-metric:focus-visible { background: var(--surface-hover); padding-left: 14px; }
+.wallos-dial .dial-summary-metric + .dial-summary-metric:hover,
+.wallos-dial .dial-summary-metric + .dial-summary-metric:focus-visible { padding-left: 48px; }
+.wallos-dial .dial-summary-label { color: var(--text-muted); font-size: 14px; letter-spacing: .11em; }
+.wallos-dial .dial-summary-metric strong { font-size: clamp(32px, 4vw, 56px); font-weight: var(--dial-weight-number); letter-spacing: -.02em; line-height: 1; }
+.wallos-dial .dial-summary-metric i { position: absolute; top: 25px; right: 24px; color: var(--text-muted); font-size: 14px; transition: color .18s ease, transform .18s ease; }
+.wallos-dial .dial-summary-metric:hover i,
+.wallos-dial .dial-summary-metric:focus-visible i { color: var(--dial-signal); transform: translate(2px, -2px); }
+
+/* Budgets and savings only appear when corresponding data exists. */
+.wallos-dial .dashboard > .upcoming-subscriptions,
+.wallos-dial .dashboard > .savings-subscriptions { width: 100%; max-width: none; margin: 40px 0 0; }
+.wallos-dial .budget-subscriptions,
+.wallos-dial .dashboard > .savings-subscriptions { padding: 0 9px; }
+.wallos-dial .budget-subscriptions h2,
+.wallos-dial .dashboard > .savings-subscriptions h2 { margin: 0 0 20px; padding-top: 26px; border-top: 1px solid var(--text-color); font-size: 28px; font-weight: var(--dial-weight-heading); }
+.wallos-dial .budget-subscriptions .dashboard-subscriptions-container,
+.wallos-dial .savings-subscriptions .dashboard-subscriptions-container { overflow: visible; padding: 0; }
+.wallos-dial .budget-subscriptions .dashboard-subscriptions-list,
+.wallos-dial .savings-subscriptions .dashboard-subscriptions-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  min-width: 0;
+  gap: 0;
+  border-top: 1px solid var(--box-border-color);
+  border-bottom: 1px solid var(--box-border-color);
+}
+.wallos-dial .budget-subscriptions .dashboard-subscriptions-list > .subscription-item.thin,
+.wallos-dial .savings-subscriptions .dashboard-subscriptions-list > .subscription-item.thin {
+  width: auto;
+  height: 135px;
+  padding: 22px;
+  border: 0;
+  border-right: 1px solid var(--box-border-color);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.wallos-dial .budget-subscriptions .dashboard-subscriptions-list > .subscription-item.thin:last-child,
+.wallos-dial .savings-subscriptions .dashboard-subscriptions-list > .subscription-item.thin:last-child { border-right: 0; }
+
+/* Preserve the existing operational sections. */
+.wallos-dial .dashboard > .overdue-subscriptions,
+.wallos-dial .dashboard > .upcoming-subscriptions,
+.wallos-dial .dashboard > .savings-subscriptions {
+  width: 100%;
+}
+
+@media (max-width: 1100px) {
+  body.wallos-dial > .dial-site-header > .dial-header-inner { grid-template-columns: 190px 1fr auto; }
+  .wallos-dial .dial-primary-nav { gap: 24px; }
+  .wallos-dial .dial-primary-nav a { font-size: 16px; }
+  .wallos-dial .dial-monthly-value { font-size: 80px; }
+  .wallos-dial .dial-table-head,
+  .wallos-dial .dial-payment-row { grid-template-columns: minmax(210px, 1.5fr) minmax(150px, 1fr) minmax(100px, .7fr) minmax(105px, .8fr) 25px; }
+  .wallos-dial .subscriptions.dial-grouped.grid-view .dial-category-items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wallos-dial .dial-site-header .dropdown-content { animation: none; }
+  .wallos-dial .dial-wordmark,
+  .wallos-dial .dial-primary-nav a,
+  .wallos-dial .dial-search-link,
+  .wallos-dial .dial-search-link i,
+  .wallos-dial .dial-settings-button,
+  .wallos-dial .dial-settings-button i,
+  .wallos-dial .dial-tick-mark,
+  .wallos-dial .dial-day-label,
+  .wallos-dial .dial-readout,
+  .wallos-dial .dial-tick-tooltip,
+  .wallos-dial .dial-add-link,
+  .wallos-dial .dial-add-link i,
+  .wallos-dial .dial-payment-row,
+  .wallos-dial .dial-payment-row::before,
+  .wallos-dial .dial-logo-image,
+  .wallos-dial .dial-service-logo .dial-redrawn-logo,
+  .wallos-dial .dial-row-more { transition: none; }
+  .wallos-dial .dial-summary-all,
+  .wallos-dial .dial-summary-metric,
+  .wallos-dial .dial-summary-metric i { transition: none; }
+  .wallos-dial .dial-category-name,
+  .wallos-dial .dial-category-heading i { transition: none; }
+  .wallos-dial .dial-form-backdrop { transition: none; }
+  .wallos-dial .dial-primary-nav a:hover,
+  .wallos-dial .dial-primary-nav a:focus-visible { transform: none; }
+  .wallos-dial .dial-tick-mark { transform: none; }
+  .wallos-dial .dial-day-label { transform: translateX(-25%); }
+}
+
+/* Keep the subscription form actions visible at desktop heights. */
+.wallos-dial .subscription-form.is-open {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.wallos-dial .subscription-form > header { flex: none; }
+.wallos-dial .subscription-form > form {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-width: thin;
+  padding-right: 6px;
+}
+.wallos-dial .subscription-form > .dial-form-actions {
+  flex: none;
+  margin-top: 10px;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--box-border-color);
+  background: var(--input-background-color);
+}
+
+/* The first three figures carry the overview; the rest remain one click away. */
+.wallos-dial .dial-stat-details { margin-top: 14px; }
+.wallos-dial .dial-stat-details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 15px 18px;
+  border: 1px solid var(--box-border-color);
+  border-radius: 2px;
+  color: var(--text-color);
+  font-size: 14px;
+  font-weight: var(--dial-weight-heading);
+  list-style: none;
+  transition: background-color .16s ease;
+}
+.wallos-dial .dial-stat-details > summary::-webkit-details-marker { display: none; }
+.wallos-dial .dial-stat-details > summary:hover,
+.wallos-dial .dial-stat-details > summary:focus-visible { background: var(--surface-hover); }
+.wallos-dial .dial-stat-details > summary i { color: var(--text-muted); transition: transform .16s ease; }
+.wallos-dial .dial-stat-details[open] > summary i { transform: rotate(180deg); }
+.wallos-dial .dial-stat-details > .statistics { margin-top: 14px; }
+
+/* Ranked bars make small categories readable without a crowded donut legend. */
+.wallos-dial .graph { border-radius: 2px; box-shadow: none; }
+.wallos-dial .dial-ranked-graph { align-items: stretch; }
+.wallos-dial .dial-ranked-graph > div[id] { width: 100%; }
+.wallos-dial .dial-ranked-list { display: grid; gap: 6px; width: 100%; padding: 10px 12px 4px; box-sizing: border-box; }
+.wallos-dial .dial-ranked-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 16px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text-color);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color .16s ease, opacity .16s ease;
+}
+.wallos-dial .dial-ranked-row:hover,
+.wallos-dial .dial-ranked-row:focus-visible { background: var(--surface-hover); }
+.wallos-dial .dial-ranked-row.is-muted { opacity: .42; }
+.wallos-dial .dial-ranked-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--dial-weight-heading); }
+.wallos-dial .dial-ranked-amount { color: var(--text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.wallos-dial .dial-ranked-track { grid-column: 1 / -1; display: block; height: 4px; background: var(--dial-stat-surface); }
+.wallos-dial .dial-ranked-fill { display: block; height: 100%; min-width: 2px; transition: width .2s ease; }
+.wallos-dial .apexcharts-text { font-size: 12px !important; }
+
+/* Settings and subscription cards use the same flat geometry. */
+.wallos-dial .account-section,
+.wallos-dial .account-notifications-section {
+  border-radius: 2px;
+  box-shadow: none;
+}
+.wallos-dial .account-section { padding: 24px 28px; }
+.wallos-dial .subscriptions.grid-view .subscription { padding: 14px 16px 16px; }
+.wallos-dial .subscriptions.grid-view .subscription-main > .name { margin-top: 4px; }
+.wallos-dial .subscriptions.grid-view .subscription-main > .price { margin-bottom: 8px; }
+
+.wallos-dial .dial-summary-amount { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+.wallos-dial .dial-summary-amount small { color: var(--text-muted); font-size: 13px; font-weight: var(--dial-weight-heading); letter-spacing: .08em; }
+.wallos-dial .dial-summary-amount strong { min-width: 0; }

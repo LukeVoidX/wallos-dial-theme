@@ -1,0 +1,13 @@
+.DS_Store
+/data/
+/config/logo-map.local.php
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+.env
+.env.*
+!*.example
+*.log
+__pycache__/
