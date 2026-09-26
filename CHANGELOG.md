@@ -9,6 +9,7 @@
 - Upstream file hash gate, package checks, runtime health smoke, scheduled upstream-release notice, and tag-triggered image publishing workflow.
 - Optional user-owned SVG mapping without bundled brand art.
 - Shared-header language switch that saves the account locale using Wallos translations.
+- Centered 1480px maximum width for the header and dashboard on wide desktop windows.
 
 ### Operational notes
 

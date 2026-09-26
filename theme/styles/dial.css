@@ -168,10 +168,11 @@ body.wallos-dial > .dial-site-header {
 }
 
 body.wallos-dial > .dial-site-header > .dial-header-inner {
-  width: 100%;
-  max-width: none;
+  width: calc(100% - clamp(48px, 7.8vw, 152px));
+  max-width: 1480px;
   min-height: 102px;
-  padding: 0 3.9%;
+  margin-inline: auto;
+  padding: 0;
   display: grid;
   grid-template-columns: minmax(240px, 23.5%) 1fr auto;
   gap: 16px;
@@ -497,9 +498,10 @@ body.wallos-dial > .dial-site-header > .dial-header-inner {
 .wallos-dial .subscriptions.grid-view .dial-search-empty { grid-column: 1 / -1; }
 
 .wallos-dial main > .dashboard.contain {
-  max-width: none;
-  width: 100%;
-  padding: 0 3.9%;
+  width: calc(100% - clamp(48px, 7.8vw, 152px));
+  max-width: 1480px;
+  margin-inline: auto;
+  padding: 0;
 }
 
 .wallos-dial .dial-dashboard {
@@ -803,7 +805,7 @@ body.wallos-dial > .dial-site-header > .dial-header-inner {
 .wallos-dial .dial-dashboard-footer p:last-child { text-align: right; font-size: 12px; }
 .wallos-dial .dial-dashboard-footer p:last-child span { margin-left: auto; margin-bottom: 53px; }
 
-/* Continue the dashboard as a full-width ledger below the reference viewport. */
+/* Continue the dashboard as a readable ledger below the reference viewport. */
 .wallos-dial .dashboard > .dial-summary {
   width: 100%;
   margin: 46px 0 0;
