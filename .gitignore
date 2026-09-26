@@ -1,6 +1,7 @@
 .DS_Store
 /data/
 /config/logo-map.local.php
+/config/icons/
 *.db
 *.db-shm
 *.db-wal

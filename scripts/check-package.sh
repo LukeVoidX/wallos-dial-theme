@@ -2,14 +2,18 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-required=(VERSION Dockerfile compose.example.yaml LICENSE.md README.md theme/index.php theme/subscriptions.php theme/calendar.php theme/stats.php theme/includes/header.php theme/includes/dial_logo_map.php theme/styles/dial.css theme/scripts/stats-dial.js theme/scripts/dial-interaction.js)
+required=(VERSION WALLOS_VERSION Dockerfile compose.yaml compose.build.yaml compat/upstream-files.sha256 LICENSE.md README.md theme/index.php theme/subscriptions.php theme/calendar.php theme/stats.php theme/includes/header.php theme/includes/dial_logo_map.php theme/styles/dial.css theme/scripts/stats-dial.js theme/scripts/dial-interaction.js)
 for file in "${required[@]}"; do
   [[ -f "$file" ]] || { echo "Missing: $file" >&2; exit 1; }
 done
 
 version=$(tr -d '\n' < VERSION)
 grep -Fq "org.opencontainers.image.version=\"$version\"" Dockerfile || { echo 'Dockerfile version differs from VERSION' >&2; exit 1; }
-grep -Fq "wallos-dial:$version" compose.example.yaml || { echo 'Compose tag differs from VERSION' >&2; exit 1; }
+grep -Fq "wallos-dial:$version" compose.build.yaml || { echo 'Compose tag differs from VERSION' >&2; exit 1; }
+
+upstream_version=$(tr -d '\n' < WALLOS_VERSION)
+grep -Fq "FROM bellamy/wallos:$upstream_version@sha256:" Dockerfile || { echo 'Base image differs from WALLOS_VERSION' >&2; exit 1; }
+grep -Fq "ghcr.io/lukevoidx/wallos-dial:$version" compose.yaml || { echo 'Public Compose tag differs from VERSION' >&2; exit 1; }
 
 if command -v node >/dev/null; then
   while IFS= read -r -d '' file; do node --check "$file"; done < <(find theme -name '*.js' -print0)

@@ -3,12 +3,17 @@
 - [x] Source extracted to a standalone repository; no upstream repository history copied.
 - [x] GPLv3 and upstream attribution included.
 - [x] No database, uploaded logos, personalized logo map, auth material, or live host config in the candidate.
-- [x] Pinned Wallos 5.8.1 Docker image builds.
-- [x] PHP and JavaScript syntax checks pass.
-- [x] Disposable runtime checks: dashboard, 16 subscription cards, calendar events, statistics sections, settings, and add form. Data was a private disposable copy and is not part of the package.
-- [x] Example deployment binds to `127.0.0.1` and persists DB and uploaded logos outside the image.
-- [ ] Owner reviews repository name, README, code, and release candidate archive.
+- [x] Pinned Wallos 5.8.1 image and nine overwritten-file hashes verified at build time.
+- [x] Deliberately mismatched hash rejected by the build; the nine upstream hashes also match the official arm64 image.
+- [x] PHP and JavaScript syntax checks passed; both Compose files validated.
+- [x] Fresh install with empty persistent DB/logo mounts reached registration and created a valid SQLite database.
+- [x] Disposable populated runtime loaded dashboard, 16 subscriptions, calendar, statistics, settings, and add form. A synthetic subscription was added and deleted; the test database returned to 16 rows and integrity `ok`.
+- [x] Runtime smoke checked `/health.php`, Dial CSS, and interaction JavaScript.
+- [x] Pull-only Compose binds to `127.0.0.1`, persists DB/logos, and uses a versioned image tag.
+- [ ] Owner reviews repository name, docs, code, image publication target, and release candidate archive.
 - [ ] Create public `LukeVoidX/wallos-dial-theme` repository and push exact reviewed commit.
-- [ ] Confirm remote commit and CI; create `v0.1.0` release after owner approval.
+- [ ] Verify source CI. Push `v0.1.0` only after owner approval; verify amd64/arm64 GHCR image build and an arm64 runtime smoke.
+- [ ] Make the first GHCR package public (the registry initially defaults to private), then verify an anonymous pull and a clean Compose installation.
+- [ ] Publish GitHub Release with the reviewed source archive and exact image digest.
 
-Tested from a disposable copy of a Wallos database. The source package itself contains no data. Upstream upgrades beyond 5.8.1 are not yet validated.
+The currently running private Wallos service is not changed by this package work. The project cannot claim compatibility with untested future Wallos releases or zero defects.

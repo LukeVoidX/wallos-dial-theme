@@ -2,7 +2,9 @@
 
 A precise, warm, desktop-focused interface for [Wallos](https://github.com/ellite/Wallos). The theme adds an instrument-style dashboard timeline, a restrained type and color system, grouped subscription cards, clearer statistics, and focused interaction states. Wallos's subscription, calendar, settings, search, and notification features remain available.
 
-**Status:** `0.1.0` release candidate · **Wallos compatibility:** `5.8.1` only.
+**Status:** `0.1.0` release candidate · **Tested Wallos version:** `5.8.1` only.
+
+Compatibility is published per Wallos version. An upstream release does not automatically make an older Dial image compatible. The build checks the exact upstream files it replaces and stops on a mismatch; a newly tested Dial image is then published.
 
 Dial is a source overlay built into a Docker image. It is not a native Wallos theme option, and it is not affiliated with the Wallos project. Upgrading Wallos requires rebuilding and reviewing the overlay against the new upstream version. See [Updating](docs/UPGRADING.md).
 
@@ -17,41 +19,54 @@ Requirements: Docker with Compose, an available local port `8282`, and a recent 
 ```bash
 git clone https://github.com/LukeVoidX/wallos-dial-theme.git
 cd wallos-dial-theme
-docker compose -f compose.example.yaml up -d --build
+docker compose up -d
 ```
 
-Open `http://127.0.0.1:8282` from the same machine. The example binds to loopback; use your own HTTPS reverse proxy and access controls if you need remote access. Change `TZ: UTC` to your timezone. Wallos stores its database in `./data/db` and uploaded subscription logos in `./data/logos`; both are excluded from Git.
+Open `http://127.0.0.1:8282` from the same machine. The Compose file pulls a prebuilt versioned image and binds to loopback; use your own HTTPS reverse proxy and access controls if you need remote access. Set `TZ` in a local `.env` file if needed. Wallos stores its database in `./data/db` and uploaded subscription logos in `./data/logos`; both are excluded from Git.
 
-The `git clone` URL becomes usable after the public repository is published. Until then, use the release candidate archive supplied by the maintainer.
+The GitHub repository and public container image become available only after release publication. Until then, the archive can be built locally with `docker compose -f compose.build.yaml up -d --build`.
 
 ## Use an existing Wallos database
 
-1. Back up your existing SQLite database and uploaded logos. Keep the original image and Compose file for rollback.
-2. Review `compose.example.yaml`, then point its two volume mounts at your existing Wallos `db` and `images/uploads/logos` directories. Retain the same timezone and other environment settings you already use.
-3. Stop the existing Wallos container before binding Dial to the same port. Build and start Dial with `docker compose -f compose.example.yaml up -d --build`.
-4. Confirm that login, subscription count, logos, dashboard, calendar, statistics, settings, and notifications look correct. Do not import or re-enter subscriptions.
+1. Back up the existing SQLite database and uploaded logos. Keep the previous image reference and Compose file for rollback.
+2. Copy the repository locally and create a Git-ignored `.env` file with **absolute** paths to the existing mounted directories:
 
-The theme does not migrate, seed, or edit your subscription data. Wallos's own startup and migration behavior still applies. Test upgrades against a copy of your data first.
+   ```dotenv
+   WALLOS_DB_DIR=/absolute/path/to/current/db
+   WALLOS_LOGOS_DIR=/absolute/path/to/current/logos
+   TZ=Europe/Berlin
+   ```
+
+3. Run `docker compose config` and check the resolved mounts. Stop the old container before starting Dial on the same port; then run `docker compose up -d`.
+4. Check login, subscription count, logos, dashboard, calendar, statistics, settings, and notifications. Do not re-enter subscriptions.
+
+The theme itself does not seed or edit subscriptions. Wallos's own startup and migration behavior still applies; test a newer Wallos base against a disposable data copy first. If your existing service uses other environment variables, proxy rules, or a different port, carry them into your deployment configuration deliberately.
 
 ## Optional custom vector logos
 
-Uploaded logos remain untouched and are fitted into a consistent tile by default. To substitute your own SVG for a particular uploaded file:
+Uploaded logos remain untouched and are fitted into a consistent tile by default. For a custom SVG, put it in `config/icons/` and uncomment the two read-only mounts in `compose.yaml`. Copy [`config/logo-map.example.php`](config/logo-map.example.php) to `config/logo-map.local.php`, then map the uploaded filename to your SVG filename. Unknown filenames keep their original uploaded logo.
 
-1. Put the SVG in `theme/images/dial-logos/` and rebuild the image.
-2. Copy [`config/logo-map.example.php`](config/logo-map.example.php) to `config/logo-map.local.php`, then map the uploaded filename to the SVG filename.
-3. Uncomment the read-only config mount and `WALLOS_DIAL_LOGO_MAP` line in `compose.example.yaml`; restart the container.
+This repository contains no subscription data, uploaded logos, brand marks, or private logo mappings. `config/icons/`, `config/logo-map.local.php`, `.env`, and `data/` are Git ignored.
 
-Unknown filenames keep their original uploaded logo. This repository contains no subscription data, uploaded logos, brand marks, or private logo mappings. The optional mapping file and `data/` directory are Git ignored.
+## Updates and compatibility
+
+| Dial | Tested Wallos | Install image |
+|---|---|---|
+| 0.1.0 | 5.8.1 | `ghcr.io/lukevoidx/wallos-dial:0.1.0` |
+
+Use a versioned Dial image; avoid `latest`. A weekly workflow detects new upstream Wallos releases. Maintainers inspect changed templates, run the compatibility gate and smoke checks, then publish a new Dial image. Until that verified image exists, keep the previous working version. [Upgrade and rollback details](docs/UPGRADING.md).
 
 ## What is included
 
 - `theme/`: modified Wallos PHP, CSS, and JavaScript files at their in-container paths.
-- `Dockerfile`: the exact Wallos 5.8.1 base image and the overlay. `VERSION` is the canonical theme version.
-- `compose.example.yaml`: loopback-bound sample deployment with persistent database and logo volumes.
+- `compose.yaml`: pull-only, loopback-bound deployment with persistent database and logo volumes.
+- `Dockerfile` and `compose.build.yaml`: source build for contributors and pre-release checks.
+- `compat/upstream-files.sha256`: hashes of every upstream file overwritten by the theme; a changed base fails the build pending review.
+- `VERSION` and `WALLOS_VERSION`: theme release and tested upstream version.
 - `docs/UPGRADING.md`: compatibility and rollback instructions.
 - `LICENSE.md`: GPLv3, matching the upstream project's license.
 
-`docker build -t wallos-dial:0.1.0 .` builds the image. `scripts/check-package.sh` checks package structure, syntax, and accidental inclusion of local data before a release.
+`./scripts/check-package.sh` validates the package. `docker build -t wallos-dial:0.1.0 .` and `./scripts/smoke-image.sh wallos-dial:0.1.0` check a local image. Releases publish both `linux/amd64` and `linux/arm64` images after passing these gates.
 
 ## Credits and license
 

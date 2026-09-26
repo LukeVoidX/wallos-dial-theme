@@ -1,0 +1,17 @@
+# For new installations. Existing Wallos users must point volumes to their
+# existing db and uploaded-logo directories after making a backup.
+services:
+  wallos:
+    image: ghcr.io/lukevoidx/wallos-dial:0.1.0
+    container_name: wallos-dial
+    ports:
+      - "127.0.0.1:8282:80"
+    environment:
+      TZ: ${TZ:-UTC}
+    volumes:
+      - ${WALLOS_DB_DIR:-./data/db}:/var/www/html/db
+      - ${WALLOS_LOGOS_DIR:-./data/logos}:/var/www/html/images/uploads/logos
+      # Optional user-owned SVG mapping (create both paths before enabling):
+      # - ./config/logo-map.local.php:/var/www/html/includes/dial_logo_map.local.php:ro
+      # - ./config/icons:/var/www/html/images/dial-logos:ro
+    restart: unless-stopped

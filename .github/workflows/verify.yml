@@ -10,6 +10,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check package
         run: ./scripts/check-package.sh
+      - name: Validate Compose files
+        run: docker compose config -q && docker compose -f compose.build.yaml config -q
       - name: Build pinned Wallos image
         run: docker build -t wallos-dial:ci .
       - name: Lint PHP overlay
@@ -19,3 +21,5 @@ jobs:
               php -l "$file" || exit 1
             done
           '
+      - name: Smoke test runtime
+        run: ./scripts/smoke-image.sh wallos-dial:ci
