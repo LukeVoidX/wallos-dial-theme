@@ -102,7 +102,7 @@ $mobileNavigation = $settings['mobile_nav'] ? "mobile-navigation" : "";
   <link rel="stylesheet" href="styles/barlow.css">
   <link rel="stylesheet" href="styles/font-awesome.min.css">
   <link rel="stylesheet" href="styles/brands.css">
-  <link rel="stylesheet" href="styles/dial.css?<?= $version ?>-0.1.0-countdown-1">
+  <link rel="stylesheet" href="styles/dial.css?<?= $version ?>-0.1.0-scale-1">
   <script type="text/javascript" src="scripts/all.js?<?= $version ?>"></script>
   <script type="text/javascript" src="scripts/common.js?<?= $version ?>"></script>
   <script type="text/javascript">

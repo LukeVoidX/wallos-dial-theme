@@ -15,3 +15,6 @@ At desktop CSS viewport widths around 1420, 1920, and 2400 pixels, the header an
 
 ## Constraints and delivery impact
 CSS-only change, no database writes or migrations. The public package is still awaiting publication approval. The private site requires its usual backup and a new image before replacing the current image.
+
+## Follow-up verification
+The four main pages were measured at 1920, 1440, 1100, and 900px CSS widths. Only the dashboard showed a 1px horizontal overflow at 900px, traced to an invisible date tooltip near the end of the timeline. Aligning the last 12 tooltips to the right at widths up to 1100px removed it. The dashboard was then retested at 1100, 900, 800, 768, and 720px with no horizontal overflow in both private and public previews. Subscriptions, calendar, and statistics had no horizontal overflow at 800, 768, or 720px. Settings, profile, admin, and about were checked from 720 to 1920px. The add-subscription dialog retained visible Save/Cancel controls in a 1280×700 viewport. These are desktop-width and zoom-equivalent checks; a separate phone layout was not requested.

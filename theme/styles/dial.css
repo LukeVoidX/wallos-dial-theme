@@ -915,6 +915,7 @@ body.wallos-dial > .dial-site-header > .dial-header-inner {
 }
 
 @media (max-width: 1100px) {
+  .wallos-dial .dial-tick:nth-last-child(-n+12) .dial-tick-tooltip { left: auto; right: 0; }
   body.wallos-dial > .dial-site-header > .dial-header-inner { grid-template-columns: 190px 1fr auto; }
   .wallos-dial .dial-primary-nav { gap: 24px; }
   .wallos-dial .dial-primary-nav a { font-size: 16px; }
