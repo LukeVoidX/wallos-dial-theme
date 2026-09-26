@@ -10,6 +10,7 @@
 - Optional user-owned SVG mapping without bundled brand art.
 - Shared-header language switch that saves the account locale using Wallos translations.
 - Centered 1480px maximum width for the header and dashboard on wide desktop windows.
+- Localized calendar-day countdown beside upcoming payment dates, with restrained emphasis for payments due within three days.
 
 ### Operational notes
 

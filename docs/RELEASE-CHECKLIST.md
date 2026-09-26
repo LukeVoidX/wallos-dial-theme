@@ -10,6 +10,7 @@
 - [x] Disposable populated runtime loaded dashboard, 16 subscriptions, calendar, statistics, settings, and add form. A synthetic subscription was added and deleted; the test database returned to 16 rows and integrity `ok`.
 - [x] Language switch checks: simplified/English/Traditional labels, persisted account field and locale selection, invalid language (422), missing CSRF, and invalid request method rejected.
 - [x] Desktop width checks: header/dashboard aligned, timeline contained, no horizontal overflow across normal and wide viewport equivalents.
+- [x] Upcoming payment countdown: localized column and values checked in both previews; signed calendar-day calculation and 1100px desktop layout checked.
 - [x] Runtime smoke checked `/health.php`, Dial CSS, and interaction JavaScript.
 - [x] Pull-only Compose binds to `127.0.0.1`, persists DB/logos, and uses a versioned image tag.
 - [ ] Owner reviews repository name, docs, code, image publication target, and release candidate archive.

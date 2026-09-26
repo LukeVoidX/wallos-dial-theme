@@ -27,6 +27,7 @@ $dialTimelineStart = $dialToday->modify('first day of this month');
 $dialTimelineEnd = $dialTimelineStart->modify('+2 months +2 days');
 $dialTimelineDays = (int) $dialTimelineStart->diff($dialTimelineEnd)->days + 1;
 $dialChineseDates = strpos($lang, 'zh_') === 0;
+$dialCountdownHeading = $lang === 'zh_cn' ? '倒计时' : ($lang === 'zh_tw' ? '倒數' : 'Countdown');
 $dialDateFormatter = new IntlDateFormatter(
     $lang,
     IntlDateFormatter::MEDIUM,
@@ -110,6 +111,7 @@ $dialMonthlyDigits = dialMoneyDigits($dialMonthlyValue);
     <div class="dial-table-head" aria-hidden="true">
       <span><?= htmlspecialchars(translate('subscription', $i18n), ENT_QUOTES, 'UTF-8') ?></span>
       <span><?= htmlspecialchars(translate('next_payment', $i18n), ENT_QUOTES, 'UTF-8') ?></span>
+      <span><?= $dialCountdownHeading ?></span>
       <span><?= htmlspecialchars(translate('price', $i18n), ENT_QUOTES, 'UTF-8') ?></span>
       <span><?= htmlspecialchars(translate('frequency', $i18n), ENT_QUOTES, 'UTF-8') ?></span>
       <span></span>
@@ -121,6 +123,12 @@ $dialMonthlyDigits = dialMoneyDigits($dialMonthlyValue);
           $subscriptionName = htmlspecialchars($subscription['name'], ENT_QUOTES, 'UTF-8');
           $subscriptionId = (int) $subscription['id'];
           $subscriptionDate = new DateTimeImmutable($subscription['next_payment']);
+          $daysUntilPayment = (int) $dialToday->diff($subscriptionDate)->format('%r%a');
+          $countdownText = $daysUntilPayment === 0
+              ? ($lang === 'zh_cn' ? '今天' : ($lang === 'zh_tw' ? '今日' : 'Today'))
+              : ($daysUntilPayment > 0
+                  ? ($lang === 'zh_cn' || $lang === 'zh_tw' ? $daysUntilPayment . ' 天' : $daysUntilPayment . ' ' . ($daysUntilPayment === 1 ? 'day' : 'days'))
+                  : ($lang === 'zh_cn' ? '逾期 ' . abs($daysUntilPayment) . ' 天' : ($lang === 'zh_tw' ? '逾期 ' . abs($daysUntilPayment) . ' 天' : 'Overdue ' . abs($daysUntilPayment) . ' ' . (abs($daysUntilPayment) === 1 ? 'day' : 'days'))));
           $subscriptionPrice = formatPrice(
               $subscription['price'],
               $currencies[$subscription['currency_id']]['code'],
@@ -129,7 +137,7 @@ $dialMonthlyDigits = dialMoneyDigits($dialMonthlyValue);
           $subscriptionRedrawnLogo = dialRedrawnLogoFor($subscription['logo'] ?? '');
       ?>
         <div class="dial-payment-row" role="button" tabindex="0" data-id="<?= $subscriptionId ?>"
-          aria-label="<?= $subscriptionName ?>, <?= htmlspecialchars($dialDateFormatter->format($subscriptionDate), ENT_QUOTES, 'UTF-8') ?>, <?= htmlspecialchars($subscriptionPrice, ENT_QUOTES, 'UTF-8') ?>"
+          aria-label="<?= $subscriptionName ?>, <?= htmlspecialchars($dialDateFormatter->format($subscriptionDate), ENT_QUOTES, 'UTF-8') ?>, <?= htmlspecialchars($countdownText, ENT_QUOTES, 'UTF-8') ?>, <?= htmlspecialchars($subscriptionPrice, ENT_QUOTES, 'UTF-8') ?>"
           title="<?= htmlspecialchars(translate('subscription', $i18n), ENT_QUOTES, 'UTF-8') ?>: <?= $subscriptionName ?>"
           onclick="showSubscriptionDetails(event, <?= $subscriptionId ?>)"
           onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showSubscriptionDetails(event, <?= $subscriptionId ?>); }">
@@ -153,6 +161,7 @@ $dialMonthlyDigits = dialMoneyDigits($dialMonthlyValue);
             <span class="dial-service-name"><?= $subscriptionName ?></span>
           </span>
           <time datetime="<?= htmlspecialchars($subscriptionDate->format('Y-m-d'), ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($dialDateFormatter->format($subscriptionDate), ENT_QUOTES, 'UTF-8') ?></time>
+          <span class="dial-row-countdown<?= $daysUntilPayment <= 3 ? ' dial-row-countdown--urgent' : '' ?>"><?= htmlspecialchars($countdownText, ENT_QUOTES, 'UTF-8') ?></span>
           <span class="dial-row-price"><?= htmlspecialchars($subscriptionPrice, ENT_QUOTES, 'UTF-8') ?></span>
           <span class="dial-row-frequency"><?= htmlspecialchars(dialBillingCycle($subscription['cycle'], $subscription['frequency'], $i18n), ENT_QUOTES, 'UTF-8') ?></span>
           <i class="fa-solid fa-ellipsis dial-row-more" aria-hidden="true"></i>

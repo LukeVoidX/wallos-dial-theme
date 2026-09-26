@@ -742,7 +742,7 @@ body.wallos-dial > .dial-site-header > .dial-header-inner {
 .wallos-dial .dial-table-head,
 .wallos-dial .dial-payment-row {
   display: grid;
-  grid-template-columns: minmax(290px, 1.65fr) minmax(180px, 1.1fr) minmax(120px, .9fr) minmax(130px, 1.1fr) 34px;
+  grid-template-columns: minmax(240px, 1.65fr) minmax(155px, 1fr) minmax(110px, .65fr) minmax(125px, .85fr) minmax(105px, .7fr) 34px;
   align-items: center;
   column-gap: 8px;
   padding: 0 8px;
@@ -784,6 +784,8 @@ body.wallos-dial > .dial-site-header > .dial-header-inner {
 .wallos-dial .dial-service-logo .dial-redrawn-logo { width: 48px; height: 48px; object-fit: contain; transition: transform .2s ease; }
 .wallos-dial .dial-payment-row:hover .dial-service-logo img { transform: translateY(-2px) scale(var(--dial-optical-scale, 1)); }
 .wallos-dial .dial-row-price { white-space: nowrap; font-weight: var(--dial-weight-number); letter-spacing: -.015em; }
+.wallos-dial .dial-row-countdown { color: var(--text-muted); white-space: nowrap; font-size: 17px; font-variant-numeric: tabular-nums; }
+.wallos-dial .dial-row-countdown--urgent { color: var(--dial-signal); }
 .wallos-dial .dial-row-frequency { white-space: nowrap; }
 .wallos-dial .dial-row-more { justify-self: end; font-size: 20px; transition: color .18s ease, transform .18s ease; }
 .wallos-dial .dial-payment-row:hover .dial-row-more,
@@ -918,7 +920,7 @@ body.wallos-dial > .dial-site-header > .dial-header-inner {
   .wallos-dial .dial-primary-nav a { font-size: 16px; }
   .wallos-dial .dial-monthly-value { font-size: 80px; }
   .wallos-dial .dial-table-head,
-  .wallos-dial .dial-payment-row { grid-template-columns: minmax(210px, 1.5fr) minmax(150px, 1fr) minmax(100px, .7fr) minmax(105px, .8fr) 25px; }
+  .wallos-dial .dial-payment-row { grid-template-columns: minmax(190px, 1.5fr) minmax(140px, 1fr) minmax(85px, .65fr) minmax(95px, .7fr) minmax(85px, .7fr) 25px; }
   .wallos-dial .subscriptions.dial-grouped.grid-view .dial-category-items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
