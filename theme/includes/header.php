@@ -87,7 +87,9 @@ $mobileNavigation = $settings['mobile_nav'] ? "mobile-navigation" : "";
   <meta name="apple-mobile-web-app-title" content="Wallos">
   <meta name="theme-color" content="<?= $theme == "light" ? "#FFFFFF" : "#12151C" ?>" id="theme-color" />
   <meta name="referrer" content="no-referrer">
-  <link rel="icon" type="image/png" href="images/icon/favicon.ico" sizes="16x16">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/dial-icon/favicon-16.png?<?= $version ?>-favicon-1">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/dial-icon/favicon-32.png?<?= $version ?>-favicon-1">
+  <link rel="icon" type="image/svg+xml" href="images/dial-icon/favicon.svg?<?= $version ?>-favicon-1">
   <link rel="apple-touch-icon" href="images/icon/apple-touch-icon.png">
   <link rel="apple-touch-icon" sizes="152x152" href="images/icon/apple-touch-icon-152.png">
   <link rel="apple-touch-icon" sizes="180x180" href="images/icon/apple-touch-icon-180.png">
