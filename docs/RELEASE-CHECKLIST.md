@@ -12,6 +12,7 @@
 - [x] Desktop width checks: header/dashboard aligned, timeline contained, no horizontal overflow across normal and wide viewport equivalents.
 - [x] Upcoming payment countdown: localized column and values checked in both previews; signed calendar-day calculation and 1100px desktop layout checked.
 - [x] Cross-page desktop scaling pass: main routes at 720–1920px, secondary routes at 720–1920px, and add dialog at 1280×700; hidden timeline tooltip overflow corrected.
+- [x] Subscription details URL icon remains visible before hover in both private and public preview themes; exported calendar button remains visible.
 - [x] Runtime smoke checked `/health.php`, Dial CSS, and interaction JavaScript.
 - [x] Pull-only Compose binds to `127.0.0.1`, persists DB/logos, and uses a versioned image tag.
 - [ ] Owner reviews repository name, docs, code, image publication target, and release candidate archive.

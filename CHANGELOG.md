@@ -12,6 +12,7 @@
 - Centered 1480px maximum width for the header and dashboard on wide desktop windows.
 - Localized calendar-day countdown beside upcoming payment dates, with restrained emphasis for payments due within three days.
 - Adjusted the final timeline tooltips at compact desktop widths so hidden date labels cannot create horizontal scrolling.
+- Restored the visible globe icon on the subscription details URL action before hover.
 
 ### Operational notes
 

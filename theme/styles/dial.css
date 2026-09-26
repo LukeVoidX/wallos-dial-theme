@@ -312,6 +312,7 @@ body.wallos-dial > .dial-site-header > .dial-header-inner {
 
 .wallos-dial .button:not(:disabled):hover { transform: translateY(-2px); }
 .wallos-dial .button:not(:disabled):active { transform: translateY(0); }
+.wallos-dial .details-price-row a.details-action-button { color: var(--text-color); }
 .wallos-dial .secondary-button:not(:disabled):hover,
 .wallos-dial .image-button:not(:disabled):hover { background: var(--surface-hover); }
 
