@@ -1039,3 +1039,44 @@ body.wallos-dial > .dial-site-header > .dial-header-inner {
 .wallos-dial .dial-summary-amount { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
 .wallos-dial .dial-summary-amount small { color: var(--text-muted); font-size: 13px; font-weight: var(--dial-weight-heading); letter-spacing: .08em; }
 .wallos-dial .dial-summary-amount strong { min-width: 0; }
+
+/* Account language selector: uses Wallos's existing locale and profile value. */
+.wallos-dial .dial-language-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-width: 94px;
+}
+.wallos-dial .dial-language-control::after {
+  content: "⌄";
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-55%);
+  color: var(--text-muted);
+  font-size: 17px;
+  pointer-events: none;
+}
+.wallos-dial #dial-language {
+  width: 100%;
+  height: 38px;
+  padding: 0 19px 0 7px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text-color);
+  font: inherit;
+  font-size: 14px;
+  font-weight: var(--dial-weight-heading);
+  cursor: pointer;
+  appearance: none;
+  transition: background-color .18s ease, color .18s ease;
+}
+.wallos-dial #dial-language:hover,
+.wallos-dial #dial-language:focus-visible { background: var(--surface-hover); }
+.wallos-dial #dial-language:focus-visible { outline: 2px solid var(--dial-signal); outline-offset: 2px; }
+.wallos-dial #dial-language:disabled { cursor: wait; opacity: .55; }
+@media (max-width: 1100px) {
+  .wallos-dial .dial-utility-nav { gap: 14px; }
+  .wallos-dial .dial-language-control { min-width: 80px; max-width: 102px; }
+}

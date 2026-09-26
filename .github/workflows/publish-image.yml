@@ -27,7 +27,7 @@ jobs:
           docker build -t wallos-dial:preflight .
           ./scripts/smoke-image.sh wallos-dial:preflight
           docker run --rm --entrypoint sh wallos-dial:preflight -lc '
-            for file in /var/www/html/index.php /var/www/html/subscriptions.php /var/www/html/calendar.php /var/www/html/stats.php /var/www/html/includes/header.php /var/www/html/includes/dial_logo_map.php /var/www/html/includes/dial_dashboard.php /var/www/html/includes/dial_stat_money.php /var/www/html/includes/list_subscriptions.php /var/www/html/endpoints/subscriptions/get.php; do
+            for file in /var/www/html/index.php /var/www/html/subscriptions.php /var/www/html/calendar.php /var/www/html/stats.php /var/www/html/includes/header.php /var/www/html/includes/dial_logo_map.php /var/www/html/includes/dial_dashboard.php /var/www/html/includes/dial_stat_money.php /var/www/html/includes/list_subscriptions.php /var/www/html/endpoints/subscriptions/get.php /var/www/html/endpoints/user/set_dial_language.php; do
               php -l "$file" >/dev/null || exit 1
             done
           '

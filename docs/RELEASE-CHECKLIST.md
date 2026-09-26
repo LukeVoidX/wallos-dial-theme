@@ -8,6 +8,7 @@
 - [x] PHP and JavaScript syntax checks passed; both Compose files validated.
 - [x] Fresh install with empty persistent DB/logo mounts reached registration and created a valid SQLite database.
 - [x] Disposable populated runtime loaded dashboard, 16 subscriptions, calendar, statistics, settings, and add form. A synthetic subscription was added and deleted; the test database returned to 16 rows and integrity `ok`.
+- [x] Language switch checks: simplified/English/Traditional labels, persisted account field and locale selection, invalid language (422), missing CSRF, and invalid request method rejected.
 - [x] Runtime smoke checked `/health.php`, Dial CSS, and interaction JavaScript.
 - [x] Pull-only Compose binds to `127.0.0.1`, persists DB/logos, and uses a versioned image tag.
 - [ ] Owner reviews repository name, docs, code, image publication target, and release candidate archive.

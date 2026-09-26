@@ -21,5 +21,6 @@ RUN set -eu; \
     rm -rf /tmp/dial-theme /tmp/dial-upstream-files.sha256
 RUN chmod 644 /var/www/html/styles/dial.css \
     /var/www/html/scripts/dial-interaction.js \
+    /var/www/html/scripts/dial-language.js \
     /var/www/html/scripts/stats-dial.js \
     /var/www/html/scripts/subscriptions.js

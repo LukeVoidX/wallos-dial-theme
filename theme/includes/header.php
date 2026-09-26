@@ -102,7 +102,7 @@ $mobileNavigation = $settings['mobile_nav'] ? "mobile-navigation" : "";
   <link rel="stylesheet" href="styles/barlow.css">
   <link rel="stylesheet" href="styles/font-awesome.min.css">
   <link rel="stylesheet" href="styles/brands.css">
-  <link rel="stylesheet" href="styles/dial.css?<?= $version ?>-0.1.0">
+  <link rel="stylesheet" href="styles/dial.css?<?= $version ?>-0.1.0-language-1">
   <script type="text/javascript" src="scripts/all.js?<?= $version ?>"></script>
   <script type="text/javascript" src="scripts/common.js?<?= $version ?>"></script>
   <script type="text/javascript">
@@ -152,6 +152,7 @@ $mobileNavigation = $settings['mobile_nav'] ? "mobile-navigation" : "";
   ?>
   <script type="text/javascript" src="scripts/i18n/<?= $lang ?>.js?<?= $version ?>"></script>
   <script type="text/javascript" src="scripts/i18n/getlang.js?<?= $version ?>"></script>
+  <script type="text/javascript" src="scripts/dial-language.js?<?= $version ?>-0.1.0" defer></script>
   <script type="text/javascript" src="scripts/password-toggle.js?<?= $version ?>"></script>
   <script>
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
@@ -177,6 +178,20 @@ $mobileNavigation = $settings['mobile_nav'] ? "mobile-navigation" : "";
         <a href="stats.php" class="<?= $dialPage === 'stats.php' ? 'is-active' : '' ?>"><?= translate('stats', $i18n) ?></a>
       </nav>
       <nav class="dial-utility-nav" aria-label="Search and account">
+        <span class="dial-language-control">
+          <select id="dial-language" aria-label="<?= htmlspecialchars(translate('language', $i18n), ENT_QUOTES, 'UTF-8') ?>">
+            <?php
+            foreach (['zh_cn', 'en', 'zh_tw'] as $code) {
+              if (!isset($languages[$code])) continue;
+              echo '<option value="' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '"' . ($lang === $code ? ' selected' : '') . '>' . htmlspecialchars($languages[$code]['name'], ENT_QUOTES, 'UTF-8') . '</option>';
+            }
+            foreach ($languages as $code => $language) {
+              if (in_array($code, ['zh_cn', 'en', 'zh_tw'], true)) continue;
+              echo '<option value="' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '"' . ($lang === $code ? ' selected' : '') . '>' . htmlspecialchars($language['name'], ENT_QUOTES, 'UTF-8') . '</option>';
+            }
+            ?>
+          </select>
+        </span>
         <a href="subscriptions.php?focus=search" class="dial-search-link" title="<?= translate('search', $i18n) ?>" aria-label="<?= translate('search', $i18n) ?>"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a>
         <div class="dropdown">
           <button class="dropbtn dial-settings-button" type="button" onClick="toggleDropdown()" title="<?= translate('settings', $i18n) ?>" aria-label="<?= translate('settings', $i18n) ?>">

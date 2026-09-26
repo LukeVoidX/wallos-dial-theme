@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-required=(VERSION WALLOS_VERSION Dockerfile compose.yaml compose.build.yaml compat/upstream-files.sha256 LICENSE.md README.md theme/index.php theme/subscriptions.php theme/calendar.php theme/stats.php theme/includes/header.php theme/includes/dial_logo_map.php theme/styles/dial.css theme/scripts/stats-dial.js theme/scripts/dial-interaction.js)
+required=(VERSION WALLOS_VERSION Dockerfile compose.yaml compose.build.yaml compat/upstream-files.sha256 LICENSE.md README.md theme/index.php theme/subscriptions.php theme/calendar.php theme/stats.php theme/includes/header.php theme/includes/dial_logo_map.php theme/endpoints/user/set_dial_language.php theme/styles/dial.css theme/scripts/stats-dial.js theme/scripts/dial-interaction.js theme/scripts/dial-language.js)
 for file in "${required[@]}"; do
   [[ -f "$file" ]] || { echo "Missing: $file" >&2; exit 1; }
 done

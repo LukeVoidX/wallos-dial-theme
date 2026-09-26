@@ -8,6 +8,7 @@
 - Versioned, pull-only Compose installation backed by a planned GHCR image for `linux/amd64` and `linux/arm64`; source-build Compose remains available.
 - Upstream file hash gate, package checks, runtime health smoke, scheduled upstream-release notice, and tag-triggered image publishing workflow.
 - Optional user-owned SVG mapping without bundled brand art.
+- Shared-header language switch that saves the account locale using Wallos translations.
 
 ### Operational notes
 
