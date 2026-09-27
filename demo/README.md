@@ -4,7 +4,7 @@ This directory prepares the **actual Wallos Dial 0.1.0 image** for an isolated p
 
 ## Topology
 
-`https://lukevoidx.github.io/wallos-dial-theme/` (GitHub Pages entry) → `https://wallos-demo.jarvishub.me/` (Caddy) → `127.0.0.1:8296` (separate Wallos Dial container) → separate synthetic SQLite and SVG logo volumes.
+`https://lukevoidx.github.io/wallos-dial-theme/` (GitHub Pages entry) → `https://wallos-demo.mostai.org/` (Caddy) → `127.0.0.1:8296` (separate Wallos Dial container) → separate synthetic SQLite and SVG logo volumes.
 
 The Pages URL cannot execute PHP; it forwards to the server. The public Caddy site allows GET/HEAD for the visible pages and assets, selected read-only subscription detail endpoints, and POST only for the Dial language endpoint. Demo Mode makes the language endpoint update only the visitor's Cookie. All other writes and administrative paths return 404. The public account is shared and uses synthetic data only.
 

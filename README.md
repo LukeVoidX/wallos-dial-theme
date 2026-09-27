@@ -8,7 +8,7 @@ A precise, warm, desktop-focused interface for [Wallos](https://github.com/ellit
 
 **Dial version:** `0.1.0` · **Tested Wallos version:** `5.8.1` only.
 
-**Try it before installing:** [Open the live bilingual demo](https://lukevoidx.github.io/wallos-dial-theme/) (planned public URL). The GitHub Pages link forwards to an isolated Wallos Dial container running the actual PHP application with 30 fictional subscriptions. Browse the overview, grouped subscriptions, calendar, statistics, details, and language switch. The public environment is read-only; install the image to use account and editing functions. [How the live demo works](docs/DEMO.md).
+**Try it before installing:** [Open the live bilingual demo](https://lukevoidx.github.io/wallos-dial-theme/). The GitHub Pages link forwards to an isolated Wallos Dial container running the actual PHP application with 30 fictional subscriptions. Browse the overview, grouped subscriptions, calendar, statistics, details, and language switch. The public environment is read-only; install the image to use account and editing functions. [How the live demo works](docs/DEMO.md).
 
 ![Wallos Dial dashboard showcase with an actual interface capture](docs/assets/posters/showcase-overview.png)
 
@@ -25,6 +25,10 @@ Dial is a source overlay built into a Docker image. It is not a native Wallos th
 The design uses warm off-white, dark numerals, fine lines, and a small red signal. It is tuned for desktop use. The original Wallos mobile layout remains available, but this release does not promise a separate mobile redesign.
 
 ![Wallos Dial grouped subscription design with an actual interface capture](docs/assets/posters/showcase-subscriptions.png)
+
+![Wallos Dial calendar with an actual interface capture](docs/assets/posters/showcase-calendar.png)
+
+![Wallos Dial statistics with an actual interface capture](docs/assets/posters/showcase-statistics.png)
 
 ![Wallos Dial design principles: measured hierarchy, calibrated time, useful grouping, restrained red](docs/assets/posters/design-principles.png)
 

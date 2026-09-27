@@ -1,6 +1,6 @@
 # Append to the existing Netcup Caddyfile only after reviewing its site blocks.
 # This host is a separate, public, read-only demonstration of synthetic data.
-wallos-demo.jarvishub.me {
+wallos-demo.mostai.org {
     encode zstd gzip
     import security_headers_proxy
     import access_log

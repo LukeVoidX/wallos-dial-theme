@@ -8,7 +8,7 @@ Visitors can read the project in English or Simplified Chinese and use a public 
 
 ## Architecture
 
-- GitHub Pages at `https://lukevoidx.github.io/wallos-dial-theme/` is the free entry URL. Its `docs/index.html` forwards to `https://wallos-demo.jarvishub.me/`.
+- GitHub Pages at `https://lukevoidx.github.io/wallos-dial-theme/` is the free entry URL. Its `docs/index.html` forwards to `https://wallos-demo.mostai.org/`.
 - The destination runs the same versioned Wallos Dial Docker image as the release, on a separate server container, hostname, port, SQLite volume, and logo directory.
 - `demo/seed.py` creates a fictional account, 30 subscriptions across AI/Infra/Domains/Media, and SVG marks, refusing any populated database.
 - Public reverse proxy permits read-only application browsing and the language endpoint. The language selection sets a visitor cookie without changing the shared demo account. All other writes and administrative paths are blocked. A reset job periodically restores the synthetic seed.

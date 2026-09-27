@@ -12,7 +12,11 @@ The warm ivory surface, dark figures, precise date marks and small red accents d
 
 ![Grouped subscriptions showcase using an actual Wallos Dial browser capture](assets/posters/showcase-subscriptions.png)
 
-These two showcases use the [actual demo overview capture](assets/screenshots/real-demo-overview.png) and [actual grouped grid capture](assets/screenshots/real-demo-grid.png) without redrawing interface details. The live demo has 30 fictional subscriptions.
+![Calendar showcase using an actual Wallos Dial browser capture](assets/posters/showcase-calendar.png)
+
+![Statistics showcase using an actual Wallos Dial browser capture](assets/posters/showcase-statistics.png)
+
+The overview and subscription showcases use [actual demo overview](assets/screenshots/real-demo-overview.png) and [grouped grid](assets/screenshots/real-demo-grid.png) captures from the 30-record fictional demo. The calendar and statistics posters use [calendar](assets/screenshots/after-calendar.png) and [statistics](assets/screenshots/after-stats.png) captures from the 16-record synthetic review fixture. Interface details were not redrawn.
 
 ## Overview
 

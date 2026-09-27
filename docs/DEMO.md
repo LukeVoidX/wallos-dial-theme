@@ -2,7 +2,7 @@
 
 **Local running preview:** `http://127.0.0.1:4190/` (available while the maintainer's local demo container is running).
 
-**Planned public entry:** `https://lukevoidx.github.io/wallos-dial-theme/` → `https://wallos-demo.jarvishub.me/`. Neither URL is a published-demo claim until both endpoints pass anonymous verification.
+**Public entry:** `https://lukevoidx.github.io/wallos-dial-theme/` → `https://wallos-demo.mostai.org/`. This is the real Wallos Dial runtime with a separate fictional dataset. The new host was verified with HTTPS and read-only route checks on 2026-09-28.
 
 ![Actual Wallos Dial running with fictional demo records](assets/screenshots/real-demo-overview.png)
 
