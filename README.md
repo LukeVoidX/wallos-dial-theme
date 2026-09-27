@@ -1,16 +1,38 @@
+![Wallos Dial — an open-source desktop interface for Wallos](docs/assets/posters/hero.png)
+
 # Wallos Dial
+
+[English](README.md) · [简体中文](README.zh-CN.md) · [Screenshots and before/after](docs/SHOWCASE.md) · [Install and upgrade](docs/UPGRADING.md)
 
 A precise, warm, desktop-focused interface for [Wallos](https://github.com/ellite/Wallos). The theme adds an instrument-style dashboard timeline, a restrained type and color system, grouped subscription cards, clearer statistics, focused interaction states, and a persistent language switch in the header. Wallos's subscription, calendar, settings, search, and notification features remain available.
 
-**Status:** `0.1.0` release candidate · **Tested Wallos version:** `5.8.1` only.
+**Dial version:** `0.1.0` · **Tested Wallos version:** `5.8.1` only.
+
+![Actual Wallos Dial dashboard with synthetic demo data](docs/assets/screenshots/after-dashboard.png)
+
+The screenshot above is a direct browser capture from an isolated demo account. All names, prices, and logos shown in this repository are synthetic. [See the original Wallos and Dial side by side](docs/SHOWCASE.md).
 
 Compatibility is published per Wallos version. An upstream release does not automatically make an older Dial image compatible. The build checks the exact upstream files it replaces and stops on a mismatch; a newly tested Dial image is then published.
 
 Dial is a source overlay built into a Docker image. It is not a native Wallos theme option, and it is not affiliated with the Wallos project. Upgrading Wallos requires rebuilding and reviewing the overlay against the new upstream version. See [Updating](docs/UPGRADING.md).
 
+**Recommended for:** someone self-hosting Wallos 5.8.1 who wants a quieter, desktop-first view and is willing to keep a versioned image. If your priority is a phone-first UI or automatically taking every new Wallos release, wait for a compatible release before switching. Keep a database backup either way.
+
 ## Preview
 
 The design uses warm off-white, dark numerals, fine lines, and a small red signal. It is tuned for desktop use. The original Wallos mobile layout remains available, but this release does not promise a separate mobile redesign.
+
+| What you see | What it helps with |
+|---|---|
+| Monthly total and precise date dial | Read the recurring commitment and its timing at a glance. |
+| Upcoming-payment countdown | See calendar days until the next three payments. |
+| Grouped subscription ledger | Scan AI, infrastructure, domains, media, or your own categories. |
+| Unified calendar and statistics | Move between dates and costs without a change in visual language. |
+| Quick language selector | Switch between English, Simplified Chinese, Traditional Chinese, and Wallos's other locales. |
+
+![Original Wallos versus Wallos Dial dashboard, same synthetic data](docs/assets/posters/compare-dashboard.png)
+
+[See the subscriptions comparison, other views, and full-resolution captures](docs/SHOWCASE.md).
 
 ## Install a new instance
 
@@ -24,7 +46,11 @@ docker compose up -d
 
 Open `http://127.0.0.1:8282` from the same machine. The Compose file pulls a prebuilt versioned image and binds to loopback; use your own HTTPS reverse proxy and access controls if you need remote access. Set `TZ` in a local `.env` file if needed. Wallos stores its database in `./data/db` and uploaded subscription logos in `./data/logos`; both are excluded from Git.
 
-The GitHub repository and public container image become available only after release publication. Until then, the archive can be built locally with `docker compose -f compose.build.yaml up -d --build`.
+For a server you access by SSH, keep the loopback binding and forward the port: `ssh -L 8282:127.0.0.1:8282 user@your-server`. Then open `http://127.0.0.1:8282` locally. Complete Wallos's normal first-run registration there.
+
+Verify the container with `docker compose ps` and `curl -fsS http://127.0.0.1:8282/health.php`. If startup or assets fail, see [Troubleshooting](docs/TROUBLESHOOTING.md).
+
+Contributors can build the same source locally with `docker compose -f compose.build.yaml up -d --build`.
 
 ## Use an existing Wallos database
 
@@ -41,6 +67,8 @@ The GitHub repository and public container image become available only after rel
 4. Check login, subscription count, logos, dashboard, calendar, statistics, settings, and notifications. Do not re-enter subscriptions.
 
 The theme itself does not seed or edit subscriptions. Wallos's own startup and migration behavior still applies; test a newer Wallos base against a disposable data copy first. If your existing service uses other environment variables, proxy rules, or a different port, carry them into your deployment configuration deliberately.
+
+Do not mount a live database into a second running Wallos container. Stop the old container after backing up and validating your Dial Compose mounts.
 
 ## Optional custom vector logos
 
@@ -68,6 +96,9 @@ Use a versioned Dial image; avoid `latest`. A weekly workflow detects new upstre
 - `compat/upstream-files.sha256`: hashes of every upstream file overwritten by the theme; a changed base fails the build pending review.
 - `VERSION` and `WALLOS_VERSION`: theme release and tested upstream version.
 - `docs/UPGRADING.md`: compatibility and rollback instructions.
+- `docs/SHOWCASE.md`: direct, synthetic-data screenshots and before/after posters.
+- `docs/TROUBLESHOOTING.md`: startup, port, logo, cache, and compatibility checks.
+- `README.zh-CN.md`: Simplified Chinese installation guide.
 - `LICENSE.md`: GPLv3, matching the upstream project's license.
 
 `./scripts/check-package.sh` validates the package. `docker build -t wallos-dial:0.1.0 .` and `./scripts/smoke-image.sh wallos-dial:0.1.0` check a local image. Releases publish both `linux/amd64` and `linux/arm64` images after passing these gates.
@@ -75,3 +106,5 @@ Use a versioned Dial image; avoid `latest`. A weekly workflow detects new upstre
 ## Credits and license
 
 Wallos Dial modifies [Wallos](https://github.com/ellite/Wallos), originally by ellite and contributors. Wallos and this derivative source are distributed under [GPLv3](LICENSE.md). Keep the upstream copyright and license notices when redistributing. No official Wallos endorsement is implied.
+
+Suggestions and fixes are welcome. Read [Contributing](CONTRIBUTING.md) before proposing support for a new Wallos version. For bugs, include the Dial version, Wallos version, browser, and a redacted screenshot; never attach your database or credentials.

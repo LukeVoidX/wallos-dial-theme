@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 — release candidate
+## 0.1.0
 
 ### Added
 
@@ -14,6 +14,8 @@
 - Adjusted the final timeline tooltips at compact desktop widths so hidden date labels cannot create horizontal scrolling.
 - Restored the visible globe icon on the subscription details URL action before hover.
 - Replaced the browser tab favicon with a crisp, original warm-white and black W monogram.
+- Added a public visual gallery: ImageGen-backed posters and direct before/after browser captures from a synthetic demo account.
+- Added English and Simplified Chinese install guidance, troubleshooting, contribution instructions, and launch notes.
 
 ### Operational notes
 
