@@ -10,9 +10,13 @@ Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界
 
 **先体验，再安装：**[打开真实运行的中英文 Demo](https://lukevoidx.github.io/wallos-dial-theme/)（计划中的公开网址）。GitHub Pages 入口会转到独立的 Wallos Dial 容器；它运行实际 PHP 应用，并放入 30 条虚构订阅。可浏览总览、分类订阅、日历、统计、详情与语言切换。公开环境为只读，账户与编辑功能需自行安装镜像体验。[了解真实 Demo 的部署与边界](docs/DEMO.md)。
 
-![使用虚构示例数据的 Dial 首页实拍](docs/assets/screenshots/after-dashboard.png)
+![Wallos Dial 总览展示：内嵌真实运行界面的截图](docs/assets/posters/showcase-overview.png)
 
-仓库中的界面截图来自隔离示例账号，名称、金额和图标均为虚构。ImageGen 只用于海报背景，前后对比中的界面保持真实浏览器截图。[查看完整对比](docs/SHOWCASE.md)。
+仓库中的界面截图来自隔离示例账号，名称、金额和标识均为虚构。ImageGen 只用于海报背景，内嵌界面保持真实浏览器截图。[查看完整对比与原始截图](docs/SHOWCASE.md)。
+
+![Wallos Dial 分类订阅展示](docs/assets/posters/showcase-subscriptions.png)
+
+![设计思路：清晰层级、时间刻度、分类与克制的红色](docs/assets/posters/design-principles.png)
 
 ## 新安装
 

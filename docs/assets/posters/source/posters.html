@@ -12,7 +12,7 @@
     .poster { width: 1920px; height: 1080px; display: none; position: relative; overflow: hidden; background-size: cover; background-position: center; }
     html[data-kind="hero"] #hero, html[data-kind="dashboard"] #dashboard,
     html[data-kind="subscriptions"] #subscriptions, html[data-kind="features"] #features,
-    html[data-kind="social"] #social { display: block; }
+    html[data-kind="social"] #social, html[data-kind="showcase-overview"] #showcase-overview, html[data-kind="showcase-subscriptions"] #showcase-subscriptions, html[data-kind="principles"] #principles { display: block; }
     .eyebrow { font-size: 20px; font-weight: 700; letter-spacing: .28em; text-transform: uppercase; }
     .rule { height: 2px; background: #191817; }
     .red { color: #c90019; }
@@ -54,6 +54,38 @@
     .social .caption { position: absolute; left: 72px; top: 70px; font-size: 18px; font-weight: 700; letter-spacing: .22em; }
     .social h2 { position: absolute; left: 68px; top: 205px; margin: 0; font-size: 112px; line-height: .9; letter-spacing: -.075em; }
     .social .foot { position: absolute; left: 72px; bottom: 66px; font-size: 25px; font-weight: 500; }
+
+    .showcase { background-image: url('showcase-backdrop.png'); }
+    .showcase .show-top { position:absolute; left:100px; right:100px; top:74px; display:flex; justify-content:space-between; align-items:start; }
+    .showcase .show-top small { font-size:19px; font-weight:700; letter-spacing:.19em; }
+    .showcase .show-top > small { background:rgba(245,242,233,.86); padding:8px 12px; }
+    .showcase h2 { font-size:72px; line-height:1; letter-spacing:-.055em; margin:26px 0 0; max-width:1400px; }
+    .showcase .screen { position:absolute; left:100px; top:280px; width:1290px; height:650px; border:2px solid #aaa397; background:#f5f2e9; box-shadow:0 26px 60px rgba(28,27,24,.23); overflow:hidden; }
+    .showcase .screen img { display:block; width:100%; height:100%; object-fit:cover; object-position:top center; }
+    .showcase .notes { position:absolute; top:280px; right:100px; width:390px; background:rgba(245,242,233,.94); padding:26px 28px 18px; border-left:3px solid #d20b20; }
+    .showcase .notes article { border-bottom:1px solid #c7c1b7; padding:18px 0 20px; }
+    .showcase .notes article:last-child { border:0; }
+    .showcase .notes b { font-size:18px; letter-spacing:.13em; color:#d20b20; }
+    .showcase .notes h3 { font-size:25px; margin:9px 0 6px; letter-spacing:-.025em; }
+    .showcase .notes p { color:#56534f; font-size:18px; line-height:1.32; margin:0; }
+    .showcase .show-foot { position:absolute; left:100px; right:100px; bottom:63px; display:flex; justify-content:space-between; font-size:18px; font-weight:700; letter-spacing:.14em; }
+    .showcase.subs .screen { left:560px; width:1260px; top:280px; height:650px; }
+    .showcase.subs .notes { left:100px; right:auto; width:390px; top:280px; }
+    .showcase.subs h2 { max-width:1100px; }
+    .principles { background-image:url('showcase-backdrop.png'); }
+    .principles .label { position:absolute; top:86px; left:100px; font-size:19px; font-weight:700; letter-spacing:.21em; }
+    .principles h2 { position:absolute; top:156px; left:95px; margin:0; font-size:86px; line-height:.97; letter-spacing:-.065em; }
+    .principles .lead { position:absolute; left:100px; top:377px; font-size:29px; line-height:1.3; max-width:850px; }
+    .principles .principle-list { position:absolute; left:100px; top:575px; width:930px; display:grid; grid-template-columns:1fr 1fr; gap:30px 50px; }
+    .principles .principle-list article { border-top:2px solid #191817; padding-top:15px; }
+    .principles .principle-list b { font-size:18px; color:#c90019; letter-spacing:.12em; }
+    .principles .principle-list h3 { font-size:30px; margin:10px 0 6px; letter-spacing:-.04em; }
+    .principles .principle-list p { font-size:19px; margin:0; line-height:1.3; color:#56534f; }
+    .principles .swatches { position:absolute; left:1130px; top:575px; width:650px; display:flex; gap:15px; }
+    .principles .swatch { flex:1; }
+    .principles .swatch i { display:block; height:110px; border:1px solid #888; }
+    .principles .swatch span { display:block; padding-top:10px; font-size:16px; font-weight:700; letter-spacing:.05em; }
+    .principles .bottom { position:absolute; bottom:55px; left:100px; right:100px; border-top:2px solid #191817; padding-top:20px; display:flex; justify-content:space-between; font-size:18px; font-weight:700; letter-spacing:.14em; }
   </style>
 </head>
 <body>
@@ -93,6 +125,40 @@
     <div class="caption">OPEN SOURCE / WALLOS 5.8.1</div>
     <h2>WALLOS<br>DIAL<span class="red">.</span></h2>
     <div class="foot">A quieter way to see what renews.</div>
+  </section>
+
+  <section class="poster showcase" id="showcase-overview" aria-label="Wallos Dial overview showcase">
+    <div class="show-top"><div><small>WALLOS DIAL / INTERFACE 01</small><h2>Every renewal.<br>In its place.</h2></div><small>OVERVIEW</small></div>
+    <div class="screen"><img src="../../screenshots/real-demo-overview.png" alt="Actual Wallos Dial dashboard with fictional data"></div>
+    <div class="notes">
+      <article><b>01 / COST</b><h3>One clear number</h3><p>Recurring spend leads the page without competing cards.</p></article>
+      <article><b>02 / TIME</b><h3>A readable dial</h3><p>Fine calibration marks make the next dates tangible.</p></article>
+      <article><b>03 / ACTION</b><h3>What comes next</h3><p>Payments and countdowns sit in a precise ledger.</p></article>
+    </div>
+    <div class="show-foot"><span>ACTUAL WALLOS DIAL CAPTURE · FICTIONAL DATA</span><span>01 / 03</span></div>
+  </section>
+  <section class="poster showcase subs" id="showcase-subscriptions" aria-label="Wallos Dial subscriptions showcase">
+    <div class="show-top"><div><small>WALLOS DIAL / INTERFACE 02</small><h2>Subscriptions,<br>put in order.</h2></div><small>GROUPED LEDGER</small></div>
+    <div class="notes">
+      <article><b>01 / GROUPS</b><h3>Four useful views</h3><p>AI, Infra, Domains and Media reflect how services are used.</p></article>
+      <article><b>02 / RECOGNITION</b><h3>Consistent marks</h3><p>Service marks share one visual scale and shape.</p></article>
+      <article><b>03 / CONTROL</b><h3>Familiar actions</h3><p>Search, sort, filter and detail stay in the real Wallos workflow.</p></article>
+    </div>
+    <div class="screen"><img src="../../screenshots/real-demo-grid.png" alt="Actual Wallos Dial grouped subscription grid with fictional data"></div>
+    <div class="show-foot"><span>ACTUAL WALLOS DIAL CAPTURE · FICTIONAL DATA</span><span>02 / 03</span></div>
+  </section>
+  <section class="poster principles" id="principles" aria-label="Wallos Dial design principles">
+    <div class="label">WALLOS DIAL / DESIGN NOTES</div>
+    <h2>Precision.<br>Without noise.</h2>
+    <p class="lead">An instrument-inspired desktop language for the subscriptions you keep going.</p>
+    <div class="principle-list">
+      <article><b>01</b><h3>Measured hierarchy</h3><p>Large totals; quieter supporting data.</p></article>
+      <article><b>02</b><h3>Calibrated time</h3><p>Dates expressed as a deliberate dial.</p></article>
+      <article><b>03</b><h3>Useful grouping</h3><p>AI, Infra, Domains and Media in one ledger.</p></article>
+      <article><b>04</b><h3>Restrained signal</h3><p>Red is reserved for focus and urgency.</p></article>
+    </div>
+    <div class="swatches"><div class="swatch"><i style="background:#f5f2e9"></i><span>WARM IVORY</span></div><div class="swatch"><i style="background:#191817"></i><span>CHARCOAL</span></div><div class="swatch"><i style="background:#d20b20"></i><span>SIGNAL RED</span></div></div>
+    <div class="bottom"><span>WALLOS 5.8.1 / DESKTOP THEME</span><span>DESIGN SYSTEM / 03</span></div>
   </section>
 </body>
 </html>

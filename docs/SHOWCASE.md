@@ -2,6 +2,18 @@
 
 The UI in these comparisons is captured directly from Wallos 5.8.1 and Wallos Dial 0.1.0 running with **the same synthetic demo database**. Service names, prices, user, logos, and payment method are fictitious. ImageGen was used for the editorial backgrounds; it did not redraw the UI screenshots.
 
+## Design direction and product showcase
+
+![Design principles: measured hierarchy, calibrated time, useful grouping, restrained signal](assets/posters/design-principles.png)
+
+The warm ivory surface, dark figures, precise date marks and small red accents define the system. The generated background suggests an instrument dial; the poster copy and palette are typeset separately.
+
+![Overview showcase using an actual Wallos Dial browser capture](assets/posters/showcase-overview.png)
+
+![Grouped subscriptions showcase using an actual Wallos Dial browser capture](assets/posters/showcase-subscriptions.png)
+
+These two showcases use the [actual demo overview capture](assets/screenshots/real-demo-overview.png) and [actual grouped grid capture](assets/screenshots/real-demo-grid.png) without redrawing interface details. The live demo has 30 fictional subscriptions.
+
 ## Overview
 
 ![Original Wallos and Dial dashboard, side by side](assets/posters/compare-dashboard.png)

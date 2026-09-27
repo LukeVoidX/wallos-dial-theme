@@ -10,9 +10,9 @@ A precise, warm, desktop-focused interface for [Wallos](https://github.com/ellit
 
 **Try it before installing:** [Open the live bilingual demo](https://lukevoidx.github.io/wallos-dial-theme/) (planned public URL). The GitHub Pages link forwards to an isolated Wallos Dial container running the actual PHP application with 30 fictional subscriptions. Browse the overview, grouped subscriptions, calendar, statistics, details, and language switch. The public environment is read-only; install the image to use account and editing functions. [How the live demo works](docs/DEMO.md).
 
-![Actual Wallos Dial dashboard with synthetic demo data](docs/assets/screenshots/after-dashboard.png)
+![Wallos Dial dashboard showcase with an actual interface capture](docs/assets/posters/showcase-overview.png)
 
-The screenshot above is a direct browser capture from an isolated demo account. All names, prices, and logos shown in this repository are synthetic. [See the original Wallos and Dial side by side](docs/SHOWCASE.md).
+The UI inside the showcase is a direct browser capture from an isolated demo account. All names, prices, and marks shown in this repository are synthetic. [Inspect the full-size interface capture](docs/assets/screenshots/real-demo-overview.png) or [see original Wallos and Dial side by side](docs/SHOWCASE.md).
 
 Compatibility is published per Wallos version. An upstream release does not automatically make an older Dial image compatible. The build checks the exact upstream files it replaces and stops on a mismatch; a newly tested Dial image is then published.
 
@@ -23,6 +23,10 @@ Dial is a source overlay built into a Docker image. It is not a native Wallos th
 ## Preview
 
 The design uses warm off-white, dark numerals, fine lines, and a small red signal. It is tuned for desktop use. The original Wallos mobile layout remains available, but this release does not promise a separate mobile redesign.
+
+![Wallos Dial grouped subscription design with an actual interface capture](docs/assets/posters/showcase-subscriptions.png)
+
+![Wallos Dial design principles: measured hierarchy, calibrated time, useful grouping, restrained red](docs/assets/posters/design-principles.png)
 
 | What you see | What it helps with |
 |---|---|
