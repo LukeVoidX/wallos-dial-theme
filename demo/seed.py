@@ -83,7 +83,7 @@ def seed(db_path: Path, logo_dir: Path, base_date: date) -> None:
         db.execute("UPDATE settings SET monthly_price=1, upcoming_payments_limit=4, convert_currency=0 WHERE user_id=1")
         db.execute(
             'INSERT INTO custom_css_style (css, user_id) VALUES (?, 1)',
-            ('.wallos-dial .demo-banner{max-width:1480px;margin:0 auto 20px;'
+            ('.wallos-dial .demo-banner{width:100%;box-sizing:border-box;margin:0 auto 20px;'
              'padding:11px 16px;border:1px solid #c9c5b9;border-left:3px solid #d90b1c;'
              'border-radius:2px;background:transparent;color:#65615a;text-align:left;'
              'font-size:13px;line-height:1.35}'
