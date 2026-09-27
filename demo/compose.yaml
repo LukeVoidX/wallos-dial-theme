@@ -1,0 +1,16 @@
+# Dedicated public demo only. Never point these variables at production Wallos.
+services:
+  wallos-demo:
+    image: ${WALLOS_DEMO_IMAGE:-ghcr.io/lukevoidx/wallos-dial:0.1.0}
+    container_name: wallos-dial-public-demo
+    ports:
+      - "127.0.0.1:8296:80"
+    environment:
+      TZ: ${TZ:-UTC}
+      DEMO_MODE: "1"
+    volumes:
+      - ${WALLOS_DEMO_DB_DIR:?set an isolated absolute demo DB directory}:/var/www/html/db
+      - ${WALLOS_DEMO_LOGOS_DIR:?set an isolated absolute demo logo directory}:/var/www/html/images/uploads/logos
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped

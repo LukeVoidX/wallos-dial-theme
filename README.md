@@ -8,7 +8,7 @@ A precise, warm, desktop-focused interface for [Wallos](https://github.com/ellit
 
 **Dial version:** `0.1.0` · **Tested Wallos version:** `5.8.1` only.
 
-**Try it before installing:** [Open the free, bilingual browser demo](https://lukevoidx.github.io/wallos-dial-theme/). It contains 30 fictional subscriptions and lets you explore the overview, grouped subscriptions, calendar, statistics, search, editing, and language switch. Changes stay in that browser. This GitHub Pages preview is static; it does not connect to a Wallos server or process payments. [How the demo works](docs/DEMO.md).
+**Try it before installing:** [Open the live bilingual demo](https://lukevoidx.github.io/wallos-dial-theme/) (planned public URL). The GitHub Pages link forwards to an isolated Wallos Dial container running the actual PHP application with 30 fictional subscriptions. Browse the overview, grouped subscriptions, calendar, statistics, details, and language switch. The public environment is read-only; install the image to use account and editing functions. [How the live demo works](docs/DEMO.md).
 
 ![Actual Wallos Dial dashboard with synthetic demo data](docs/assets/screenshots/after-dashboard.png)
 
@@ -99,7 +99,8 @@ Use a versioned Dial image; avoid `latest`. A weekly workflow detects new upstre
 - `VERSION` and `WALLOS_VERSION`: theme release and tested upstream version.
 - `docs/UPGRADING.md`: compatibility and rollback instructions.
 - `docs/SHOWCASE.md`: direct, synthetic-data screenshots and before/after posters.
-- `docs/index.html`: static, bilingual GitHub Pages demo with fictional records.
+- `docs/index.html`: GitHub Pages entry point forwarding to the isolated live demo.
+- `demo/seed.py`: synthetic data and SVG logo generator for a fresh demo database.
 - `docs/TROUBLESHOOTING.md`: startup, port, logo, cache, and compatibility checks.
 - `README.zh-CN.md`: Simplified Chinese installation guide.
 - `LICENSE.md`: GPLv3, matching the upstream project's license.

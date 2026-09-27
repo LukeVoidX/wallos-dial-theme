@@ -17,7 +17,9 @@
 - [x] Public posters use ImageGen backgrounds and exact browser captures from isolated synthetic data; raw screenshots and provenance are included. No personal account screenshots are in the repository.
 - [x] A 1280×640 social preview under 1 MB is prepared for GitHub repository settings.
 - [x] English and Simplified Chinese install guides, before/after gallery, troubleshooting, contribution guide, release notes, and launch copy have valid local links.
-- [x] Local static Pages demo: 30 fictional records, English/Simplified Chinese, navigation, search/filter/sort, grid/list detail, add/edit/delete, calendar, statistics, browser-only persistence/reset, and widths 900/1100/1600px. Local browser reported no page errors; static captures are labeled separately from real theme captures.
+- [x] Replaced the divergent static imitation with a local **actual Wallos Dial container** on `127.0.0.1:4190`; its separate SQLite volume has 30 fictional records and generated SVG marks. Dashboard, subscriptions, calendar, statistics, detail fetch, and English/Simplified Chinese loaded with no browser page errors.
+- [x] A Demo Mode image build, PHP syntax check, runtime smoke, and language endpoint check passed. In Demo Mode, a Chinese language selection changed the visitor Cookie and rendered Chinese without changing the shared account's database language.
+- [x] The synthetic reset script restored 30 rows and SQLite integrity `ok` in a dedicated local demo volume, after verifying the exact container mounts.
 - [x] Isolated original Wallos and Dial demo containers used the same 16 fictitious subscriptions; both are healthy, the database integrity check returned `ok`, and browser sessions reported no page errors.
 - [x] Exact review source built and passed hash/PHP/runtime checks on an amd64 host; a fresh mounted database reached registration with SQLite integrity `ok`.
 - [x] The same theme source built natively on arm64, passed runtime health/assets smoke, and a fresh mounted database reached registration with SQLite integrity `ok`.
@@ -26,7 +28,8 @@
 - [ ] Owner reviews repository name, docs, code, image publication target, and release candidate archive.
 - [ ] Create public `LukeVoidX/wallos-dial-theme` repository and push exact reviewed commit.
 - [ ] Set repository description, suggested topics, and upload `docs/assets/posters/social-preview.png` as the social preview.
-- [ ] Enable GitHub Pages from `main` `/docs` and verify `https://lukevoidx.github.io/wallos-dial-theme/` anonymously.
+- [ ] Deploy a separate public, read-only Wallos Dial demo container with synthetic volumes at `wallos-demo.jarvishub.me`; verify Caddy allowlist, HTTPS, Cloudflare origin restriction, and two-hour reset job anonymously.
+- [ ] Enable GitHub Pages from `main` `/docs` and verify that `https://lukevoidx.github.io/wallos-dial-theme/` forwards to the live real demo.
 - [ ] Verify source CI. Push `v0.1.0` only after owner approval; verify amd64/arm64 GHCR image build and an arm64 runtime smoke.
 - [ ] Make the first GHCR package public (the registry initially defaults to private), then verify an anonymous pull and a clean Compose installation.
 - [ ] Publish GitHub Release with the reviewed source archive and exact image digest.

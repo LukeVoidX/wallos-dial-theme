@@ -6,4 +6,5 @@
 *.sqlite*
 *.log
 docs
+demo
 config

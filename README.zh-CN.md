@@ -8,7 +8,7 @@ Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界
 
 **Dial 版本：**`0.1.0` · **已验证的 Wallos 版本：**仅 `5.8.1`。这是构建在固定 Wallos 镜像上的源码叠加层，并非 Wallos 内置的可切换主题；它不隶属于 Wallos 官方。
 
-**先体验，再安装：**[打开免费的中英文交互 Demo](https://lukevoidx.github.io/wallos-dial-theme/)。内含 30 条虚构订阅，可以操作总览、分类订阅、日历、统计、搜索、编辑和语言切换。修改仅保存在当前浏览器。这个 GitHub Pages 页面是静态预览，不连接 Wallos 服务器，也不处理付款。[了解 Demo 的边界与重置方法](docs/DEMO.md)。
+**先体验，再安装：**[打开真实运行的中英文 Demo](https://lukevoidx.github.io/wallos-dial-theme/)（计划中的公开网址）。GitHub Pages 入口会转到独立的 Wallos Dial 容器；它运行实际 PHP 应用，并放入 30 条虚构订阅。可浏览总览、分类订阅、日历、统计、详情与语言切换。公开环境为只读，账户与编辑功能需自行安装镜像体验。[了解真实 Demo 的部署与边界](docs/DEMO.md)。
 
 ![使用虚构示例数据的 Dial 首页实拍](docs/assets/screenshots/after-dashboard.png)
 

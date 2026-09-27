@@ -1,0 +1,38 @@
+# Append to the existing Netcup Caddyfile only after reviewing its site blocks.
+# This host is a separate, public, read-only demonstration of synthetic data.
+wallos-demo.jarvishub.me {
+    encode zstd gzip
+    import security_headers_proxy
+    import access_log
+    header X-Robots-Tag "noindex, nofollow"
+
+    @not_cloudflare {
+        not remote_ip 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22 2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32 2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32
+    }
+    @language {
+        path /endpoints/user/set_dial_language.php
+        method POST
+    }
+    @read_endpoint {
+        path /endpoints/subscription/get.php /endpoints/subscription/getcalendar.php /endpoints/subscriptions/get.php
+        method GET
+    }
+    @read_page {
+        path / /index.php /login.php /subscriptions.php /calendar.php /stats.php /about.php /manifest.php /service-worker.js /health.php /favicon.ico /styles/* /scripts/* /images/* /webfonts/*
+        method GET HEAD
+    }
+
+    route {
+        respond @not_cloudflare 403
+        handle @language {
+            reverse_proxy 127.0.0.1:8296
+        }
+        handle @read_endpoint {
+            reverse_proxy 127.0.0.1:8296
+        }
+        handle @read_page {
+            reverse_proxy 127.0.0.1:8296
+        }
+        respond 404
+    }
+}

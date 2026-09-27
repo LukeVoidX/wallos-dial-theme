@@ -26,7 +26,9 @@ else
   echo 'PHP missing: use the Docker image for PHP syntax verification' >&2
 fi
 
-if find . -type f \( -name '*.db' -o -name '*.sqlite' -o -name '.env' -o -name '*.key' -o -name '*.pem' \) -print | grep -q .; then
+# data/ is explicitly Git/Docker-ignored and may hold a running local demo.
+# Scan the source package, not that disposable runtime volume.
+if find . \( -path './.git' -o -path './data' \) -prune -o -type f \( -name '*.db' -o -name '*.sqlite' -o -name '.env' -o -name '*.key' -o -name '*.pem' \) -print | grep -q .; then
   echo 'Local database, environment, or key file found in package' >&2
   exit 1
 fi
