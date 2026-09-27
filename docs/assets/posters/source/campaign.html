@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1920, initial-scale=1">
+  <title>Wallos Dial campaign</title>
+  <script>
+    const q = new URLSearchParams(location.search);
+    document.documentElement.dataset.kind = q.get('kind') || 'hero';
+    document.documentElement.dataset.lang = q.get('lang') === 'zh' ? 'zh' : 'en';
+  </script>
+  <style>
+    :root { --paper:#f5f2e9; --ink:#191817; --muted:#69655e; --signal:#d20b20; }
+    * { box-sizing:border-box; }
+    html,body { width:1920px; height:1080px; margin:0; overflow:hidden; }
+    body { font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif; color:var(--ink); background:var(--paper); }
+    .poster { display:none; position:relative; width:1920px; height:1080px; overflow:hidden; }
+    html[data-kind="hero"] #hero,html[data-kind="time"] #time,html[data-kind="ledger"] #ledger,
+    html[data-kind="calendar"] #calendar,html[data-kind="numbers"] #numbers,html[data-kind="demo"] #demo { display:block; }
+    html[data-lang="en"] .zh,html[data-lang="zh"] .en { display:none !important; }
+    .kicker { font-size:21px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+    .number { color:var(--signal); font-weight:750; }
+    .hairline { height:1px; background:rgba(25,24,23,.35); }
+    .screen { overflow:hidden; background:var(--paper); border:1px solid rgba(25,24,23,.42); box-shadow:0 22px 48px rgba(25,24,23,.18); }
+    .screen img { display:block; width:100%; height:100%; object-fit:cover; object-position:top center; }
+    .screen .en-img,.screen .zh-img { display:none; }
+    html[data-lang="en"] .screen .en-img,html[data-lang="zh"] .screen .zh-img { display:block; }
+    .footer { position:absolute; left:100px; right:100px; bottom:48px; display:flex; align-items:center; justify-content:space-between; font-size:17px; font-weight:700; letter-spacing:.15em; }
+    .footer span:last-child { color:var(--muted); }
+    .hero { background:var(--paper) url('instrument-dial-backdrop.png') center/cover no-repeat; }
+    .hero::before { content:""; position:absolute; inset:0; background:linear-gradient(90deg,rgba(245,242,233,.45),transparent 72%); }
+    .hero .kicker { position:absolute; left:100px; top:72px; }
+    .hero h1 { position:absolute; left:92px; top:142px; margin:0; font-size:93px; line-height:.98; letter-spacing:-.065em; font-weight:750; }
+    .hero .dek { position:absolute; left:100px; top:340px; margin:0; max-width:900px; font-size:25px; line-height:1.32; color:#383531; }
+    .hero .screen { position:absolute; left:100px; top:453px; width:1090px; height:518px; }
+    .hero .screen img { height:auto; object-fit:initial; }
+    .hero .rail { position:absolute; left:1235px; top:555px; width:330px; padding-left:23px; border-left:4px solid var(--signal); font-size:22px; font-weight:700; line-height:1.35; }
+    .hero .footer { color:var(--ink); }
+    .time { background:var(--ink); color:var(--paper); }
+    .time .kicker { position:absolute; left:100px; top:78px; color:#bdb8ae; }
+    .time h2 { position:absolute; left:90px; top:155px; margin:0; font-size:112px; line-height:.93; letter-spacing:-.065em; font-weight:750; }
+    .time .sub { position:absolute; right:105px; top:205px; width:410px; font-size:27px; line-height:1.3; color:#d4cfc5; }
+    .time .strip { position:absolute; left:95px; top:450px; width:1730px; height:165px; border:1px solid #b6afa4; overflow:hidden; background:var(--paper); }
+    .time .strip img { display:none; position:absolute; left:0; top:-390px; width:1730px; height:auto; }
+    html[data-lang="en"] .time .strip img.en-img,html[data-lang="zh"] .time .strip img.zh-img { display:block; }
+    .time .trio { position:absolute; left:100px; right:100px; top:690px; display:grid; grid-template-columns:repeat(3,1fr); gap:38px; }
+    .time .trio article { padding-top:18px; border-top:1px solid #77736c; }
+    .time .trio b { color:#f04655; font-size:18px; letter-spacing:.15em; }
+    .time .trio strong { display:block; margin-top:12px; font-size:29px; font-weight:600; letter-spacing:-.02em; }
+    .time .footer { color:#bdb8ae; }
+    .time .footer span:last-child { color:#bdb8ae; }
+    .ledger { background:var(--paper); }
+    .ledger .kicker { position:absolute; left:100px; top:82px; }
+    .ledger h2 { position:absolute; left:95px; top:160px; width:550px; margin:0; font-size:85px; line-height:.98; letter-spacing:-.065em; }
+    .ledger .intro { position:absolute; left:100px; top:370px; width:500px; font-size:25px; line-height:1.3; color:var(--muted); }
+    .ledger .groups { position:absolute; left:100px; top:555px; width:500px; }
+    .ledger .groups div { display:flex; justify-content:space-between; align-items:baseline; border-top:1px solid #aaa49a; padding:13px 0 11px; }
+    .ledger .groups b { color:var(--signal); font-size:18px; letter-spacing:.1em; }
+    .ledger .groups strong { font-size:30px; font-weight:600; }
+    .ledger .groups small { color:var(--muted); font-size:19px; }
+    .ledger .screen { position:absolute; left:690px; top:135px; width:1130px; height:720px; }
+    .ledger .screen img { position:absolute; left:-260px; top:-100px; width:1600px; height:1000px; max-width:none; object-fit:initial; }
+    .calendar { background:#e9e5da; }
+    .calendar .kicker { position:absolute; left:100px; top:75px; }
+    .calendar h2 { position:absolute; left:95px; top:143px; margin:0; font-size:92px; line-height:1; letter-spacing:-.06em; }
+    .calendar .screen { position:absolute; left:100px; top:285px; width:1370px; height:686px; }
+    .calendar .aside { position:absolute; left:1530px; top:320px; width:295px; }
+    .calendar .aside .big { font-size:102px; line-height:.9; font-weight:650; letter-spacing:-.08em; }
+    .calendar .aside .redline { width:65px; height:6px; background:var(--signal); margin:35px 0; }
+    .calendar .aside p { font-size:26px; line-height:1.28; margin:0; }
+    .calendar .aside small { display:block; margin-top:28px; color:var(--muted); font-size:17px; line-height:1.4; }
+    .numbers { background:#292823; color:var(--paper); }
+    .numbers .kicker { position:absolute; left:100px; top:80px; color:#c9c5ba; }
+    .numbers h2 { position:absolute; left:95px; top:150px; margin:0; font-size:91px; line-height:.98; letter-spacing:-.065em; }
+    .numbers .screen { position:absolute; left:100px; top:340px; width:1270px; height:625px; border-color:#b9b3a7; }
+    .numbers .aside { position:absolute; left:1440px; top:385px; width:340px; }
+    .numbers .aside b { display:block; font-size:84px; font-weight:600; line-height:1; letter-spacing:-.06em; }
+    .numbers .aside span { display:block; margin-top:13px; font-size:21px; color:#d9d3c8; }
+    .numbers .aside p { margin-top:42px; padding-top:23px; border-top:2px solid var(--signal); color:#d9d3c8; font-size:23px; line-height:1.35; }
+    .numbers .footer { color:#bdb8ae; }
+    .numbers .footer span:last-child { color:#bdb8ae; }
+    .demo { background:var(--paper); }
+    .demo .kicker { position:absolute; left:100px; top:75px; }
+    .demo h2 { position:absolute; left:95px; top:145px; margin:0; font-size:112px; letter-spacing:-.065em; line-height:.96; }
+    .demo .url { position:absolute; left:100px; top:345px; padding-bottom:15px; border-bottom:5px solid var(--signal); font-size:31px; font-weight:600; letter-spacing:-.025em; }
+    .demo .screens { position:absolute; left:100px; right:100px; top:435px; display:grid; grid-template-columns:1fr 1fr; gap:34px; }
+    .demo .screens .screen { width:100%; height:470px; }
+    .demo .proof { position:absolute; left:100px; top:930px; display:flex; gap:42px; font-size:18px; font-weight:700; letter-spacing:.09em; }
+    .demo .proof i { display:inline-block; width:9px; height:9px; margin-right:12px; background:var(--signal); }
+  </style>
+</head>
+<body>
+  <section class="poster hero" id="hero">
+    <div class="kicker">WALLOS DIAL / OPEN SOURCE DESKTOP THEME</div>
+    <h1><span class="en">See what renews.<br>Know what stays.</span><span class="zh">每一次续订，<br>都心中有数。</span></h1>
+    <p class="dek"><span class="en">A warmer, more precise way to read your recurring costs.</span><span class="zh">用更清晰的层级，读懂每一笔持续支出。</span></p>
+    <div class="screen"><img class="en-img" src="../../screenshots/after-dashboard.png" alt="Actual English overview"><img class="zh-img" src="../../screenshots/real-demo-overview.png" alt="Actual Simplified Chinese overview"></div>
+    <div class="rail"><span class="en">Cost.<br>Time.<br>What comes next.</span><span class="zh">费用。<br>时间。<br>下一笔付款。</span></div>
+    <div class="footer"><span>ACTUAL INTERFACE · SYNTHETIC DATA</span><span>01 / 06</span></div>
+  </section>
+  <section class="poster time" id="time">
+    <div class="kicker">WALLOS DIAL / CALIBRATED TIME</div>
+    <h2><span class="en">Time, made<br>visible.</span><span class="zh">让时间，<br>看得见。</span></h2>
+    <div class="sub"><span class="en">A date dial turns scattered renewal dates into one readable rhythm.</span><span class="zh">日期刻度把分散的续订时间，排成可读的节奏。</span></div>
+    <div class="strip"><img class="en-img" src="../../screenshots/after-dashboard.png" alt="Real Wallos Dial timeline"><img class="zh-img" src="../../screenshots/real-demo-overview.png" alt="Real Wallos Dial timeline"></div>
+    <div class="trio">
+      <article><b>01 / TIMELINE</b><strong><span class="en">Dates in context</span><span class="zh">日期放回时间里</span></strong></article>
+      <article><b>02 / SIGNAL</b><strong><span class="en">One precise red marker</span><span class="zh">一枚清晰的红色标记</span></strong></article>
+      <article><b>03 / COUNTDOWN</b><strong><span class="en">Days until payment</span><span class="zh">下一笔付款倒计时</span></strong></article>
+    </div>
+    <div class="footer"><span>REAL DASHBOARD CROP · NO REDRAWN UI</span><span>02 / 06</span></div>
+  </section>
+  <section class="poster ledger" id="ledger">
+    <div class="kicker">WALLOS DIAL / SUBSCRIPTIONS</div>
+    <h2><span class="en">A ledger<br>with order.</span><span class="zh">订阅再多，<br>也有条理。</span></h2>
+    <p class="intro"><span class="en">Categories make a long subscription list easier to scan and manage.</span><span class="zh">用真正有用的分类，快速找到要管理的服务。</span></p>
+    <div class="groups"><div><b>01</b><strong>AI</strong><small>08</small></div><div><b>02</b><strong>Infra</strong><small>08</small></div><div><b>03</b><strong>Domains</strong><small>06</small></div><div><b>04</b><strong>Media</strong><small>08</small></div></div>
+    <div class="screen"><img class="en-img" src="../../screenshots/campaign-grid-en.png" alt="Actual English grouped subscriptions"><img class="zh-img" src="../../screenshots/campaign-grid-zh.png" alt="Actual Chinese grouped subscriptions"></div>
+    <div class="footer"><span>30 FICTIONAL SUBSCRIPTIONS · ACTUAL DEMO CAPTURE</span><span>03 / 06</span></div>
+  </section>
+  <section class="poster calendar" id="calendar">
+    <div class="kicker">WALLOS DIAL / CALENDAR</div>
+    <h2><span class="en">The month, at a glance.</span><span class="zh">这个月，一眼看清。</span></h2>
+    <div class="screen"><img class="en-img" src="../../screenshots/campaign-calendar-oct-en.png" alt="Real October calendar in English"><img class="zh-img" src="../../screenshots/campaign-calendar-oct-zh.png" alt="Real October calendar in Chinese"></div>
+    <div class="aside"><div class="big">10<span class="number">.</span>26</div><div class="redline"></div><p><span class="en">Every renewal has a date. The calendar gives it a place.</span><span class="zh">每次续订都有日期。日历给它明确的位置。</span></p><small>ACTUAL OCTOBER 2026 DEMO CAPTURE<br>FICTIONAL SERVICES</small></div>
+    <div class="footer"><span>CALENDAR / REAL WALLOS DIAL UI</span><span>04 / 06</span></div>
+  </section>
+  <section class="poster numbers" id="numbers">
+    <div class="kicker">WALLOS DIAL / STATISTICS</div>
+    <h2><span class="en">Numbers, without noise.</span><span class="zh">让数字说话，<br>减少干扰。</span></h2>
+    <div class="screen"><img class="en-img" src="../../screenshots/campaign-stats-en.png" alt="Actual statistics in English"><img class="zh-img" src="../../screenshots/campaign-stats-zh.png" alt="Actual statistics in Chinese"></div>
+    <div class="aside"><b>30</b><span><span class="en">ACTIVE SUBSCRIPTIONS</span><span class="zh">在用订阅</span></span><p><span class="en">Totals lead. Supporting metrics stay in view when you need them.</span><span class="zh">总额先行，细节在需要时仍然清楚可见。</span></p></div>
+    <div class="footer"><span>ACTUAL STATISTICS · SYNTHETIC DATA</span><span>05 / 06</span></div>
+  </section>
+  <section class="poster demo" id="demo">
+    <div class="kicker">WALLOS DIAL / LIVE DEMO</div>
+    <h2><span class="en">Try the real thing.</span><span class="zh">直接体验真实界面。</span></h2>
+    <div class="url">wallos-demo.mostai.org ↗</div>
+    <div class="screens"><div class="screen"><img class="en-img" src="../../screenshots/campaign-demo-overview-en.png" alt="Overview"><img class="zh-img" src="../../screenshots/campaign-demo-overview-zh.png" alt="Overview"></div><div class="screen"><img class="en-img" src="../../screenshots/campaign-grid-en.png" alt="Subscriptions"><img class="zh-img" src="../../screenshots/campaign-grid-zh.png" alt="Subscriptions"></div></div>
+    <div class="proof"><span><i></i><span class="en">ACTUAL WALLOS DIAL APP</span><span class="zh">真实运行的 WALLOS DIAL</span></span><span><i></i><span class="en">30 FICTIONAL SUBSCRIPTIONS</span><span class="zh">30 条虚构订阅</span></span><span><i></i><span class="en">PUBLIC DEMO IS READ ONLY</span><span class="zh">公开 DEMO 只读</span></span></div>
+    <div class="footer"><span>WALLOS 5.8.1 / DIAL 0.1.0</span><span>06 / 06</span></div>
+  </section>
+</body>
+</html>

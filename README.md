@@ -1,8 +1,8 @@
-![Wallos Dial — an open-source desktop interface for Wallos](docs/assets/posters/hero.png)
+![Wallos Dial — see what renews and know what stays](docs/assets/posters/campaign-hero-en.png)
 
 # Wallos Dial
 
-[Try the interactive demo](https://lukevoidx.github.io/wallos-dial-theme/) · [English](README.md) · [简体中文](README.zh-CN.md) · [Before / after](docs/SHOWCASE.md) · [Install and upgrade](docs/UPGRADING.md)
+[Try the interactive demo](https://lukevoidx.github.io/wallos-dial-theme/) · [English](README.md) · [简体中文](README.zh-CN.md) · [Poster gallery](docs/CAMPAIGN.md) · [Before / after](docs/SHOWCASE.md) · [Install and upgrade](docs/UPGRADING.md)
 
 A precise, warm, desktop-focused interface for [Wallos](https://github.com/ellite/Wallos). The theme adds an instrument-style dashboard timeline, a restrained type and color system, grouped subscription cards, clearer statistics, focused interaction states, and a persistent language switch in the header. Wallos's subscription, calendar, settings, search, and notification features remain available.
 
@@ -24,11 +24,11 @@ Dial is a source overlay built into a Docker image. It is not a native Wallos th
 
 The design uses warm off-white, dark numerals, fine lines, and a small red signal. It is tuned for desktop use. The original Wallos mobile layout remains available, but this release does not promise a separate mobile redesign.
 
-![Wallos Dial grouped subscription design with an actual interface capture](docs/assets/posters/showcase-subscriptions.png)
+![Wallos Dial grouped subscription design with an actual interface capture](docs/assets/posters/campaign-ledger-en.png)
 
-![Wallos Dial calendar with an actual interface capture](docs/assets/posters/showcase-calendar.png)
+![Wallos Dial time dial with an actual dashboard crop](docs/assets/posters/campaign-time-en.png)
 
-![Wallos Dial statistics with an actual interface capture](docs/assets/posters/showcase-statistics.png)
+[See all six product stories in English and Simplified Chinese](docs/CAMPAIGN.md), including calendar, statistics, and the real demo.
 
 ![Wallos Dial design principles: measured hierarchy, calibrated time, useful grouping, restrained red](docs/assets/posters/design-principles.png)
 

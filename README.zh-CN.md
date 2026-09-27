@@ -1,8 +1,8 @@
 # Wallos Dial
 
-![Wallos Dial 主视觉](docs/assets/posters/hero.png)
+![Wallos Dial 主视觉：每一次续订，都心中有数](docs/assets/posters/campaign-hero-zh.png)
 
-[立即体验在线 Demo](https://lukevoidx.github.io/wallos-dial-theme/) · [English](README.md) · [改版前后与原始截图](docs/SHOWCASE.md) · [安装、升级和回退](docs/UPGRADING.md)
+[立即体验在线 Demo](https://lukevoidx.github.io/wallos-dial-theme/) · [English](README.md) · [中英双语海报](docs/CAMPAIGN.md) · [改版前后与原始截图](docs/SHOWCASE.md) · [安装、升级和回退](docs/UPGRADING.md)
 
 Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界面改版。暖白底、黑色数字、细线和少量红色贯穿总览、订阅、日历与统计页面。首页集中显示月度费用、日期刻度、近期付款和倒计时；订阅页增加分类区块。原有搜索、筛选、排序、新增与编辑、通知和设置功能继续由 Wallos 处理。
 
@@ -14,11 +14,11 @@ Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界
 
 仓库中的界面截图来自隔离示例账号，名称、金额和标识均为虚构。ImageGen 只用于海报背景，内嵌界面保持真实浏览器截图。[查看完整对比与原始截图](docs/SHOWCASE.md)。
 
-![Wallos Dial 分类订阅展示](docs/assets/posters/showcase-subscriptions.png)
+![Wallos Dial 分类订阅展示](docs/assets/posters/campaign-ledger-zh.png)
 
-![Wallos Dial 日历展示，使用真实界面截图](docs/assets/posters/showcase-calendar.png)
+![Wallos Dial 日期刻度与倒计时，使用真实界面截图](docs/assets/posters/campaign-time-zh.png)
 
-![Wallos Dial 统计展示，使用真实界面截图](docs/assets/posters/showcase-statistics.png)
+[查看完整中英双语海报系列](docs/CAMPAIGN.md)，包括日历、统计与真实在线 Demo。
 
 ![设计思路：清晰层级、时间刻度、分类与克制的红色](docs/assets/posters/design-principles.png)
 
