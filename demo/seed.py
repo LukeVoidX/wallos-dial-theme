@@ -81,6 +81,14 @@ def seed(db_path: Path, logo_dir: Path, base_date: date) -> None:
             ).lastrowid
         db.execute("UPDATE admin SET registrations_open=0, max_users=1, login_disabled=1, update_notification=0 WHERE id=1")
         db.execute("UPDATE settings SET monthly_price=1, upcoming_payments_limit=4, convert_currency=0 WHERE user_id=1")
+        db.execute(
+            'INSERT INTO custom_css_style (css, user_id) VALUES (?, 1)',
+            ('.wallos-dial .demo-banner{max-width:1480px;margin:0 auto 20px;'
+             'padding:11px 16px;border:1px solid #c9c5b9;border-left:3px solid #d90b1c;'
+             'border-radius:2px;background:transparent;color:#65615a;text-align:left;'
+             'font-size:13px;line-height:1.35}'
+             '.wallos-dial .demo-banner b{color:#191817}',),
+        )
         payment_id = db.execute(
             'INSERT INTO payment_methods (name, icon, enabled, "order", user_id) VALUES (?, ?, 1, 0, 1)',
             ('Demo Card', 'demo-payment.svg'),
