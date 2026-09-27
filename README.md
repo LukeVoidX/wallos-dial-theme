@@ -2,11 +2,13 @@
 
 # Wallos Dial
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [Screenshots and before/after](docs/SHOWCASE.md) · [Install and upgrade](docs/UPGRADING.md)
+[Try the interactive demo](https://lukevoidx.github.io/wallos-dial-theme/) · [English](README.md) · [简体中文](README.zh-CN.md) · [Before / after](docs/SHOWCASE.md) · [Install and upgrade](docs/UPGRADING.md)
 
 A precise, warm, desktop-focused interface for [Wallos](https://github.com/ellite/Wallos). The theme adds an instrument-style dashboard timeline, a restrained type and color system, grouped subscription cards, clearer statistics, focused interaction states, and a persistent language switch in the header. Wallos's subscription, calendar, settings, search, and notification features remain available.
 
 **Dial version:** `0.1.0` · **Tested Wallos version:** `5.8.1` only.
+
+**Try it before installing:** [Open the free, bilingual browser demo](https://lukevoidx.github.io/wallos-dial-theme/). It contains 30 fictional subscriptions and lets you explore the overview, grouped subscriptions, calendar, statistics, search, editing, and language switch. Changes stay in that browser. This GitHub Pages preview is static; it does not connect to a Wallos server or process payments. [How the demo works](docs/DEMO.md).
 
 ![Actual Wallos Dial dashboard with synthetic demo data](docs/assets/screenshots/after-dashboard.png)
 
@@ -97,6 +99,7 @@ Use a versioned Dial image; avoid `latest`. A weekly workflow detects new upstre
 - `VERSION` and `WALLOS_VERSION`: theme release and tested upstream version.
 - `docs/UPGRADING.md`: compatibility and rollback instructions.
 - `docs/SHOWCASE.md`: direct, synthetic-data screenshots and before/after posters.
+- `docs/index.html`: static, bilingual GitHub Pages demo with fictional records.
 - `docs/TROUBLESHOOTING.md`: startup, port, logo, cache, and compatibility checks.
 - `README.zh-CN.md`: Simplified Chinese installation guide.
 - `LICENSE.md`: GPLv3, matching the upstream project's license.

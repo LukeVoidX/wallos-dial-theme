@@ -2,11 +2,13 @@
 
 ![Wallos Dial 主视觉](docs/assets/posters/hero.png)
 
-[English](README.md) · [改版前后与原始截图](docs/SHOWCASE.md) · [升级和回退](docs/UPGRADING.md)
+[立即体验在线 Demo](https://lukevoidx.github.io/wallos-dial-theme/) · [English](README.md) · [改版前后与原始截图](docs/SHOWCASE.md) · [安装、升级和回退](docs/UPGRADING.md)
 
 Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界面改版。暖白底、黑色数字、细线和少量红色贯穿总览、订阅、日历与统计页面。首页集中显示月度费用、日期刻度、近期付款和倒计时；订阅页增加分类区块。原有搜索、筛选、排序、新增与编辑、通知和设置功能继续由 Wallos 处理。
 
 **Dial 版本：**`0.1.0` · **已验证的 Wallos 版本：**仅 `5.8.1`。这是构建在固定 Wallos 镜像上的源码叠加层，并非 Wallos 内置的可切换主题；它不隶属于 Wallos 官方。
+
+**先体验，再安装：**[打开免费的中英文交互 Demo](https://lukevoidx.github.io/wallos-dial-theme/)。内含 30 条虚构订阅，可以操作总览、分类订阅、日历、统计、搜索、编辑和语言切换。修改仅保存在当前浏览器。这个 GitHub Pages 页面是静态预览，不连接 Wallos 服务器，也不处理付款。[了解 Demo 的边界与重置方法](docs/DEMO.md)。
 
 ![使用虚构示例数据的 Dial 首页实拍](docs/assets/screenshots/after-dashboard.png)
 
