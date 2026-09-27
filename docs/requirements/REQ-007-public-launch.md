@@ -1,6 +1,6 @@
 # REQ-007: Public launch materials and release
 
-Status: preparing local review; external publication pending owner confirmation
+Status: local visuals and dual-architecture preflight verified; external publication pending owner confirmation
 Risk: L3 public source and container publication
 Delivery: public GitHub repository, versioned GHCR image, GitHub Release after review
 

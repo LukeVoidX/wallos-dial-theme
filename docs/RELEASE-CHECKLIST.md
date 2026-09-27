@@ -18,6 +18,8 @@
 - [x] A 1280×640 social preview under 1 MB is prepared for GitHub repository settings.
 - [x] English and Simplified Chinese install guides, before/after gallery, troubleshooting, contribution guide, release notes, and launch copy have valid local links.
 - [x] Isolated original Wallos and Dial demo containers used the same 16 fictitious subscriptions; both are healthy, the database integrity check returned `ok`, and browser sessions reported no page errors.
+- [x] Exact review source built and passed hash/PHP/runtime checks on an amd64 host; a fresh mounted database reached registration with SQLite integrity `ok`.
+- [x] The same theme source built natively on arm64, passed runtime health/assets smoke, and a fresh mounted database reached registration with SQLite integrity `ok`.
 - [x] Runtime smoke checked `/health.php`, Dial CSS, and interaction JavaScript.
 - [x] Pull-only Compose binds to `127.0.0.1`, persists DB/logos, and uses a versioned image tag.
 - [ ] Owner reviews repository name, docs, code, image publication target, and release candidate archive.
