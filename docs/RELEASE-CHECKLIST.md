@@ -25,13 +25,13 @@
 - [x] The same theme source built natively on arm64, passed runtime health/assets smoke, and a fresh mounted database reached registration with SQLite integrity `ok`.
 - [x] Runtime smoke checked `/health.php`, Dial CSS, and interaction JavaScript.
 - [x] Pull-only Compose binds to `127.0.0.1`, persists DB/logos, and uses a versioned image tag.
-- [ ] Owner reviews repository name, docs, code, image publication target, and release candidate archive.
-- [ ] Create public `LukeVoidX/wallos-dial-theme` repository and push exact reviewed commit.
-- [ ] Set repository description, suggested topics, and upload `docs/assets/posters/social-preview.png` as the social preview.
-- [ ] Deploy a separate public, read-only Wallos Dial demo container with synthetic volumes at `wallos-demo.mostai.org`; verify Caddy allowlist, HTTPS, Cloudflare origin restriction, and two-hour reset job anonymously.
-- [ ] Enable GitHub Pages from `main` `/docs` and verify that `https://lukevoidx.github.io/wallos-dial-theme/` forwards to the live real demo.
-- [ ] Verify source CI. Push `v0.1.0` only after owner approval; verify amd64/arm64 GHCR image build and an arm64 runtime smoke.
-- [ ] Make the first GHCR package public (the registry initially defaults to private), then verify an anonymous pull and a clean Compose installation.
-- [ ] Publish GitHub Release with the reviewed source archive and exact image digest.
+- [x] Owner reviews repository name, docs, code, image publication target, and release candidate archive.
+- [x] Create public `LukeVoidX/wallos-dial-theme` repository and push exact reviewed commit.
+- [x] Set repository description, suggested topics, and upload `docs/assets/posters/social-preview.png` as the social preview.
+- [x] Deploy a separate public, read-only Wallos Dial demo container with synthetic volumes at `wallos-demo.mostai.org`; verify Caddy allowlist, HTTPS, Cloudflare origin restriction, and two-hour reset job anonymously.
+- [x] Enable GitHub Pages from `main` `/docs` and verify that `https://lukevoidx.github.io/wallos-dial-theme/` forwards to the live real demo.
+- [x] Verify source CI. Push `v0.1.0` only after owner approval; verify amd64/arm64 GHCR image build and an arm64 runtime smoke.
+- [x] Make the first GHCR package public (the registry initially defaults to private), then verify an anonymous pull and a clean Compose installation.
+- [x] Publish GitHub Release with the reviewed source archive and exact image digest.
 
 The currently running private Wallos service is not changed by this package work. The project cannot claim compatibility with untested future Wallos releases or zero defects.
