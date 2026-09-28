@@ -4,7 +4,7 @@ An open-source, desktop-focused presentation for Wallos 5.8.1: warm off-white su
 
 ![Wallos Dial dashboard](https://raw.githubusercontent.com/LukeVoidX/wallos-dial-theme/v0.1.0/docs/assets/screenshots/after-dashboard.png)
 
-Try the [English / 简体中文 live demo](https://lukevoidx.github.io/wallos-dial-theme/) before installing. It runs the actual Wallos Dial application in an isolated, read-only environment with 30 fictional subscriptions.
+Read the [English product page](https://lukevoidx.github.io/wallos-dial-theme/) or [简体中文介绍](https://lukevoidx.github.io/wallos-dial-theme/zh-CN/), then try the [real live demo](https://wallos-demo.mostai.org/). The demo runs the actual Wallos Dial application in an isolated, read-only environment with 30 fictional subscriptions.
 
 ## Install
 

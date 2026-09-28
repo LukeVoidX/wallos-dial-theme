@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>Wallos Dial — 适用于 Wallos 5.8.1 的开源桌面主题</title>
+  <meta name="description" content="Wallos Dial 是独立开发的 Wallos 5.8.1 开源桌面主题。用日期刻度、付款倒计时、分类订阅、日历和统计看清持续支出。可先体验真实运行的只读 Demo。">
+  <link rel="canonical" href="https://lukevoidx.github.io/wallos-dial-theme/zh-CN/">
+  <link rel="alternate" hreflang="en" href="https://lukevoidx.github.io/wallos-dial-theme/">
+  <link rel="alternate" hreflang="zh-CN" href="https://lukevoidx.github.io/wallos-dial-theme/zh-CN/">
+  <link rel="alternate" hreflang="x-default" href="https://lukevoidx.github.io/wallos-dial-theme/">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../site.css">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Wallos Dial">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="Wallos Dial — 看清每一次续订">
+  <meta property="og:description" content="适用于 Wallos 5.8.1 的开源桌面主题。了解真实只读 Demo、兼容范围与 Docker 安装方式。">
+  <meta property="og:url" content="https://lukevoidx.github.io/wallos-dial-theme/zh-CN/">
+  <meta property="og:image" content="https://lukevoidx.github.io/wallos-dial-theme/assets/posters/campaign-hero-zh.png">
+  <meta property="og:image:alt" content="Wallos Dial 中文总览，显示月度费用、日期刻度和即将付款">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareSourceCode",
+        "@id": "https://lukevoidx.github.io/wallos-dial-theme/#software",
+        "name": "Wallos Dial",
+        "description": "独立开发、适用于 Wallos 5.8.1 的开源桌面主题叠加层，以固定版本的 Docker 镜像分发。",
+        "version": "0.1.0",
+        "codeRepository": "https://github.com/LukeVoidX/wallos-dial-theme",
+        "license": "https://github.com/LukeVoidX/wallos-dial-theme/blob/main/LICENSE.md",
+        "programmingLanguage": ["PHP", "JavaScript", "CSS"],
+        "url": "https://lukevoidx.github.io/wallos-dial-theme/",
+        "isBasedOn": "https://github.com/ellite/Wallos"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://lukevoidx.github.io/wallos-dial-theme/zh-CN/#webpage",
+        "url": "https://lukevoidx.github.io/wallos-dial-theme/zh-CN/",
+        "name": "Wallos Dial — 适用于 Wallos 5.8.1 的开源桌面主题",
+        "description": "Wallos Dial 中文介绍、兼容范围与在线 Demo。",
+        "inLanguage": "zh-CN",
+        "about": {"@id": "https://lukevoidx.github.io/wallos-dial-theme/#software"}
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">跳转到正文</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="./" aria-label="Wallos Dial 中文首页"><strong>WALLOS</strong><span>DIAL<span class="signal">.</span></span></a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="#design">设计特点</a>
+        <a href="#install">安装</a>
+        <a href="#questions">常见问题</a>
+        <a class="language" href="../" lang="en" hreflang="en">English ↗</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <section class="wrap hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow">开源 · 桌面优先 · Wallos 5.8.1</p>
+        <h1 id="hero-title">看清每一次续订<span class="signal">。</span></h1>
+        <p class="lead">Wallos Dial 是为 <a href="https://github.com/ellite/Wallos">Wallos</a> 独立开发的桌面主题。它把持续支出、下次付款日期和订阅服务整理进一套克制、精确的界面，同时保留熟悉的 Wallos 操作流程。</p>
+        <div class="actions">
+          <a class="button primary" href="https://wallos-demo.mostai.org/">体验真实 Demo ↗</a>
+          <a class="button secondary" href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/README.zh-CN.md#新安装">查看安装说明 ↗</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="../assets/screenshots/real-demo-overview.png" width="1600" height="1000" fetchpriority="high" alt="Wallos Dial 中文总览，使用虚构数据展示月度费用、日期刻度、即将付款和倒计时">
+      </div>
+    </section>
+
+    <div class="wrap facts" aria-label="项目资料">
+      <div class="fact"><b>0.1.0</b><span>Wallos Dial 版本</span></div>
+      <div class="fact"><b>5.8.1</b><span>已验证的 Wallos 版本</span></div>
+      <div class="fact"><b>GPLv3</b><span>独立开源叠加层</span></div>
+    </div>
+
+    <section class="wrap section" id="design" aria-labelledby="design-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">设计思路</p><h2 id="design-title">持续支出，有了清晰的节奏。</h2></div>
+        <p>暖白底、黑色数字、精确日期刻度和少量红色，贯穿整个桌面界面。</p>
+      </div>
+      <article class="feature">
+        <div class="feature-visual"><img src="../assets/posters/campaign-time-zh.png" width="1920" height="1080" loading="lazy" alt="使用真实总览截图展示 Wallos Dial 的日期刻度"></div>
+        <div class="feature-copy"><span class="index">01 / 时间</span><h3>知道下一笔何时到来。</h3><p>总览将月度费用、日期刻度、即将付款和按日计算的倒计时放在一起。红色标记让时间轴的重点明确可见。</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/SHOWCASE.md">查看改版前后对比 ↗</a></div>
+      </article>
+      <article class="feature reverse">
+        <div class="feature-visual"><img src="../assets/posters/campaign-ledger-zh.png" width="1920" height="1080" loading="lazy" alt="Wallos Dial 将虚构订阅分为 AI、Infra、Domains 和 Media"></div>
+        <div class="feature-copy"><span class="index">02 / 条理</span><h3>订阅再多，也能迅速找到。</h3><p>分类卡片让长列表更易浏览。自行安装后，仍可使用搜索、筛选、排序以及列表和网格视图。</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/CAMPAIGN.zh-CN.md">查看中文海报 ↗</a></div>
+      </article>
+      <article class="feature">
+        <div class="feature-visual"><img src="../assets/posters/campaign-numbers-zh.png" width="1920" height="1080" loading="lazy" alt="Wallos Dial 中文统计界面，展示虚构的月度费用与支出预测"></div>
+        <div class="feature-copy"><span class="index">03 / 视角</span><h3>数字清楚，细节也在。</h3><p>日历和统计沿用相同的字体层级与配色。总额先行；需要深入了解时，也能查看分类和其他指标。</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/CAMPAIGN.zh-CN.md">查看日历与统计海报 ↗</a></div>
+      </article>
+    </section>
+
+    <section class="band" aria-labelledby="demo-title">
+      <div class="wrap section">
+        <p class="eyebrow">真实应用 · 虚构记录</p>
+        <h2 id="demo-title">安装之前，先自己体验。</h2>
+        <p>在线 Demo 运行真正的 Wallos Dial PHP 应用，包含 30 条虚构订阅。公开环境只读；你可以浏览总览、分类订阅、日历、统计和语言切换。新增、编辑与账户管理需要自行安装。</p>
+        <div class="actions"><a class="button" href="https://wallos-demo.mostai.org/">打开在线 Demo ↗</a></div>
+      </div>
+    </section>
+
+    <section class="wrap section" aria-labelledby="utility-title">
+      <div class="section-heading"><div><p class="eyebrow">保留原有能力</p><h2 id="utility-title">熟悉的 Wallos，新的阅读体验。</h2></div></div>
+      <div class="utility-grid">
+        <article><h3>订阅管理</h3><p>新增、编辑与管理订阅继续由自行安装的 Wallos 应用处理。</p></article>
+        <article><h3>语言切换</h3><p>顶栏可选择简体中文、英文、繁体中文及 Wallos 的其他语言。用户填写的订阅名称不会自动翻译。</p></article>
+        <article><h3>版本兼容</h3><p>Dial 0.1.0 固定在 Wallos 5.8.1。上游更新后，需要经过检查的新版主题镜像。</p></article>
+      </div>
+    </section>
+
+    <section class="wrap section install" id="install" aria-labelledby="install-title">
+      <div><p class="eyebrow">自行部署</p><h2 id="install-title">安装固定版本的镜像。</h2><p>新实例可用 Docker Compose 启动。如果要使用现有 Wallos 数据库，请先备份，再阅读迁移与回退说明。</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/UPGRADING.md">安装、升级与回退说明 ↗</a></div>
+      <div><pre><code>git clone https://github.com/LukeVoidX/wallos-dial-theme.git
+cd wallos-dial-theme
+docker compose up -d</code></pre><ol><li>在 Docker 主机打开 <code>http://127.0.0.1:8282</code>，或通过 SSH 转发端口。</li><li>按 Wallos 原有流程完成首次注册。</li><li>核对总览、订阅、日历和统计页面。</li></ol></div>
+    </section>
+
+    <section class="wrap section faq" id="questions" aria-labelledby="questions-title">
+      <p class="eyebrow">常见问题</p><h2 id="questions-title">切换前需要知道的事。</h2>
+      <div class="faq-grid">
+        <article><h3>这是 Wallos 官方主题吗？</h3><p>不是。Wallos Dial 是独立开发的 GPLv3 源码叠加层，构建为 Docker 镜像；它不隶属于 Wallos 项目，也不是应用内置的主题选项。</p></article>
+        <article><h3>Wallos 更新后会自动兼容吗？</h3><p>不会。当前版本只验证 Wallos 5.8.1。新的上游版本需要检查兼容性、重新构建并发布经过测试的 Dial 镜像。</p></article>
+        <article><h3>在线 Demo 可以修改数据吗？</h3><p>不能。公开 Demo 只读，使用 30 条虚构订阅。账户与编辑功能需要自行安装镜像。</p></article>
+        <article><h3>切换语言会翻译订阅名称吗？</h3><p>界面标签会切换语言；用户填写的名称和备注会保留原文。</p></article>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap footer-inner"><span>Wallos Dial · 独立 GPLv3 项目 · 已验证 Wallos 5.8.1</span><nav aria-label="页脚导航"><a href="https://github.com/LukeVoidX/wallos-dial-theme">GitHub</a><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/CAMPAIGN.zh-CN.md">主题海报</a><a href="https://wallos-demo.mostai.org/">Demo</a><a href="../sitemap.xml">站点地图</a></nav></div>
+  </footer>
+</body>
+</html>

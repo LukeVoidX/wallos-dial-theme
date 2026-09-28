@@ -4,9 +4,9 @@ This directory prepares the **actual Wallos Dial 0.1.0 image** for an isolated p
 
 ## Topology
 
-`https://lukevoidx.github.io/wallos-dial-theme/` (GitHub Pages entry) → `https://wallos-demo.mostai.org/` (Caddy) → `127.0.0.1:8296` (separate Wallos Dial container) → separate synthetic SQLite and SVG logo volumes.
+`https://lukevoidx.github.io/wallos-dial-theme/` and `/zh-CN/` (static GitHub Pages product information) link to `https://wallos-demo.mostai.org/` (Caddy) → `127.0.0.1:8296` (separate Wallos Dial container) → separate synthetic SQLite and SVG logo volumes.
 
-The Pages URL cannot execute PHP; it forwards to the server. The public Caddy site allows GET/HEAD for the visible pages and assets, selected read-only subscription detail endpoints, and POST only for the Dial language endpoint. Demo Mode makes the language endpoint update only the visitor's Cookie. All other writes and administrative paths return 404. The public account is shared and uses synthetic data only.
+GitHub Pages cannot execute PHP; its bilingual pages explain the theme and offer a direct link to the demo. The public Caddy site allows GET/HEAD for the visible pages and assets, selected read-only subscription detail endpoints, and POST only for the Dial language endpoint. Demo Mode makes the language endpoint update only the visitor's Cookie. All other writes and administrative paths return 404. The public account is shared and uses synthetic data only.
 
 ## Prepare on a server after approval
 
@@ -25,7 +25,7 @@ The Pages URL cannot execute PHP; it forwards to the server. The public Caddy si
    Then run `docker compose --env-file .env -f demo/compose.yaml config`, check the mounts, and start the dedicated container. Its HTTP port is bound to loopback only.
 5. Append `demo/Caddyfile.site.example` to the reviewed server Caddyfile, validate it, then reload Caddy. The snippet assumes the existing `security_headers_proxy` and `access_log` imports and a Cloudflare-proxied, one-level subdomain. Confirm the origin firewall and HTTPS behavior before opening it publicly.
 6. Schedule `demo/reset.sh /srv/wallos-dial-public-demo` every two hours using the host's scheduler. The script verifies the demo-only marker and the container's exact mounts, seeds a fresh database, stops only the dedicated demo container, swaps the SQLite file, restarts, and checks health. Do not advertise timed resets until this job is active and verified.
-7. Test anonymously: dashboard, all 30 subscriptions and marks, details, calendar, statistics, English/Simplified Chinese, and `/health.php`; test that a mutation endpoint, `/admin.php`, and database paths are blocked through the public hostname. Verify a reset returns the synthetic row count to 30. Only then enable GitHub Pages from `main` `/docs` and verify its redirect.
+7. Test anonymously: dashboard, all 30 subscriptions and marks, details, calendar, statistics, English/Simplified Chinese, and `/health.php`; test that a mutation endpoint, `/admin.php`, and database paths are blocked through the public hostname. Verify a reset returns the synthetic row count to 30. Publish the static English and Chinese GitHub Pages product pages only after the direct demo URL works.
 
 ## Local preview
 

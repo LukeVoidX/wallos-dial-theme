@@ -2,13 +2,13 @@
 
 # Wallos Dial
 
-[Try the interactive demo](https://lukevoidx.github.io/wallos-dial-theme/) · [English](README.md) · [简体中文](README.zh-CN.md) · [Poster gallery](docs/CAMPAIGN.md) · [Before / after](docs/SHOWCASE.md) · [Install and upgrade](docs/UPGRADING.md)
+[Product site](https://lukevoidx.github.io/wallos-dial-theme/) · [Try the interactive demo](https://wallos-demo.mostai.org/) · [English](README.md) · [简体中文](README.zh-CN.md) · [Poster gallery](docs/CAMPAIGN.md) · [Before / after](docs/SHOWCASE.md) · [Install and upgrade](docs/UPGRADING.md)
 
 A precise, warm, desktop-focused interface for [Wallos](https://github.com/ellite/Wallos). The theme adds an instrument-style dashboard timeline, a restrained type and color system, grouped subscription cards, clearer statistics, focused interaction states, and a persistent language switch in the header. Wallos's subscription, calendar, settings, search, and notification features remain available.
 
 **Dial version:** `0.1.0` · **Tested Wallos version:** `5.8.1` only.
 
-**Try it before installing:** [Open the live bilingual demo](https://lukevoidx.github.io/wallos-dial-theme/). The GitHub Pages link forwards to an isolated Wallos Dial container running the actual PHP application with 30 fictional subscriptions. Browse the overview, grouped subscriptions, calendar, statistics, details, and language switch. The public environment is read-only; install the image to use account and editing functions. [How the live demo works](docs/DEMO.md).
+**Try it before installing:** [Open the live bilingual demo](https://wallos-demo.mostai.org/). It runs the actual PHP application in an isolated container with 30 fictional subscriptions. Browse the overview, grouped subscriptions, calendar, statistics, details, and language switch. The public environment is read-only; install the image to use account and editing functions. The [English](https://lukevoidx.github.io/wallos-dial-theme/) and [Chinese](https://lukevoidx.github.io/wallos-dial-theme/zh-CN/) GitHub Pages sites explain the theme before you open the demo. [How the live demo works](docs/DEMO.md).
 
 ![Wallos Dial dashboard showcase with an actual interface capture](docs/assets/posters/showcase-overview.png)
 
@@ -107,7 +107,8 @@ Use a versioned Dial image; avoid `latest`. A weekly workflow detects new upstre
 - `VERSION` and `WALLOS_VERSION`: theme release and tested upstream version.
 - `docs/UPGRADING.md`: compatibility and rollback instructions.
 - `docs/SHOWCASE.md`: direct, synthetic-data screenshots and before/after posters.
-- `docs/index.html`: GitHub Pages entry point forwarding to the isolated live demo.
+- `docs/index.html` and `docs/zh-CN/index.html`: bilingual GitHub Pages product pages linking to the isolated live demo.
+- `docs/sitemap.xml` and `docs/SEARCH.md`: language URL discovery and search visibility boundaries.
 - `demo/seed.py`: synthetic data and SVG logo generator for a fresh demo database.
 - `docs/TROUBLESHOOTING.md`: startup, port, logo, cache, and compatibility checks.
 - `README.zh-CN.md`: Simplified Chinese installation guide.

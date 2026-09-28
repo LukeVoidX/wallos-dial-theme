@@ -4,7 +4,7 @@
 
 `Wallos Dial｜Wallos 5.8.1 桌面主题 · A warm desktop theme with a live bilingual demo, payment countdown and grouped subscriptions.`
 
-Live demo entry: `https://lukevoidx.github.io/wallos-dial-theme/` → `https://wallos-demo.mostai.org/`.
+Product pages: `https://lukevoidx.github.io/wallos-dial-theme/` (English) and `https://lukevoidx.github.io/wallos-dial-theme/zh-CN/` (Simplified Chinese). Real live demo: `https://wallos-demo.mostai.org/`.
 
 Suggested topics: `wallos`, `subscription-tracker`, `dashboard`, `docker`, `theme`, `self-hosted`, `open-source`.
 

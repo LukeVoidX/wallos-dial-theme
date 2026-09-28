@@ -29,7 +29,7 @@
 - [x] Create public `LukeVoidX/wallos-dial-theme` repository and push exact reviewed commit.
 - [x] Set repository description, suggested topics, and upload `docs/assets/posters/social-preview.png` as the social preview.
 - [x] Deploy a separate public, read-only Wallos Dial demo container with synthetic volumes at `wallos-demo.mostai.org`; verify Caddy allowlist, HTTPS, Cloudflare origin restriction, and two-hour reset job anonymously.
-- [x] Enable GitHub Pages from `main` `/docs` and verify that `https://lukevoidx.github.io/wallos-dial-theme/` forwards to the live real demo.
+- [x] Enable GitHub Pages from `main` `/docs`; the English and Chinese product pages link to the real live demo. Verify both pages, metadata and sitemap after publication.
 - [x] Verify source CI. Push `v0.1.0` only after owner approval; verify amd64/arm64 GHCR image build and an arm64 runtime smoke.
 - [x] Make the first GHCR package public (the registry initially defaults to private), then verify an anonymous pull and a clean Compose installation.
 - [x] Publish GitHub Release with the reviewed source archive and exact image digest.

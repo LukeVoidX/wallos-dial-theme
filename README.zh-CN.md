@@ -2,13 +2,13 @@
 
 ![Wallos Dial 主视觉：每一次续订，都心中有数](docs/assets/posters/campaign-hero-zh.png)
 
-[立即体验在线 Demo](https://lukevoidx.github.io/wallos-dial-theme/) · [English](README.md) · [中文海报](docs/CAMPAIGN.zh-CN.md) · [改版前后与原始截图](docs/SHOWCASE.md) · [安装、升级和回退](docs/UPGRADING.md)
+[中文介绍页](https://lukevoidx.github.io/wallos-dial-theme/zh-CN/) · [立即体验在线 Demo](https://wallos-demo.mostai.org/) · [English](README.md) · [中文海报](docs/CAMPAIGN.zh-CN.md) · [改版前后与原始截图](docs/SHOWCASE.md) · [安装、升级和回退](docs/UPGRADING.md)
 
 Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界面改版。暖白底、黑色数字、细线和少量红色贯穿总览、订阅、日历与统计页面。首页集中显示月度费用、日期刻度、近期付款和倒计时；订阅页增加分类区块。原有搜索、筛选、排序、新增与编辑、通知和设置功能继续由 Wallos 处理。
 
 **Dial 版本：**`0.1.0` · **已验证的 Wallos 版本：**仅 `5.8.1`。这是构建在固定 Wallos 镜像上的源码叠加层，并非 Wallos 内置的可切换主题；它不隶属于 Wallos 官方。
 
-**先体验，再安装：**[打开真实运行的中英文 Demo](https://lukevoidx.github.io/wallos-dial-theme/)。GitHub Pages 入口会转到独立的 Wallos Dial 容器；它运行实际 PHP 应用，并放入 30 条虚构订阅。可浏览总览、分类订阅、日历、统计、详情与语言切换。公开环境为只读，账户与编辑功能需自行安装镜像体验。[了解真实 Demo 的部署与边界](docs/DEMO.md)。
+**先体验，再安装：**[打开真实运行的中英文 Demo](https://wallos-demo.mostai.org/)。它在独立容器运行实际 PHP 应用，并放入 30 条虚构订阅。可浏览总览、分类订阅、日历、统计、详情与语言切换。公开环境为只读，账户与编辑功能需自行安装镜像体验。GitHub Pages 的[中文](https://lukevoidx.github.io/wallos-dial-theme/zh-CN/)与[英文](https://lukevoidx.github.io/wallos-dial-theme/)介绍页可先说明主题与兼容范围。[了解真实 Demo 的部署与边界](docs/DEMO.md)。
 
 ![Wallos Dial 总览展示：内嵌真实运行界面的截图](docs/assets/posters/showcase-overview.png)
 
