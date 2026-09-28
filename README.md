@@ -28,7 +28,7 @@ The design uses warm off-white, dark numerals, fine lines, and a small red signa
 
 ![Wallos Dial time dial with an actual dashboard crop](docs/assets/posters/campaign-time-en.png)
 
-[See all six product stories in English and Simplified Chinese](docs/CAMPAIGN.md), including calendar, statistics, and the real demo.
+[See all six product stories](docs/CAMPAIGN.md), including calendar, statistics, and the real demo. [简体中文图集](docs/CAMPAIGN.zh-CN.md).
 
 ![Wallos Dial design principles: measured hierarchy, calibrated time, useful grouping, restrained red](docs/assets/posters/design-principles.png)
 

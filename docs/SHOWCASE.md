@@ -1,6 +1,6 @@
 # Wallos Dial showcase
 
-[Browse the new six-part bilingual poster series](CAMPAIGN.md) · [直接查看六个主题的中英双语海报](CAMPAIGN.md)
+[Browse the six-part poster series in English](CAMPAIGN.md) · [查看六张中文主题海报](CAMPAIGN.zh-CN.md)
 
 The UI in these comparisons is captured directly from Wallos 5.8.1 and Wallos Dial 0.1.0 running with **the same synthetic demo database**. Service names, prices, user, logos, and payment method are fictitious. ImageGen was used for the editorial backgrounds; it did not redraw the UI screenshots.
 

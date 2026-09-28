@@ -2,7 +2,7 @@
 
 ![Wallos Dial 主视觉：每一次续订，都心中有数](docs/assets/posters/campaign-hero-zh.png)
 
-[立即体验在线 Demo](https://lukevoidx.github.io/wallos-dial-theme/) · [English](README.md) · [中英双语海报](docs/CAMPAIGN.md) · [改版前后与原始截图](docs/SHOWCASE.md) · [安装、升级和回退](docs/UPGRADING.md)
+[立即体验在线 Demo](https://lukevoidx.github.io/wallos-dial-theme/) · [English](README.md) · [中文海报](docs/CAMPAIGN.zh-CN.md) · [改版前后与原始截图](docs/SHOWCASE.md) · [安装、升级和回退](docs/UPGRADING.md)
 
 Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界面改版。暖白底、黑色数字、细线和少量红色贯穿总览、订阅、日历与统计页面。首页集中显示月度费用、日期刻度、近期付款和倒计时；订阅页增加分类区块。原有搜索、筛选、排序、新增与编辑、通知和设置功能继续由 Wallos 处理。
 
@@ -18,7 +18,7 @@ Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界
 
 ![Wallos Dial 日期刻度与倒计时，使用真实界面截图](docs/assets/posters/campaign-time-zh.png)
 
-[查看完整中英双语海报系列](docs/CAMPAIGN.md)，包括日历、统计与真实在线 Demo。
+[查看完整中文海报系列](docs/CAMPAIGN.zh-CN.md)，包括日历、统计与真实在线 Demo；也可切换到[英文版](docs/CAMPAIGN.md)。
 
 ![设计思路：清晰层级、时间刻度、分类与克制的红色](docs/assets/posters/design-principles.png)
 
