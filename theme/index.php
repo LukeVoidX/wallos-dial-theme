@@ -458,7 +458,7 @@ require_once 'includes/subscription_details_popup.php';
 ?>
 
 <script src="scripts/dashboard.js?<?= $version ?>"></script>
-<script src="scripts/dial-interaction.js?<?= $version ?>-0.1.0" defer></script>
+<script src="scripts/dial-interaction.js?dial=<?= rawurlencode(DIAL_VERSION) ?>" defer></script>
 
 <?php
 require_once 'includes/footer.php';

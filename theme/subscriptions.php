@@ -584,7 +584,7 @@ $dialGrouped = ($_COOKIE['subscriptionsGrouped'] ?? '1') !== '0';
 <div class="dial-form-backdrop" aria-hidden="true" onClick="closeAddSubscription()"></div>
 
 <?php require_once 'includes/subscription_details_popup.php'; ?>
-<script src="scripts/subscriptions.js?<?= $version ?>-categories-1"></script>
+<script src="scripts/subscriptions.js?dial=<?= rawurlencode(DIAL_VERSION) ?>"></script>
 <?php if (isset($_GET['focus']) && $_GET['focus'] === 'search'): ?>
 <script>document.getElementById('search')?.focus();</script>
 <?php endif; ?>

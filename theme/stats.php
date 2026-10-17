@@ -698,7 +698,7 @@ if ($showAnyGraph) {
   <?php
 }
 ?>
-<script src="scripts/stats-dial.js?<?= $version ?>-0.1.0"></script>
+<script src="scripts/stats-dial.js?dial=<?= rawurlencode(DIAL_VERSION) ?>"></script>
 <?php
 require_once 'includes/footer.php';
 ?>

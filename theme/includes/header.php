@@ -14,6 +14,7 @@ require_once 'i18n/' . $lang . '.php';
 require_once 'getsettings.php';
 
 require_once 'version.php';
+require_once 'dial_version.php';
 
 if ($userCount == 0) {
   $db->close();
@@ -87,9 +88,9 @@ $mobileNavigation = $settings['mobile_nav'] ? "mobile-navigation" : "";
   <meta name="apple-mobile-web-app-title" content="Wallos">
   <meta name="theme-color" content="<?= $theme == "light" ? "#FFFFFF" : "#12151C" ?>" id="theme-color" />
   <meta name="referrer" content="no-referrer">
-  <link rel="icon" type="image/png" sizes="16x16" href="images/dial-icon/favicon-16.png?<?= $version ?>-favicon-1">
-  <link rel="icon" type="image/png" sizes="32x32" href="images/dial-icon/favicon-32.png?<?= $version ?>-favicon-1">
-  <link rel="icon" type="image/svg+xml" href="images/dial-icon/favicon.svg?<?= $version ?>-favicon-1">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/dial-icon/favicon-16.png?dial=<?= rawurlencode(DIAL_VERSION) ?>">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/dial-icon/favicon-32.png?dial=<?= rawurlencode(DIAL_VERSION) ?>">
+  <link rel="icon" type="image/svg+xml" href="images/dial-icon/favicon.svg?dial=<?= rawurlencode(DIAL_VERSION) ?>">
   <link rel="apple-touch-icon" href="images/icon/apple-touch-icon.png">
   <link rel="apple-touch-icon" sizes="152x152" href="images/icon/apple-touch-icon-152.png">
   <link rel="apple-touch-icon" sizes="180x180" href="images/icon/apple-touch-icon-180.png">
@@ -104,7 +105,7 @@ $mobileNavigation = $settings['mobile_nav'] ? "mobile-navigation" : "";
   <link rel="stylesheet" href="styles/barlow.css">
   <link rel="stylesheet" href="styles/font-awesome.min.css">
   <link rel="stylesheet" href="styles/brands.css">
-  <link rel="stylesheet" href="styles/dial.css?<?= $version ?>-0.1.0-detail-icon-1">
+  <link rel="stylesheet" href="styles/dial.css?dial=<?= rawurlencode(DIAL_VERSION) ?>">
   <script type="text/javascript" src="scripts/all.js?<?= $version ?>"></script>
   <script type="text/javascript" src="scripts/common.js?<?= $version ?>"></script>
   <script type="text/javascript">
@@ -154,7 +155,7 @@ $mobileNavigation = $settings['mobile_nav'] ? "mobile-navigation" : "";
   ?>
   <script type="text/javascript" src="scripts/i18n/<?= $lang ?>.js?<?= $version ?>"></script>
   <script type="text/javascript" src="scripts/i18n/getlang.js?<?= $version ?>"></script>
-  <script type="text/javascript" src="scripts/dial-language.js?<?= $version ?>-0.1.0" defer></script>
+  <script type="text/javascript" src="scripts/dial-language.js?dial=<?= rawurlencode(DIAL_VERSION) ?>" defer></script>
   <script type="text/javascript" src="scripts/password-toggle.js?<?= $version ?>"></script>
   <script>
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {

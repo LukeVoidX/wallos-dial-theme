@@ -327,7 +327,7 @@ for name, phrases in required.items():
 edge=${2:-}
 if test -n "$edge"; then
   curl -fsS "${edge%/}/categories.php" | grep -Fq 'dial-category-readonly'
-  curl -fsS "${edge%/}/service-worker.php" | grep -Fq 'static-cache-5.8.3-dial-1.0.0'
+  curl -fsS "${edge%/}/service-worker.php" | grep -Fq 'static-cache-v5.8.3-dial-1.0.0'
   for route in /endpoints/categories/category.php /endpoints/categories/dial_manage.php /endpoints/dial/icons.php /endpoints/subscription/add.php; do
     status=$(curl -sS -o /dev/null -w '%{http_code}' -X POST "${edge%/}$route")
     test "$status" = 404

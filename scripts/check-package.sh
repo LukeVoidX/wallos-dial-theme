@@ -2,13 +2,14 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-required=(VERSION WALLOS_VERSION Dockerfile compose.yaml compose.build.yaml compat/upstream-files.sha256 LICENSE.md README.md theme/index.php theme/subscriptions.php theme/calendar.php theme/stats.php theme/includes/header.php theme/includes/dial_logo_map.php theme/includes/dial_mail_theme.php theme/endpoints/user/set_dial_language.php theme/endpoints/cronjobs/sendnotifications.php theme/endpoints/cronjobs/sendcancellationnotifications.php theme/endpoints/cronjobs/sendverificationemails.php theme/endpoints/cronjobs/sendresetpasswordemails.php theme/endpoints/notifications/testemailnotifications.php theme/styles/dial.css theme/scripts/stats-dial.js theme/scripts/dial-interaction.js theme/scripts/dial-language.js theme/images/dial-icon/favicon.svg theme/images/dial-icon/favicon-16.png theme/images/dial-icon/favicon-32.png tests/mail-theme.php tests/mail-mime.php tests/mail-smtp.php)
+required=(VERSION WALLOS_VERSION Dockerfile compose.yaml compose.build.yaml compat/upstream-files.sha256 LICENSE.md README.md theme/index.php theme/subscriptions.php theme/calendar.php theme/stats.php theme/includes/header.php theme/includes/dial_version.php theme/includes/dial_logo_map.php theme/includes/dial_mail_theme.php theme/endpoints/user/set_dial_language.php theme/endpoints/cronjobs/sendnotifications.php theme/endpoints/cronjobs/sendcancellationnotifications.php theme/endpoints/cronjobs/sendverificationemails.php theme/endpoints/cronjobs/sendresetpasswordemails.php theme/endpoints/notifications/testemailnotifications.php theme/styles/dial.css theme/scripts/stats-dial.js theme/scripts/dial-interaction.js theme/scripts/dial-language.js theme/images/dial-icon/favicon.svg theme/images/dial-icon/favicon-16.png theme/images/dial-icon/favicon-32.png tests/mail-theme.php tests/mail-mime.php tests/mail-smtp.php)
 for file in "${required[@]}"; do
   [[ -f "$file" ]] || { echo "Missing: $file" >&2; exit 1; }
 done
 
 version=$(tr -d '\n' < VERSION)
 grep -Fq "org.opencontainers.image.version=\"$version\"" Dockerfile || { echo 'Dockerfile version differs from VERSION' >&2; exit 1; }
+grep -Fq "const DIAL_VERSION = '$version';" theme/includes/dial_version.php || { echo 'Dial PHP version differs from VERSION' >&2; exit 1; }
 grep -Fq "wallos-dial:$version" compose.build.yaml || { echo 'Compose tag differs from VERSION' >&2; exit 1; }
 
 upstream_version=$(tr -d '\n' < WALLOS_VERSION)
