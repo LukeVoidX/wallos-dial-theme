@@ -58,14 +58,15 @@ if ($rows) {
             foreach ($rows as $user) {
                 $mail->addAddress($user['email']);
                 $mail->isHTML(true);
-                $mail->Subject = 'Wallos - Reset Password';
                 try {
-                    $themedEmail = dial_mail_account('reset', $server_url, $user['email'], $user['token'], dial_mail_language_for_email($db, $user['email']));
+                    $dialLanguage = dial_mail_language_for_email($db, $user['email']);
+                    $themedEmail = dial_mail_account('reset', $server_url, $user['email'], $user['token'], $dialLanguage);
                 } catch (\InvalidArgumentException $e) {
                     echo "Password reset email skipped: configure a valid Wallos Server URL.<br>";
                     $mail->clearAddresses();
                     continue;
                 }
+                $mail->Subject = 'Wallos · ' . dial_mail_copy('reset_title', $dialLanguage);
                 dial_mail_apply($mail, $themedEmail['html'], $themedEmail['text']);
 
                 $mail->send();

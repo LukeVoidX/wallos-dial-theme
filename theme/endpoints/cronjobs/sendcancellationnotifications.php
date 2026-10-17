@@ -195,14 +195,24 @@ while ($userToNotify = $usersToNotify->fetchArray(SQLITE3_ASSOC)) {
         $i = 0;
         $currentDate = new DateTime('now');
         while ($rowSubscription = $resultSubscriptions->fetchArray(SQLITE3_ASSOC)) {
-            $notify[$rowSubscription['payer_user_id']][$i]['name'] = $rowSubscription['name'];
-            $notify[$rowSubscription['payer_user_id']][$i]['price'] = $rowSubscription['price'] . $currencies[$rowSubscription['currency_id']]['symbol'];
-            $notify[$rowSubscription['payer_user_id']][$i]['currency'] = $currencies[$rowSubscription['currency_id']]['name'];
-            $notify[$rowSubscription['payer_user_id']][$i]['category'] = $categories[$rowSubscription['category_id']]['name'];
-            $notify[$rowSubscription['payer_user_id']][$i]['payer'] = $household[$rowSubscription['payer_user_id']]['name'];
-            $notify[$rowSubscription['payer_user_id']][$i]['date'] = $rowSubscription['next_payment'];
-            $notify[$rowSubscription['payer_user_id']][$i]['url'] = $rowSubscription['url'];
-            $notify[$rowSubscription['payer_user_id']][$i]['notes'] = $rowSubscription['notes'];
+            $payerUserId = (int) $rowSubscription['payer_user_id'];
+            if (!isset($household[$payerUserId])) {
+                $reason = sprintf('Skipped cancellation notification for subscription %d: payer %d is outside owner %d account.',
+                    (int) $rowSubscription['id'], $payerUserId, (int) $userId);
+                error_log('Wallos: ' . $reason);
+                echo $reason . "<br />\n";
+                continue;
+            }
+            // Legacy rows can contain entities from the form. Decode once;
+            // HTML output escapes the resulting text again at render time.
+            $notify[$payerUserId][$i]['name'] = html_entity_decode($rowSubscription['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $notify[$payerUserId][$i]['price'] = $rowSubscription['price'] . $currencies[$rowSubscription['currency_id']]['symbol'];
+            $notify[$payerUserId][$i]['currency'] = $currencies[$rowSubscription['currency_id']]['name'];
+            $notify[$payerUserId][$i]['category'] = $categories[$rowSubscription['category_id']]['name'];
+            $notify[$payerUserId][$i]['payer'] = $household[$payerUserId]['name'];
+            $notify[$payerUserId][$i]['date'] = $rowSubscription['next_payment'];
+            $notify[$payerUserId][$i]['url'] = $rowSubscription['url'];
+            $notify[$payerUserId][$i]['notes'] = $rowSubscription['notes'];
             $i++;
         }
 
@@ -222,7 +232,7 @@ while ($userToNotify = $usersToNotify->fetchArray(SQLITE3_ASSOC)) {
                     $defaultEmail = $defaultUser['email'];
                     $defaultName = $defaultUser['username'];
 
-                    foreach ($notify as $userId => $perUser) {
+                    foreach ($notify as $payerUserId => $perUser) {
                         $message = "The following subscriptions are up for cancellation:\n";
 
                         foreach ($perUser as $subscription) {
@@ -247,10 +257,16 @@ while ($userToNotify = $usersToNotify->fetchArray(SQLITE3_ASSOC)) {
                         }
                         $mail->Port = $email['smtpPort'];
 
-                        $stmt = $db->prepare('SELECT * FROM household WHERE id = :userId');
-                        $stmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
+                        $stmt = $db->prepare('SELECT * FROM household WHERE id = :payerUserId AND user_id = :ownerId');
+                        $stmt->bindValue(':payerUserId', $payerUserId, SQLITE3_INTEGER);
+                        $stmt->bindValue(':ownerId', $userId, SQLITE3_INTEGER);
                         $result = $stmt->execute();
                         $user = $result->fetchArray(SQLITE3_ASSOC);
+                        if (!$user) {
+                            error_log(sprintf('Wallos: skipped cancellation email for payer %d outside owner %d account.',
+                                (int) $payerUserId, (int) $userId));
+                            continue;
+                        }
 
                         $emailaddress = !empty($user['email']) ? $user['email'] : $defaultEmail;
                         $name = !empty($user['name']) ? $user['name'] : $defaultName;
@@ -272,9 +288,12 @@ while ($userToNotify = $usersToNotify->fetchArray(SQLITE3_ASSOC)) {
                             }
                         }
 
-                        $mail->Subject = 'Wallos Cancellation Notification';
                         $dialMailBase = wallos_get_admin_settings($db)['server_url'] ?? '';
-                        dial_mail_apply($mail, dial_mail_notifications('cancellation', $perUser, '', false, $dialMailBase, $defaultUser['language'] ?? 'en'), $message);
+                        $dialLanguage = $defaultUser['language'] ?? 'en';
+                        $mail->Subject = 'Wallos · ' . dial_mail_copy('cancellation', $dialLanguage);
+                        dial_mail_apply($mail,
+                            dial_mail_notifications('cancellation', $perUser, '', false, $dialMailBase, $dialLanguage),
+                            dial_mail_plain_notifications('cancellation', $perUser, '', false, $dialMailBase, $dialLanguage));
 
                         if ($mail->send()) {
                             echo "Email Notifications sent<br />";
@@ -291,10 +310,11 @@ while ($userToNotify = $usersToNotify->fetchArray(SQLITE3_ASSOC)) {
                 if (!$ssrf) {
                     echo "Discord notification skipped: URL failed SSRF validation.<br />";
                 } else {
-                    foreach ($notify as $userId => $perUser) {
+                    foreach ($notify as $payerUserId => $perUser) {
                         // Get name of user from household table
-                        $stmt = $db->prepare('SELECT * FROM household WHERE id = :userId');
-                        $stmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
+                        $stmt = $db->prepare('SELECT * FROM household WHERE id = :payerUserId AND user_id = :ownerId');
+                        $stmt->bindValue(':payerUserId', $payerUserId, SQLITE3_INTEGER);
+                        $stmt->bindValue(':ownerId', $userId, SQLITE3_INTEGER);
                         $result = $stmt->execute();
                         $user = $result->fetchArray(SQLITE3_ASSOC);
 
@@ -354,10 +374,11 @@ while ($userToNotify = $usersToNotify->fetchArray(SQLITE3_ASSOC)) {
                 if (!$ssrf) {
                     echo "Gotify notification skipped: URL failed SSRF validation.<br />";
                 } else {
-                    foreach ($notify as $userId => $perUser) {
+                    foreach ($notify as $payerUserId => $perUser) {
                         // Get name of user from household table
-                        $stmt = $db->prepare('SELECT * FROM household WHERE id = :userId');
-                        $stmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
+                        $stmt = $db->prepare('SELECT * FROM household WHERE id = :payerUserId AND user_id = :ownerId');
+                        $stmt->bindValue(':payerUserId', $payerUserId, SQLITE3_INTEGER);
+                        $stmt->bindValue(':ownerId', $userId, SQLITE3_INTEGER);
                         $result = $stmt->execute();
                         $user = $result->fetchArray(SQLITE3_ASSOC);
 
@@ -411,10 +432,11 @@ while ($userToNotify = $usersToNotify->fetchArray(SQLITE3_ASSOC)) {
 
             // Telegram notifications if enabled
             if ($telegramNotificationsEnabled) {
-                foreach ($notify as $userId => $perUser) {
+                foreach ($notify as $payerUserId => $perUser) {
                     // Get name of user from household table
-                    $stmt = $db->prepare('SELECT * FROM household WHERE id = :userId');
-                    $stmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
+                    $stmt = $db->prepare('SELECT * FROM household WHERE id = :payerUserId AND user_id = :ownerId');
+                    $stmt->bindValue(':payerUserId', $payerUserId, SQLITE3_INTEGER);
+                    $stmt->bindValue(':ownerId', $userId, SQLITE3_INTEGER);
                     $result = $stmt->execute();
                     $user = $result->fetchArray(SQLITE3_ASSOC);
 
@@ -461,10 +483,11 @@ while ($userToNotify = $usersToNotify->fetchArray(SQLITE3_ASSOC)) {
 
             // Pushover notifications if enabled
             if ($pushoverNotificationsEnabled) {
-                foreach ($notify as $userId => $perUser) {
+                foreach ($notify as $payerUserId => $perUser) {
                     // Get name of user from household table
-                    $stmt = $db->prepare('SELECT * FROM household WHERE id = :userId');
-                    $stmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
+                    $stmt = $db->prepare('SELECT * FROM household WHERE id = :payerUserId AND user_id = :ownerId');
+                    $stmt->bindValue(':payerUserId', $payerUserId, SQLITE3_INTEGER);
+                    $stmt->bindValue(':ownerId', $userId, SQLITE3_INTEGER);
                     $result = $stmt->execute();
                     $user = $result->fetchArray(SQLITE3_ASSOC);
 
@@ -508,10 +531,11 @@ while ($userToNotify = $usersToNotify->fetchArray(SQLITE3_ASSOC)) {
                 if (!$ssrf) {
                     echo "Ntfy notification skipped: URL failed SSRF validation.<br />";
                 } else {
-                    foreach ($notify as $userId => $perUser) {
+                    foreach ($notify as $payerUserId => $perUser) {
                         // Get name of user from household table
-                        $stmt = $db->prepare('SELECT * FROM household WHERE id = :userId');
-                        $stmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
+                        $stmt = $db->prepare('SELECT * FROM household WHERE id = :payerUserId AND user_id = :ownerId');
+                        $stmt->bindValue(':payerUserId', $payerUserId, SQLITE3_INTEGER);
+                        $stmt->bindValue(':ownerId', $userId, SQLITE3_INTEGER);
                         $result = $stmt->execute();
                         $user = $result->fetchArray(SQLITE3_ASSOC);
 
@@ -526,9 +550,12 @@ while ($userToNotify = $usersToNotify->fetchArray(SQLITE3_ASSOC)) {
                         }
 
                         $headers = json_decode($ntfy["headers"], true);
-                        $customheaders = array_map(function ($key, $value) {
-                            return "$key: $value";
-                        }, array_keys($headers), $headers);
+                        $customheaders = [];
+                        if (is_array($headers)) {
+                            $customheaders = array_map(function ($key, $value) {
+                                return "$key: $value";
+                            }, array_keys($headers), $headers);
+                        }
 
                         $ch = curl_init();
 
@@ -568,10 +595,11 @@ while ($userToNotify = $usersToNotify->fetchArray(SQLITE3_ASSOC)) {
                 if (!$ssrf) {
                     echo "Webhook notification skipped: URL failed SSRF validation.<br />";
                 } else {
-                    foreach ($notify as $userId => $perUser) {
+                    foreach ($notify as $payerUserId => $perUser) {
                         // Get name of user from household table
-                        $stmt = $db->prepare('SELECT * FROM household WHERE id = :userId');
-                        $stmt->bindValue(':userId', $userId, SQLITE3_INTEGER);
+                        $stmt = $db->prepare('SELECT * FROM household WHERE id = :payerUserId AND user_id = :ownerId');
+                        $stmt->bindValue(':payerUserId', $payerUserId, SQLITE3_INTEGER);
+                        $stmt->bindValue(':ownerId', $userId, SQLITE3_INTEGER);
                         $result = $stmt->execute();
                         $user = $result->fetchArray(SQLITE3_ASSOC);
 

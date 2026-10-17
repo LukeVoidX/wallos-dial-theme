@@ -55,6 +55,7 @@ snapshot = {
     ).fetchall(),
     "logo_sha256": hashlib.sha256(Path(sys.argv[2]).read_bytes()).hexdigest(),
 }
+
 assert db.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
 assert len(snapshot["subscriptions"]) == 30
 baseline = Path(sys.argv[3])
@@ -66,6 +67,45 @@ if baseline.exists():
 else:
     baseline.write_text(json.dumps(snapshot))
     db.backup(sqlite3.connect(baseline.with_suffix(".db")))
+db.close()
+PY
+}
+create_icon_state() {
+  python3 - "$scratch/db/wallos.db" "theme/images/dial-icon/favicon-32.png" "$scratch/icon-state.json" <<'PY'
+import hashlib, json, pathlib, sqlite3, sys
+db = sqlite3.connect(sys.argv[1], timeout=5)
+payload = pathlib.Path(sys.argv[2]).read_bytes()
+sha = hashlib.sha256(payload).hexdigest()
+subscription = db.execute("SELECT id,logo FROM subscriptions WHERE user_id=1 AND name='Cinema Club'").fetchone()
+assert subscription and subscription[1], subscription
+db.execute('BEGIN IMMEDIATE')
+asset = db.execute('INSERT INTO dial_icon_assets(user_id,label,mime,bytes,sha256,width,height) VALUES(1,?,?,?,?,32,32)',
+                   ('Synthetic test asset','image/png',payload,sha)).lastrowid
+db.execute("INSERT INTO dial_subscription_icons(user_id,subscription_id,source,catalog_key,presentation,treatment,scale) VALUES(1,?,'catalog','chatgpt','plain','color',100)",
+           (subscription[0],))
+db.commit()
+pathlib.Path(sys.argv[3]).write_text(json.dumps({'asset':asset,'sha256':sha,
+    'subscription':subscription[0], 'original_logo':subscription[1]}))
+db.close()
+PY
+}
+
+check_icon_state() {
+  python3 - "$scratch/db/wallos.db" "$scratch/icon-state.json" "$scratch/logos" <<'PY'
+import hashlib, json, pathlib, sqlite3, sys
+db = sqlite3.connect(sys.argv[1], timeout=5)
+saved = json.loads(pathlib.Path(sys.argv[2]).read_text())
+asset = db.execute('SELECT sha256,bytes FROM dial_icon_assets WHERE id=? AND user_id=1',
+                   (saved['asset'],)).fetchone()
+assert asset and asset[0] == saved['sha256'] and hashlib.sha256(asset[1]).hexdigest() == saved['sha256']
+subscription = db.execute('SELECT logo FROM subscriptions WHERE id=? AND user_id=1',
+                          (saved['subscription'],)).fetchone()
+assert subscription and subscription[0] == saved['original_logo']
+assert (pathlib.Path(sys.argv[3]) / subscription[0]).is_file()
+preference = db.execute('SELECT source,catalog_key FROM dial_subscription_icons WHERE user_id=1 AND subscription_id=?',
+                        (saved['subscription'],)).fetchone()
+assert preference == ('catalog','chatgpt'), preference
+assert db.execute('PRAGMA integrity_check').fetchone()[0] == 'ok'
 db.close()
 PY
 }
@@ -89,8 +129,10 @@ PY
 check_snapshot
 
 start_image "$candidate"
+create_icon_state
 stop_image
 check_snapshot
+check_icon_state
 start_image "$old"
 curl -fsSL -c "$scratch/old.cookies" -b "$scratch/old.cookies" \
   --data-urlencode username=demo --data-urlencode 'password=DialFixture-2026!' \
@@ -119,6 +161,14 @@ test "$(jq -r .status <<<"$add")" = Success
 id=$(docker exec "$name" sqlite3 /var/www/html/db/wallos.db \
   "SELECT id FROM subscriptions WHERE name='Temporary rollback record' AND user_id=1")
 test -n "$id"
+python3 - "$scratch/db/wallos.db" "$id" <<'PY'
+import sqlite3, sys
+db = sqlite3.connect(sys.argv[1], timeout=5)
+db.execute("INSERT INTO dial_subscription_icons(user_id,subscription_id,source,catalog_key,presentation,treatment,scale) VALUES(1,?,'catalog','chatgpt','plain','color',100)",
+           (int(sys.argv[2]),))
+db.commit()
+db.close()
+PY
 edit=$(post_subscription 'Temporary rollback edited' "$id")
 test "$(jq -r .status <<<"$edit")" = Success
 test "$(docker exec "$name" sqlite3 /var/www/html/db/wallos.db \
@@ -127,9 +177,13 @@ deleted=$(curl -fsS -b "$scratch/old.cookies" -H "X-CSRF-Token: $csrf" \
   -H 'Content-Type: application/json' -d "{\"id\":$id}" \
   "$base/endpoints/subscription/delete.php")
 test "$(jq -r .success <<<"$deleted")" = true
+test "$(docker exec "$name" sqlite3 /var/www/html/db/wallos.db \
+  "SELECT COUNT(*) FROM dial_subscription_icons WHERE subscription_id=$id")" -eq 0
 stop_image
 check_snapshot
+check_icon_state
 start_image "$candidate"
 stop_image
 check_snapshot
+check_icon_state
 echo 'Disposable upgrade, old-image writes, rollback, and re-upgrade passed.'

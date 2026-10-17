@@ -4,31 +4,10 @@ on:
   pull_request:
 
 jobs:
-  build-and-lint:
+  build-and-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
-      - name: Check package
-        run: ./scripts/check-package.sh
-      - name: Validate Compose files
-        run: docker compose config -q && docker compose -f compose.build.yaml config -q
-      - name: Build pinned Wallos image
-        run: docker build -t wallos-dial:ci .
-      - name: Test category transactions and HTTP boundaries
-        run: |
-          docker run --rm -v "$PWD/tests:/tests:ro" --entrypoint php wallos-dial:ci /tests/category-core.php
-          bash tests/category-http.sh wallos-dial:ci
-          bash tests/category-demo-edge.sh wallos-dial:ci
-      - name: Lint PHP overlay
-        run: |
-          docker run --rm --entrypoint sh wallos-dial:ci -lc '
-            for file in /var/www/html/index.php /var/www/html/subscriptions.php /var/www/html/categories.php /var/www/html/settings.php /var/www/html/calendar.php /var/www/html/stats.php /var/www/html/includes/header.php /var/www/html/includes/dial_logo_map.php /var/www/html/includes/dial_categories.php /var/www/html/includes/dial_category_i18n.php /var/www/html/includes/dial_dashboard.php /var/www/html/includes/dial_stat_money.php /var/www/html/includes/dial_mail_theme.php /var/www/html/includes/list_subscriptions.php /var/www/html/includes/filters_menu.php /var/www/html/endpoints/categories/category.php /var/www/html/endpoints/categories/dial_manage.php /var/www/html/endpoints/subscriptions/get.php /var/www/html/endpoints/user/set_dial_language.php /var/www/html/endpoints/cronjobs/sendnotifications.php /var/www/html/endpoints/cronjobs/sendcancellationnotifications.php /var/www/html/endpoints/cronjobs/sendverificationemails.php /var/www/html/endpoints/cronjobs/sendresetpasswordemails.php /var/www/html/endpoints/notifications/testemailnotifications.php; do
-              php -l "$file" || exit 1
-            done
-          '
-      - name: Test mail rendering
-        run: |
-          docker run --rm --entrypoint php -v "$PWD/tests:/tests:ro" -v "$PWD/theme/includes:/theme/includes:ro" wallos-dial:ci /tests/mail-theme.php
-          docker run --rm --entrypoint php -v "$PWD/tests:/tests:ro" -v "$PWD/theme/includes:/theme/includes:ro" wallos-dial:ci /tests/mail-mime.php
-      - name: Smoke test runtime
-        run: ./scripts/smoke-image.sh wallos-dial:ci
+      - name: Verify complete local Dial candidate
+        run: ./scripts/verify-1.0-candidate.sh wallos-dial:ci

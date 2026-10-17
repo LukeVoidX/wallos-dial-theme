@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.0.0 — local release candidate
+
+Target base: Wallos 5.8.3. The local source has been promoted to version `1.0.0` for final review. This entry does not assert that a GitHub Release, GHCR image, or Demo update has occurred.
+
+### Added
+
+- Account-scoped Manage categories page with add, rename, keyboard/drag reorder, safe merge, empty-category deletion, and an optional starter set for empty accounts.
+- Per-subscription Icon chooser with Original, nine first-party neutral catalog pictograms, and My Icons, plus plain/framed, color/monochrome, and 80–120% optical adjustment.
+- Private My Icons library in the account's SQLite database, including normalized image uploads, owner-checked retrieval, quota controls, and safe fallback to the original Wallos Logo.
+- Consistent icon resolution across the subscription list, dashboard and detail view. Existing uploaded Logo files and optional private legacy SVG mappings remain available.
+- Real read-only category-manager view for the isolated synthetic Demo, subject to the separate Demo deployment approval.
+
+### Compatibility and release boundary
+
+- Rebased the pinned source overlay and exact-file hash gate to Wallos 5.8.3; upstream security and mail behavior is included in the reviewed overlay.
+- The 0.1.1 email templates and language switch continue in 1.0. Renewal/cancellation plain text and optional period summaries now follow the recipient language. Dynamic account pages and uploaded Logos are no longer stored by the Service Worker. A new upstream Wallos release still requires a reviewed Dial image.
+- The final combined security, upgrade/rollback, browser, dual-architecture, Demo and publication checks are recorded in [the 1.0 checklist](docs/RELEASE-CHECKLIST-1.0.0.md) before release. Unchecked items are not release claims.
+
 ## 0.1.1
 
 ### Added

@@ -11,8 +11,8 @@ if (!headers_sent()) {
 // that changed JS/CSS without remembering to bump a hardcoded cache version
 // used to leave already-visited browsers stuck on old cached files indefinitely.
 const STATIC_CACHE = 'static-cache-<?= $version ?>-dial-<?= DIAL_VERSION ?>';
-const PAGES_CACHE = 'pages-cache-v1';
-const LOGOS_CACHE = 'logos-cache-v2';
+// Only public, versioned assets may enter CacheStorage. Prior workers cached
+// account pages and uploaded Logos; activation removes those old buckets.
 
 // manifest.php is intentionally not precached here: it's per-user (theme
 // cookie dependent), so it falls through to the network-first handler below
@@ -45,6 +45,7 @@ const staticAssets = [
     'scripts/dial-categories.js',
     'scripts/dial-category-refresh.js',
     'scripts/dial-language.js',
+    'scripts/dial-icon-chooser.js',
     'scripts/stats-dial.js',
     'scripts/subscription-details.js',
     'scripts/password-toggle.js',
@@ -97,6 +98,15 @@ const staticAssets = [
     'images/dial-icon/favicon.svg',
     'images/dial-icon/favicon-16.png',
     'images/dial-icon/favicon-32.png',
+    'images/dial-catalog/apple-one.svg',
+    'images/dial-catalog/chatgpt.svg',
+    'images/dial-catalog/claude.svg',
+    'images/dial-catalog/jianying.svg',
+    'images/dial-catalog/netcup.svg',
+    'images/dial-catalog/nmcloud.svg',
+    'images/dial-catalog/proxy-seller.svg',
+    'images/dial-catalog/racknerd.svg',
+    'images/dial-catalog/vmiss.svg',
     'images/icon/android-chrome-192x192.png',
     'images/icon/android-chrome-512x512.png',
     'images/icon/maskable_icon_x192.png',
@@ -176,18 +186,6 @@ const staticAssets = [
     'images/uploads/icons/webmoney.png',
 ];
 
-const pagesToPrefetch = [
-    'index.php',
-    'subscriptions.php',
-    'profile.php',
-    'calendar.php',
-    'settings.php',
-    'stats.php',
-    'about.php',
-    'login.php',
-    'admin.php',
-];
-
 // Install: cache static assets in small batches. Firing all ~150 fetches at
 // once starves large files (apexcharts is 600KB) of connections on HTTP/1.1
 // origins, and a dropped one is silently skipped - see the static-asset
@@ -212,7 +210,7 @@ self.addEventListener('install', function (event) {
 
 // Activate: clean up old caches
 self.addEventListener('activate', function (event) {
-    const validCaches = [STATIC_CACHE, PAGES_CACHE, LOGOS_CACHE];
+    const validCaches = [STATIC_CACHE];
     event.waitUntil(
         caches.keys().then(keys =>
             Promise.all(
@@ -222,22 +220,6 @@ self.addEventListener('activate', function (event) {
         )
     );
     self.clients.claim();
-});
-
-// Message: prefetch pages after login
-self.addEventListener('message', function (event) {
-    if (event.data && event.data.type === 'PREFETCH_PAGES') {
-        caches.open(PAGES_CACHE).then(cache => {
-            pagesToPrefetch.forEach(url => {
-                fetch(url).then(response => {
-                    // Only cache if user is actually logged in (no redirect)
-                    if (response.ok && !response.redirected) {
-                        cache.put(url, response);
-                    }
-                }).catch(() => {});
-            });
-        });
-    }
 });
 
 // Fetch: single handler for all requests
@@ -256,30 +238,19 @@ self.addEventListener('fetch', function (event) {
         return;
     }
 
-    // Uploaded Dial icons are account-scoped and must not enter either cache.
-    if (url.pathname.endsWith('/endpoints/dial/icon.php')) {
+    // Both the raster and library metadata are account-scoped. The single
+    // subscription JSON endpoint is private too; all three stay network-only.
+    if (url.pathname.endsWith('/endpoints/dial/icon.php') ||
+        url.pathname.endsWith('/endpoints/dial/icons.php') ||
+        url.pathname.endsWith('/endpoints/subscription/get.php') ||
+        url.pathname.endsWith('/endpoints/subscriptions/get.php')) {
         event.respondWith(fetch(request));
         return;
     }
 
-    // Logo images: use cache-first, but cache only successful image responses.
-    // This prevents temporary 404/HTML responses from becoming permanent
-    // broken images. Bumping LOGOS_CACHE removes previously poisoned entries.
+    // Original uploaded Logos can differ by account and must remain online-only.
     if (url.pathname.includes('images/uploads/logos')) {
-        event.respondWith(
-            caches.match(request).then(response => {
-                return response || fetch(request).then(networkResponse => {
-                    const contentType = networkResponse.headers.get('content-type') || '';
-                    if (networkResponse.ok && contentType.startsWith('image/')) {
-                        return caches.open(LOGOS_CACHE).then(cache => {
-                            cache.put(request, networkResponse.clone());
-                            return networkResponse;
-                        });
-                    }
-                    return networkResponse;
-                });
-            })
-        );
+        event.respondWith(fetch(request));
         return;
     }
 
@@ -296,9 +267,7 @@ self.addEventListener('fetch', function (event) {
     if (staticAssets.some(asset => url.pathname.endsWith(asset))) {
         event.respondWith(
             caches.open(STATIC_CACHE).then(cache => {
-                // A prior release could have placed a script in PAGES_CACHE.
-                // Searching every cache would return that stale response first,
-                // even after the new static cache was populated.
+                // Only this release's static bucket is consulted.
                 return cache.match(request, { ignoreSearch: true }).then(cached => {
                     if (cached) return cached;
                     return fetch(request).then(networkResponse => {
@@ -313,21 +282,8 @@ self.addEventListener('fetch', function (event) {
         return;
     }
 
-    // PHP pages and everything else: network-first, cache as fallback
-    // Also update the pages cache on every successful load
-    event.respondWith(
-        fetch(request).then(response => {
-            if (response.ok && !response.redirected) {
-                const responseClone = response.clone(); // clone before any async operation
-                caches.open(PAGES_CACHE).then(cache => {
-                    cache.put(request, responseClone);
-                });
-            }
-            return response;
-        }).catch(() => {
-            return caches.match(request, { ignoreSearch: true });
-        })
-    );
+    // Dynamic pages and all unlisted paths are account-scoped network requests.
+    event.respondWith(fetch(request));
 });
 
 // Web Push (RFC 8291/8292): the payload includes/webpush_helper.php sends is

@@ -21,8 +21,15 @@ wallos-demo.mostai.org {
         path /endpoints/subscription/get.php /endpoints/subscription/getcalendar.php /endpoints/subscriptions/get.php
         method GET
     }
+    @seed_logo {
+        path_regexp seed_logo ^/images/uploads/logos/demo-(?:0[1-9]|[12][0-9]|30|payment)[.]svg$
+        method GET HEAD
+    }
+    @private_upload {
+        path /images/uploads/*
+    }
     @read_page {
-        path / /index.php /login.php /subscriptions.php /categories.php /calendar.php /stats.php /about.php /manifest.php /service-worker.js /health.php /favicon.ico /styles/* /scripts/* /images/* /webfonts/*
+        path / /index.php /login.php /subscriptions.php /categories.php /calendar.php /stats.php /about.php /manifest.php /service-worker.js /service-worker.php /health.php /favicon.ico /styles/* /scripts/* /images/* /webfonts/*
         method GET HEAD
     }
 
@@ -36,6 +43,12 @@ wallos-demo.mostai.org {
         }
         handle @read_endpoint {
             reverse_proxy 127.0.0.1:8296
+        }
+        handle @seed_logo {
+            reverse_proxy 127.0.0.1:8296
+        }
+        handle @private_upload {
+            respond 404
         }
         handle @read_page {
             reverse_proxy 127.0.0.1:8296

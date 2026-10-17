@@ -4,7 +4,10 @@ set -euo pipefail
 image=${1:?pass a local image tag}
 cd "$(dirname "$0")/../.."
 
-test "$(cat VERSION)" = '1.0.0-rc.1'
+case "$(cat VERSION)" in
+  1.0.0-rc.1|1.0.0) ;;
+  *) echo 'Unexpected Dial 1.0 candidate version' >&2; exit 1;;
+esac
 test "$(cat WALLOS_VERSION)" = '5.8.3'
 file=theme/endpoints/cronjobs/sendnotifications.php
 test "$(grep -Fc 'SELECT * FROM household WHERE id = :id AND user_id = :ownerId' "$file")" -eq 11

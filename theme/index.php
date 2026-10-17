@@ -3,6 +3,7 @@
 require_once 'includes/header.php';
 require_once 'includes/getdbkeys.php';
 require_once 'includes/logo_theme_variant.php';
+require_once 'includes/dial_icon_resolver.php';
 require_once 'includes/upcoming_payments.php';
 require_once 'includes/upcoming_cancellations.php';
 require_once 'includes/dial_stat_money.php';
@@ -171,17 +172,10 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
 
                         ?>
                         <div class="subscription-item" onClick="showSubscriptionDetails(event, <?= $subscription['id'] ?>)" data-id="<?= $subscription['id'] ?>">
-                            <?php
-                            if (empty($subscription['logo'])) {
-                                ?>
+                            <div class="dial-summary-service">
+                                <?= dialRenderIcon(dialResolveIcon($db, (int) $userId, $subscription), 'dial-service-icon') ?>
                                 <p class="subscription-item-title"><?= $subscriptionName ?></p>
-                                <?php
-                            } else {
-                                $subscriptionLogoSrc = "images/uploads/logos/" . $subscription['logo'];
-                                $subscriptionLogoVariantSrc = !empty($subscription['logo_variant']) ? "images/uploads/logos/" . $subscription['logo_variant'] : null;
-                                echo renderThemedLogoImg($subscriptionLogoSrc, $subscriptionLogoVariantSrc, $subscription['logo_text_color'] ?? null, 'subscription-item-logo', 'alt="' . $subscriptionName . ' logo" title="' . $subscriptionName . '"');
-                            }
-                            ?>
+                            </div>
                             <div class="subscription-item-info">
                                 <p class="subscription-item-date"> <?= $subscriptionDisplayNextPayment ?>
                                 </p>
@@ -215,17 +209,10 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
 
                             ?>
                             <div class="subscription-item" onClick="showSubscriptionDetails(event, <?= $subscription['id'] ?>)" data-id="<?= $subscription['id'] ?>">
-                                <?php
-                                if (empty($subscription['logo'])) {
-                                    ?>
+                                <div class="dial-summary-service">
+                                    <?= dialRenderIcon(dialResolveIcon($db, (int) $userId, $subscription), 'dial-service-icon') ?>
                                     <p class="subscription-item-title"><?= $subscriptionName ?></p>
-                                    <?php
-                                } else {
-                                    $subscriptionLogoSrc = "images/uploads/logos/" . $subscription['logo'];
-                                    $subscriptionLogoVariantSrc = !empty($subscription['logo_variant']) ? "images/uploads/logos/" . $subscription['logo_variant'] : null;
-                                    echo renderThemedLogoImg($subscriptionLogoSrc, $subscriptionLogoVariantSrc, $subscription['logo_text_color'] ?? null, 'subscription-item-logo', 'alt="' . $subscriptionName . ' logo" title="' . $subscriptionName . '"');
-                                }
-                                ?>
+                                </div>
                                 <div class="subscription-item-info">
                                     <p class="subscription-item-date"> <?= $subscriptionDisplayCancellationDate ?></p>
                                     <p class="subscription-item-price"> <?= $subscriptionDisplayPrice ?></p>

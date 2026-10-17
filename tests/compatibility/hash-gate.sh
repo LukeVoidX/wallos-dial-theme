@@ -8,6 +8,7 @@ mkdir -p "$scratch/compat"
 cp Dockerfile "$scratch/Dockerfile"
 cp -R theme "$scratch/theme"
 cp compat/upstream-files.sha256 "$scratch/compat/upstream-files.sha256"
+cp compat/nginx-dial-icon.conf "$scratch/compat/nginx-dial-icon.conf"
 python3 - "$scratch/compat/upstream-files.sha256" <<'PY'
 from pathlib import Path
 import sys

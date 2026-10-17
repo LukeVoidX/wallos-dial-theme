@@ -3,9 +3,83 @@
 require_once 'includes/header.php';
 require_once 'includes/getdbkeys.php';
 require_once 'includes/logo_theme_variant.php';
+require_once 'includes/dial_icon_resolver.php';
 require_once 'includes/dial_categories.php';
 require_once 'includes/dial_category_i18n.php';
 $categoryCopy = dial_category_copy($lang);
+$dialIconCopies = [
+  'en' => [
+    'icon' => 'Icon', 'change' => 'Change icon', 'chooser' => 'Choose an icon',
+    'original' => 'Original', 'catalog' => 'Built-in', 'library' => 'My icons', 'upload' => 'Upload',
+    'originalHint' => 'Use the original subscription logo, if available.',
+    'catalogHint' => 'Independent neutral symbols, not official service logos. Service names are for identification only.',
+    'libraryHint' => 'Your uploaded icons are private to this account.',
+    'emptyLibrary' => 'No icons uploaded yet.', 'preview' => 'Actual size preview',
+    'warm' => 'Warm background', 'dark' => 'Dark background',
+    'presentation' => 'Presentation', 'plain' => 'Plain', 'framed' => 'Framed',
+    'treatment' => 'Treatment', 'color' => 'Color', 'mono' => 'Monochrome',
+    'size' => 'Size', 'uploadFile' => 'Choose an image', 'uploadLabel' => 'Icon name',
+    'uploadAction' => 'Add to my icons', 'delete' => 'Delete', 'save' => 'Use this icon',
+    'cancel' => 'Cancel', 'demoNotice' => 'This demo is read-only. Install Wallos Dial to save icon changes.',
+    'fileLimit' => 'PNG, JPEG, WebP or SVG · up to 2 MB. SVG is converted to a safe image on the server.',
+    'loading' => 'Loading your icons…', 'loadError' => 'Could not load your icons.',
+    'saveError' => 'Could not save the icon. Try again.',
+    'uploadError' => 'Could not upload the icon.', 'uploadSuccess' => 'Icon added.',
+    'lowResolution' => 'Low resolution; may look blurry.',
+    'deleteSuccess' => 'Icon deleted.', 'deleteError' => 'This icon cannot be deleted while in use.',
+    'deleteConfirm' => 'Delete this icon from your library?',
+    'selectFile' => 'Choose an image first.', 'sourceMissing' => 'Choose an icon from this source.',
+    'uploadBusy' => 'Uploading icon…', 'none' => 'No original logo',
+  ],
+  'zh_cn' => [
+    'icon' => '图标', 'change' => '更换图标', 'chooser' => '选择图标',
+    'original' => '原图', 'catalog' => '内置', 'library' => '我的图标', 'upload' => '上传',
+    'originalHint' => '使用原有订阅 Logo（如有）。',
+    'catalogHint' => '独立设计的中性符号，并非服务官方 Logo；服务名称仅用于识别。',
+    'libraryHint' => '上传的图标仅当前账户可见。',
+    'emptyLibrary' => '还没有上传图标。', 'preview' => '实际尺寸预览',
+    'warm' => '暖色背景', 'dark' => '深色背景',
+    'presentation' => '呈现方式', 'plain' => '无边框', 'framed' => '带边框',
+    'treatment' => '色彩', 'color' => '原色', 'mono' => '单色',
+    'size' => '尺寸', 'uploadFile' => '选择图片', 'uploadLabel' => '图标名称',
+    'uploadAction' => '加入我的图标', 'delete' => '删除', 'save' => '使用此图标',
+    'cancel' => '取消', 'demoNotice' => '公开演示仅供浏览。安装 Wallos Dial 后才可保存图标更改。',
+    'fileLimit' => 'PNG、JPEG、WebP 或 SVG · 最大 2 MB。服务器会将 SVG 转换为安全图片。',
+    'loading' => '正在加载图标…', 'loadError' => '无法加载你的图标。',
+    'saveError' => '图标保存失败，请重试。',
+    'uploadError' => '图标上传失败。', 'uploadSuccess' => '已添加图标。',
+    'lowResolution' => '分辨率较低，放大后可能模糊。',
+    'deleteSuccess' => '已删除图标。', 'deleteError' => '图标正在使用，无法删除。',
+    'deleteConfirm' => '要从图标库删除此图标吗？',
+    'selectFile' => '请先选择图片。', 'sourceMissing' => '请从此来源选择图标。',
+    'uploadBusy' => '正在上传图标…', 'none' => '没有原始 Logo',
+  ],
+  'zh_tw' => [
+    'icon' => '圖標', 'change' => '更換圖標', 'chooser' => '選擇圖標',
+    'original' => '原圖', 'catalog' => '內建', 'library' => '我的圖標', 'upload' => '上傳',
+    'originalHint' => '使用原有訂閱 Logo（如有）。',
+    'catalogHint' => '獨立設計的中性符號，並非服務官方 Logo；服務名稱僅用於識別。',
+    'libraryHint' => '上傳的圖標僅目前帳戶可見。',
+    'emptyLibrary' => '尚未上傳圖標。', 'preview' => '實際尺寸預覽',
+    'warm' => '暖色背景', 'dark' => '深色背景',
+    'presentation' => '呈現方式', 'plain' => '無邊框', 'framed' => '有邊框',
+    'treatment' => '色彩', 'color' => '原色', 'mono' => '單色',
+    'size' => '尺寸', 'uploadFile' => '選擇圖片', 'uploadLabel' => '圖標名稱',
+    'uploadAction' => '加入我的圖標', 'delete' => '刪除', 'save' => '使用此圖標',
+    'cancel' => '取消', 'demoNotice' => '公開展示僅供瀏覽。安裝 Wallos Dial 後才能儲存圖標變更。',
+    'fileLimit' => 'PNG、JPEG、WebP 或 SVG · 最大 2 MB。伺服器會將 SVG 轉換為安全圖片。',
+    'loading' => '正在載入圖標…', 'loadError' => '無法載入你的圖標。',
+    'saveError' => '圖標儲存失敗，請重試。',
+    'uploadError' => '圖標上傳失敗。', 'uploadSuccess' => '已新增圖標。',
+    'lowResolution' => '解析度較低，放大後可能模糊。',
+    'deleteSuccess' => '已刪除圖標。', 'deleteError' => '圖標正在使用，無法刪除。',
+    'deleteConfirm' => '要從圖標庫刪除此圖標嗎？',
+    'selectFile' => '請先選擇圖片。', 'sourceMissing' => '請從此來源選擇圖標。',
+    'uploadBusy' => '正在上傳圖標…', 'none' => '沒有原始 Logo',
+  ],
+];
+$dialIconCopy = $dialIconCopies[$lang] ?? $dialIconCopies['en'];
+$dialIconHtml = static fn(string $key): string => htmlspecialchars($dialIconCopy[$key], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 
 include_once 'includes/list_subscriptions.php';
 
@@ -237,6 +311,7 @@ $dialGrouped = ($_COOKIE['subscriptionsGrouped'] ?? '1') !== '0';
       }
       $id = $subscription['id'];
       $print[$id]['id'] = $id;
+      $print[$id]['dial_icon'] = dialResolveIcon($db, (int) $userId, $subscription);
       $print[$id]['logo'] = $subscription['logo'] != "" ? "images/uploads/logos/" . $subscription['logo'] : "";
       $print[$id]['logo_text_color'] = $subscription['logo_text_color'] ?? null;
       $print[$id]['logo_variant'] = !empty($subscription['logo_variant']) ? "images/uploads/logos/" . $subscription['logo_variant'] : null;
@@ -503,6 +578,15 @@ $dialGrouped = ($_COOKIE['subscriptionsGrouped'] ?? '1') !== '0';
       </select>
     </div>
 
+    <div class="form-group dial-icon-form-entry">
+      <div>
+        <span class="dial-icon-form-label"><?= $dialIconHtml('icon') ?></span>
+        <span id="dial-icon-current-label" class="dial-icon-form-current"><?= $dialIconHtml('original') ?></span>
+      </div>
+      <button type="button" id="dial-icon-open-form" class="secondary-button"
+        data-testid="dial-icon-open-form"><?= $dialIconHtml('change') ?></button>
+    </div>
+
     <div class="form-group-inline grow" id="notifications-group">
       <input type="checkbox" id="notifications" name="notifications" onchange="toggleNotificationDays()">
       <label for="notifications" class="grow"><?= translate('enable_notifications', $i18n) ?></label>
@@ -598,7 +682,114 @@ $dialGrouped = ($_COOKIE['subscriptionsGrouped'] ?? '1') !== '0';
 </section>
 <div class="dial-form-backdrop" aria-hidden="true" onClick="closeAddSubscription()"></div>
 
+<dialog id="dial-icon-chooser" class="dial-icon-chooser" data-testid="dial-icon-chooser"
+  data-demo-mode="<?= $demoMode === '1' ? '1' : '0' ?>" aria-labelledby="dial-icon-chooser-title">
+  <div class="dial-icon-dialog-head">
+    <div>
+      <p class="dial-icon-eyebrow">WALLOS DIAL / ICONS</p>
+      <h2 id="dial-icon-chooser-title"><?= $dialIconHtml('chooser') ?></h2>
+    </div>
+    <button type="button" id="dial-icon-close" class="dial-icon-close"
+      aria-label="<?= $dialIconHtml('cancel') ?>" title="<?= $dialIconHtml('cancel') ?>">×</button>
+  </div>
+  <nav class="dial-icon-source-tabs" aria-label="<?= $dialIconHtml('chooser') ?>">
+    <?php foreach (['original', 'catalog', 'library', 'upload'] as $source): ?>
+      <button type="button" data-dial-source="<?= $source ?>"
+        data-testid="dial-icon-source-<?= $source ?>" aria-pressed="<?= $source === 'original' ? 'true' : 'false' ?>">
+        <?= $dialIconHtml($source) ?>
+      </button>
+    <?php endforeach; ?>
+  </nav>
+  <div class="dial-icon-source-body">
+    <section id="dial-icon-panel-original" class="dial-icon-panel">
+      <p><?= $dialIconHtml('originalHint') ?></p>
+      <div id="dial-icon-original-choice" class="dial-icon-original-choice"></div>
+    </section>
+    <section id="dial-icon-panel-catalog" class="dial-icon-panel" hidden>
+      <p><?= $dialIconHtml('catalogHint') ?></p>
+      <div class="dial-icon-options" id="dial-icon-catalog-options">
+        <?php foreach (dialIconCatalog() as $key => $item): ?>
+          <button type="button" class="dial-icon-option" data-catalog-key="<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>"
+            data-testid="dial-icon-catalog-<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>"
+            data-optical-scale="<?= htmlspecialchars((string) $item['optical_scale'], ENT_QUOTES, 'UTF-8') ?>"
+            aria-pressed="false">
+            <span class="dial-icon-option-art" aria-hidden="true"><img src="images/dial-catalog/<?= rawurlencode($item['file']) ?>" alt=""></span>
+            <span><?= htmlspecialchars($item['label'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></span>
+          </button>
+        <?php endforeach; ?>
+      </div>
+    </section>
+    <section id="dial-icon-panel-library" class="dial-icon-panel" hidden>
+      <p><?= $dialIconHtml('libraryHint') ?></p>
+      <div id="dial-icon-library-options" class="dial-icon-options" aria-live="polite"></div>
+    </section>
+    <section id="dial-icon-panel-upload" class="dial-icon-panel" hidden>
+      <p><?= $dialIconHtml('fileLimit') ?></p>
+      <div class="dial-icon-upload-fields">
+        <label for="dial-icon-upload-file"><?= $dialIconHtml('uploadFile') ?></label>
+        <input id="dial-icon-upload-file" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml,.svg"
+          data-testid="dial-icon-upload">
+        <label for="dial-icon-upload-label"><?= $dialIconHtml('uploadLabel') ?></label>
+        <input id="dial-icon-upload-label" type="text" maxlength="80" autocomplete="off">
+        <button type="button" id="dial-icon-upload-action" class="dial-icon-action-button"><?= $dialIconHtml('uploadAction') ?></button>
+      </div>
+    </section>
+  </div>
+  <div class="dial-icon-controls">
+    <fieldset>
+      <legend><?= $dialIconHtml('presentation') ?></legend>
+      <div class="dial-icon-segmented">
+        <?php foreach (['plain', 'framed'] as $presentation): ?>
+          <button type="button" data-dial-presentation="<?= $presentation ?>"
+            data-testid="dial-icon-presentation-<?= $presentation ?>"
+            aria-pressed="<?= $presentation === 'plain' ? 'true' : 'false' ?>"><?= $dialIconHtml($presentation) ?></button>
+        <?php endforeach; ?>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend><?= $dialIconHtml('treatment') ?></legend>
+      <div class="dial-icon-segmented">
+        <?php foreach (['color', 'mono'] as $treatment): ?>
+          <button type="button" data-dial-treatment="<?= $treatment ?>"
+            data-testid="dial-icon-treatment-<?= $treatment ?>"
+            aria-pressed="<?= $treatment === 'color' ? 'true' : 'false' ?>"><?= $dialIconHtml($treatment) ?></button>
+        <?php endforeach; ?>
+      </div>
+    </fieldset>
+    <label class="dial-icon-scale-control" for="dial-icon-scale">
+      <span><?= $dialIconHtml('size') ?> <output id="dial-icon-scale-value" for="dial-icon-scale">100%</output></span>
+      <input id="dial-icon-scale" type="range" min="80" max="120" step="5" value="100"
+        data-testid="dial-icon-scale">
+      <span class="dial-icon-scale-ends"><span>80%</span><span>120%</span></span>
+    </label>
+  </div>
+  <div class="dial-icon-preview-section" data-testid="dial-icon-preview">
+    <p><?= $dialIconHtml('preview') ?></p>
+    <div class="dial-icon-preview-pair">
+      <div class="dial-icon-preview-surface is-warm" data-preview-tone="warm">
+        <span class="dial-icon-preview-art" aria-hidden="true"></span>
+        <span><?= $dialIconHtml('warm') ?></span>
+      </div>
+      <div class="dial-icon-preview-surface is-dark" data-preview-tone="dark">
+        <span class="dial-icon-preview-art" aria-hidden="true"></span>
+        <span><?= $dialIconHtml('dark') ?></span>
+      </div>
+    </div>
+  </div>
+  <p id="dial-icon-status" class="dial-icon-status" role="status" aria-live="polite"></p>
+  <?php if ($demoMode === '1'): ?>
+    <p class="dial-icon-demo-note"><?= $dialIconHtml('demoNotice') ?></p>
+  <?php endif; ?>
+  <div class="dial-icon-dialog-actions">
+    <button type="button" id="dial-icon-cancel" class="secondary-button"><?= $dialIconHtml('cancel') ?></button>
+    <button type="button" id="dial-icon-save" class="dial-icon-action-button" data-testid="dial-icon-save"
+      <?= $demoMode === '1' ? 'disabled' : '' ?>><?= $dialIconHtml('save') ?></button>
+  </div>
+</dialog>
+
 <?php require_once 'includes/subscription_details_popup.php'; ?>
+<script>window.DialIconCopy = <?= json_encode($dialIconCopy, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
+<script src="scripts/dial-icon-chooser.js?dial=<?= rawurlencode(DIAL_VERSION) ?>"></script>
 <script src="scripts/subscriptions.js?dial=<?= rawurlencode(DIAL_VERSION) ?>"></script>
 <?php if (isset($_GET['focus']) && $_GET['focus'] === 'search'): ?>
 <script>document.getElementById('search')?.focus();</script>

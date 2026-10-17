@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/dial_logo_map.php';
+require_once __DIR__ . '/dial_icon_resolver.php';
 /**
  * Desktop dashboard composition. Existing Wallos detail, add, search and
  * settings flows remain the handlers for its controls.
@@ -134,7 +134,7 @@ $dialMonthlyDigits = dialMoneyDigits($dialMonthlyValue);
               $currencies[$subscription['currency_id']]['code'],
               $currencies
           );
-          $subscriptionRedrawnLogo = dialRedrawnLogoFor($subscription['logo'] ?? '');
+          $subscriptionIcon = dialResolveIcon($db, (int) $userId, $subscription);
       ?>
         <div class="dial-payment-row" role="button" tabindex="0" data-id="<?= $subscriptionId ?>"
           aria-label="<?= $subscriptionName ?>, <?= htmlspecialchars($dialDateFormatter->format($subscriptionDate), ENT_QUOTES, 'UTF-8') ?>, <?= htmlspecialchars($countdownText, ENT_QUOTES, 'UTF-8') ?>, <?= htmlspecialchars($subscriptionPrice, ENT_QUOTES, 'UTF-8') ?>"
@@ -142,21 +142,8 @@ $dialMonthlyDigits = dialMoneyDigits($dialMonthlyValue);
           onclick="showSubscriptionDetails(event, <?= $subscriptionId ?>)"
           onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showSubscriptionDetails(event, <?= $subscriptionId ?>); }">
           <span class="dial-service">
-            <span class="dial-service-logo<?= empty($subscription['logo']) ? ' dial-service-logo--empty' : '' ?>">
-              <?php if ($subscriptionRedrawnLogo): ?>
-                <img class="dial-redrawn-logo" src="images/dial-logos/<?= htmlspecialchars($subscriptionRedrawnLogo, ENT_QUOTES, 'UTF-8') ?>" alt="">
-              <?php elseif (!empty($subscription['logo'])):
-                  $subscriptionLogoSrc = 'images/uploads/logos/' . $subscription['logo'];
-                  $subscriptionLogoVariantSrc = !empty($subscription['logo_variant'])
-                      ? 'images/uploads/logos/' . $subscription['logo_variant'] : null;
-                  echo renderThemedLogoImg(
-                      $subscriptionLogoSrc,
-                      $subscriptionLogoVariantSrc,
-                      $subscription['logo_text_color'] ?? null,
-                      'dial-logo-image',
-                      'alt=""'
-                  );
-              endif; ?>
+            <span class="dial-service-logo<?= $subscriptionIcon['kind'] === 'fallback' ? ' dial-service-logo--empty' : '' ?>">
+              <?= dialRenderIcon($subscriptionIcon, 'dial-service-icon') ?>
             </span>
             <span class="dial-service-name"><?= $subscriptionName ?></span>
           </span>

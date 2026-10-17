@@ -44,8 +44,24 @@ if find . \( -path './.git' -o -path './data' \) -prune -o -type f \( -name '*.d
   echo 'Local database, environment, or key file found in package' >&2
   exit 1
 fi
-if grep -RIEq 'jarvishub|lukevoidx|dolphtek|withluke|mostai|mostrahub|erenship|nmcloud|proxy-seller' theme config; then
-  echo 'Account-specific mapping found in public package' >&2
+public_icons=(apple-one chatgpt claude jianying netcup nmcloud proxy-seller racknerd vmiss)
+for file in docs/ICONS.md docs/zh-CN/ICONS.md theme/migrations/dial_001_icon_library.php theme/includes/dial_icon_catalog.php theme/includes/dial_icon_repository.php theme/includes/dial_icon_resolver.php theme/includes/dial_icon_normalize.php theme/includes/dial_icon_transaction.php theme/includes/dial_logo_limits.php theme/includes/subscription_details_popup.php theme/endpoints/dial/icons.php theme/endpoints/dial/icon.php theme/endpoints/dial/subscription_icon.php theme/endpoints/subscription/add.php theme/endpoints/subscription/clone.php theme/endpoints/subscription/get.php theme/scripts/dial-icon-chooser.js theme/scripts/subscription-details.js compat/nginx-dial-icon.conf tests/icon-catalog.php tests/icon-schema.php tests/icon-resolver.php tests/icon-normalize.php tests/icon-atomic.php tests/logo-limits.php tests/icon-http.py tests/icon-detail-http.py tests/icon-cache-browser.cjs tests/icon-detail-browser.cjs tests/icon-chooser-browser.cjs; do
+  [[ -f "$file" ]] || { echo "Missing icon-system file: $file" >&2; exit 1; }
+done
+[[ -x theme/bin/dial-render-svg.sh && -x tests/run-icon-http.sh ]] || {
+  echo 'Icon SVG renderer or HTTP test runner is not executable' >&2; exit 1;
+}
+for icon in "${public_icons[@]}"; do
+  [[ -f "theme/images/dial-catalog/$icon.svg" ]] || { echo "Missing catalog icon: $icon" >&2; exit 1; }
+done
+[[ $(find theme/images/dial-catalog -maxdepth 1 -type f -name '*.svg' | wc -l | tr -d ' ') == 9 ]] || {
+  echo 'Public catalog contains an unreviewed SVG' >&2; exit 1;
+}
+if find theme/images/dial-logos -type f ! -name .gitkeep | grep -q . ||
+   [[ -e config/logo-map.local.php ]] ||
+   grep -RIEq 'dolphtek|erenship|jarvishub|mostrahub|withluke' theme config ||
+   grep -RIEq 'lukevoidx|mostai' theme/images/dial-catalog/*.svg config; then
+  echo 'Private logo or account-specific mapping found in public package' >&2
   exit 1
 fi
 

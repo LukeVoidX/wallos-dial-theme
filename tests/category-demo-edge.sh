@@ -38,6 +38,17 @@ start_app 0
 docker exec "$app" sh -c 'chmod a+rwX /var/www/html/db /var/www/html/db/wallos.db /var/www/html/images/uploads/logos'
 docker rm -f "$app" >/dev/null
 python3 demo/seed.py "$scratch/db/wallos.db" "$scratch/logos"
+printf '<svg xmlns="http://www.w3.org/2000/svg"></svg>\n' > "$scratch/logos/private-mark.svg"
+printf '<svg xmlns="http://www.w3.org/2000/svg"></svg>\n' > "$scratch/logos/demo-99.svg"
+python3 - "$scratch/db/wallos.db" "theme/images/dial-icon/favicon-32.png" <<'PY'
+import hashlib, pathlib, sqlite3, sys
+payload = pathlib.Path(sys.argv[2]).read_bytes()
+db = sqlite3.connect(sys.argv[1])
+db.execute('INSERT INTO dial_icon_assets(user_id,label,mime,bytes,sha256,width,height) VALUES(1,?,?,?,?,32,32)',
+           ('Fictional icon','image/png',payload,hashlib.sha256(payload).hexdigest()))
+db.commit()
+db.close()
+PY
 start_app 1
 
 python3 - "$site" "$scratch/Caddyfile" "$app" <<'PY'
@@ -69,4 +80,25 @@ for attempt in $(seq 1 30); do
   sleep 1
 done
 bash demo/smoke.sh "http://$origin/" "http://$edge_address/"
+curl -fsSL --cookie-jar "$scratch/edge-icon-cookies" --cookie "$scratch/edge-icon-cookies" \
+  "http://$edge_address/" >/dev/null
+for method in GET POST; do
+  for endpoint in icons.php 'icon.php?id=1'; do
+    request=(curl -sS -o /dev/null -w '%{http_code}' --cookie "$scratch/edge-icon-cookies")
+    if [[ "$method" == POST ]]; then request+=(--data 'action=delete&id=1'); fi
+    status=$("${request[@]}" "http://$edge_address/endpoints/dial/$endpoint")
+    [[ "$status" == 404 ]] || { echo "Demo edge exposed My Icons $method $endpoint ($status)" >&2; exit 1; }
+  done
+done
+curl -fsSL "http://$edge_address/images/dial-catalog/chatgpt.svg" > "$scratch/catalog.svg"
+grep -Fq '<svg' "$scratch/catalog.svg" || { echo 'Demo edge blocked a public catalog pictogram' >&2; exit 1; }
+curl -fsSL "http://$edge_address/images/uploads/logos/demo-01.svg" > "$scratch/demo-logo.svg"
+grep -Fq '<svg' "$scratch/demo-logo.svg" || { echo 'Demo edge blocked a synthetic service mark' >&2; exit 1; }
+status=$(curl -sS -o /dev/null -w '%{http_code}' "http://$edge_address/images/uploads/logos/private-mark.svg")
+[[ "$status" == 404 ]] || { echo "Demo edge exposed a non-synthetic uploaded Logo ($status)" >&2; exit 1; }
+status=$(curl -sS -o /dev/null -w '%{http_code}' "http://$edge_address/images/uploads/logos/demo-99.svg")
+[[ "$status" == 404 ]] || { echo "Demo edge exposed an unseeded Demo-looking Logo ($status)" >&2; exit 1; }
+status=$(curl -sS -o /dev/null -w '%{http_code}' --data 'subscription_id=1&dial_icon_source=original' \
+  "http://$edge_address/endpoints/dial/subscription_icon.php")
+[[ "$status" == 404 ]] || { echo "Demo edge allowed quick icon write ($status)" >&2; exit 1; }
 echo 'Isolated Demo Caddy policy passed.'

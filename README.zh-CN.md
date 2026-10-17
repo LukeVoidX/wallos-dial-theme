@@ -2,17 +2,17 @@
 
 ![Wallos Dial 主视觉：每一次续订，都心中有数](docs/assets/posters/campaign-hero-zh.png)
 
-[中文介绍页](https://lukevoidx.github.io/wallos-dial-theme/zh-CN/) · [立即体验在线 Demo](https://wallos-demo.mostai.org/) · [English](README.md) · [分类管理](docs/CATEGORIES.zh-CN.md) · [中文海报](docs/CAMPAIGN.zh-CN.md) · [改版前后与原始截图](docs/SHOWCASE.md) · [安装、升级和回退](docs/UPGRADING.md)
+[中文介绍页](https://lukevoidx.github.io/wallos-dial-theme/zh-CN/) · [立即体验在线 Demo](https://wallos-demo.mostai.org/) · [English](README.md) · [分类管理](docs/CATEGORIES.zh-CN.md) · [图标选择](docs/zh-CN/ICONS.md) · [中文海报](docs/CAMPAIGN.zh-CN.md) · [改版前后与原始截图](docs/SHOWCASE.md) · [安装、升级和回退](docs/zh-CN/UPGRADING.md)
 
 Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界面改版。暖白底、黑色数字、细线和少量红色贯穿总览、订阅、日历与统计页面。首页集中显示月度费用、日期刻度、近期付款和倒计时；订阅页增加分类区块。原有搜索、筛选、排序、新增与编辑、通知和设置功能继续由 Wallos 处理。
 
-**Dial 版本：**`0.1.1` · **已验证的 Wallos 版本：**仅 `5.8.1`。这是构建在固定 Wallos 镜像上的源码叠加层，并非 Wallos 内置的可切换主题；它不隶属于 Wallos 官方。
+**Dial 1.0.0 目标版本：**仅适配 Wallos 5.8.3。当前源码是已在本地测试的 1.0.0 发布候选版，Git 标签与镜像尚未发布；已公开的镜像和 Demo 仍是基于 Wallos 5.8.1 的 0.1.1，直至 1.0 审核、发布和部署完成。GitHub 与 GHCR 出现正式版本前，请勿尝试拉取 `1.0.0` 镜像。Dial 是固定 Wallos 镜像上的源码叠加层，并非应用内置的可切换主题，也不隶属于 Wallos 官方。
 
-**先体验，再安装：**[打开真实运行的中英文 Demo](https://wallos-demo.mostai.org/)。它在独立容器运行实际 PHP 应用，并放入 30 条虚构订阅。可浏览总览、分类订阅、日历、统计、详情与语言切换。公开环境为只读，账户与编辑功能需自行安装镜像体验。GitHub Pages 的[中文](https://lukevoidx.github.io/wallos-dial-theme/zh-CN/)与[英文](https://lukevoidx.github.io/wallos-dial-theme/)介绍页可先说明主题与兼容范围。[了解真实 Demo 的部署与边界](docs/DEMO.md)。
+**先体验，再安装：**[打开真实运行的中英文 Demo](https://wallos-demo.mostai.org/)。它在独立容器运行实际 PHP 应用，并放入 30 条虚构订阅。可浏览总览、分类订阅、日历、统计、详情与语言切换。公开环境只读；Demo 会在 1.0 发布获批后另行更新，进入时请先核对显示的版本。[了解真实 Demo 的部署与边界](docs/DEMO.md)。
 
 ![Wallos Dial 总览展示：内嵌真实运行界面的截图](docs/assets/posters/showcase-overview.png)
 
-仓库中的界面截图来自隔离示例账号，名称、金额和标识均为虚构。ImageGen 只用于海报背景，内嵌界面保持真实浏览器截图。[查看完整对比与原始截图](docs/SHOWCASE.md)。
+这张海报中的界面来自早期版本的隔离示例账号，名称、金额和标识均为虚构。ImageGen 只用于海报背景，内嵌界面保持真实浏览器截图。[查看 1.0 本地候选版的直接截图](docs/SHOWCASE.md)：首页、分类订阅、分类管理、图标选择器及统计页面使用同一组 30 条虚构订阅。公开 Demo 目前仍为 0.1.1；这些候选版截图不代表已公开部署。
 
 ![Wallos Dial 分类订阅展示](docs/assets/posters/campaign-ledger-zh.png)
 
@@ -29,6 +29,8 @@ Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界
 ## 新安装
 
 需要 Docker、Compose，以及本机空闲的 `8282` 端口：
+
+**1.0 尚未发布时：**请只在隔离实例使用 `docker compose -f compose.build.yaml up -d --build` 构建本地候选版。以下直接拉取镜像的命令适用于 `compose.yaml` 和 GHCR 都升至正式 `1.0.0` 之后。
 
 ```bash
 git clone https://github.com/LukeVoidX/wallos-dial-theme.git
@@ -61,25 +63,27 @@ ssh -L 8282:127.0.0.1:8282 user@your-server
 3. 运行 `docker compose config`，核对解析出的挂载目录。停止旧 Wallos 容器后，再运行 `docker compose up -d`；不要让两个容器同时写同一数据库。
 4. 登录后核对订阅数量、Logo、总览、日历、统计、设置和通知。无需重新录入订阅。
 
-如果原部署还有额外环境变量、代理或自定义端口，应按实际情况带入新部署。[升级与回退说明](docs/UPGRADING.md)包含版本切换和数据库迁移边界。
+如果原部署还有额外环境变量、代理或自定义端口，应按实际情况带入新部署。[中文升级与回退说明](docs/zh-CN/UPGRADING.md)包含版本切换、备份与还原步骤。
 
 分类可以在订阅页或设置页打开独立的管理界面，支持新增、改名、排序、合并和删除空分类。初始分类为可选操作，不会覆盖已有订阅。[查看分类管理说明](docs/CATEGORIES.zh-CN.md)。
 
-## 自定义 Logo 与语言
+## 图标与语言
 
-已有上传 Logo 会保留。若希望个别服务使用自备 SVG，可以将文件放入 `config/icons/`，从 [`config/logo-map.example.php`](config/logo-map.example.php) 复制一份 `config/logo-map.local.php`，建立上传文件名到 SVG 文件名的映射，再启用 `compose.yaml` 中的只读挂载。仓库不包含用户的品牌素材或私人映射。
+已有上传 Logo 会保留。新增／编辑表单的「图标」区域，以及卡片上的「更换图标」操作，可选择原图、九枚主题图标或「我的图标」，并设置有无边框、彩色／单色及 80%–120% 显示大小。主题图标是统一绘制的中性原创符号，使用服务名称作识别，不包含第三方品牌 Logo；[来源及设计规则](theme/images/dial-catalog/SOURCES.md)已列明。「原图」会恢复 Wallos 原有 Logo。「我的图标」按账户保存在 SQLite 数据库，升级前除了 Logo 数据卷，也必须备份数据库。[查看图标操作及上传限制](docs/zh-CN/ICONS.md)。
+
+已有的私人 SVG 文件映射仍可使用：将 SVG 放入 `config/icons/`，从 [`config/logo-map.example.php`](config/logo-map.example.php) 复制 `config/logo-map.local.php`，建立上传文件名到 SVG 文件名的映射，再启用 `compose.yaml` 的只读挂载。它只在没有明确图标选择时生效；选择「原图」可覆盖旧映射。私人文件、上传的 Logo 和映射不进入公开包。
 
 顶栏提供简体中文、English、繁體中文的快捷选项，也保留 Wallos 其他语言。选择会保存到现有账户语言字段和 Cookie；用户自己录入的订阅名称不会自动翻译。
 
 ## 邮件通知
 
-Dial 0.1.1 将续费、取消、SMTP 测试、邮箱验证和密码重置邮件统一为暖白 HTML 模板，并附带纯文本版本。收件人、发送时间、SMTP 配置和原有纯文本提醒内容仍由 Wallos 处理。模板文案根据账户语言显示英文、简体中文或繁体中文；其他语言回退英文，订阅名称和金额保持原样。
+Dial 1.0 沿用 0.1.1 引入的邮件设计，将续费、取消、SMTP 测试、邮箱验证和密码重置邮件统一为暖白 HTML 模板，并附带纯文本版本。收件人、发送时间和 SMTP 配置仍沿用 Wallos 原有规则；续费、取消及可选的期初摘要纯文本会按收件人账户语言显示英文、简体中文或繁体中文。其他语言回退英文，用户录入的订阅名称和金额保持原样。
 
 提醒邮件中的“打开 Wallos”按钮读取管理设置里的 **Server URL**（或部署管理的 `WALLOS_SERVER_URL`）；未设置或无效时不显示按钮。验证与重置密码邮件必须有有效的 HTTP(S) Server URL，否则保留待发送状态，避免发出无法使用的链接。安装后请按原有方式设置 SMTP，并先发送测试邮件。
 
 ## 更新边界
 
-Dial `0.1.1` 固定在 Wallos `5.8.1`。Wallos 发布新版本后，本主题**不会自动跳到未经验证的上游版本**。维护者需检查被替换文件的差异，更新适配，测试数据副本，然后发布新的 Dial 镜像。现有版本可以继续运行；不要直接把 Dockerfile 的 Wallos 版本号改新就上线。详见[升级和回退](docs/UPGRADING.md)。
+Dial `1.0.0` 的目标基底固定为 Wallos `5.8.3`；目前仍在本地候选阶段。Wallos 发布新版本后，本主题**不会自动跳到未经验证的上游版本**。维护者需检查被替换文件的差异，更新适配，测试数据副本，然后发布新的 Dial 镜像。现有版本可以继续运行；不要直接把 Dockerfile 的 Wallos 版本号改新就上线。详见[升级和回退](docs/zh-CN/UPGRADING.md)。
 
 此版本重点是桌面体验，没有单独承诺手机重新设计，也不承诺未来每次 Wallos 更新都零故障。
 

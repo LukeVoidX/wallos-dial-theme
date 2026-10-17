@@ -28,7 +28,7 @@ if (php_sapi_name() == 'cli') {
 }
 
 // Get all user ids
-$query = "SELECT id, username FROM user";
+$query = "SELECT id, username, language FROM user";
 $stmt = $db->prepare($query);
 $usersToNotify = $stmt->execute();
 $periodSummaryColumnCheck = $db->query("SELECT * FROM pragma_table_info('notification_settings') WHERE name='period_summary_at_period_start'");
@@ -351,11 +351,15 @@ while ($userToNotify = $usersToNotify->fetchArray(SQLITE3_ASSOC)) {
         $amountNeededThisPeriod = computeAmountNeededInPeriod($periodSubscriptions, $currentDate, $activeBudgetPeriod['end'], $db, $userId);
         $mainCurrencyCode = $currencies[$mainCurrencyId]['code'] ?? 'USD';
         $mainCurrencySymbol = $currencies[$mainCurrencyId]['symbol'] ?? '$';
-        $periodSummaryLine = translate('amount_for_pay_period', $i18n) . ": " . formatPrice($amountNeededThisPeriod, $mainCurrencyCode, $mainCurrencySymbol);
+        $periodI18n = (static function (string $language): array {
+            require __DIR__ . '/../../includes/i18n/' . $language . '.php';
+            return $i18n;
+        })(dial_mail_language($userToNotify['language'] ?? 'en'));
+        $periodSummaryLine = translate('amount_for_pay_period', $periodI18n) . ": " . formatPrice($amountNeededThisPeriod, $mainCurrencyCode, $mainCurrencySymbol);
 
         if (!empty($userBudgetConfig['period_budget']) && $userBudgetConfig['period_budget'] > 0) {
             $remaining = max(0, $userBudgetConfig['period_budget'] - $amountNeededThisPeriod);
-            $periodSummaryLine .= " | " . translate('remaining', $i18n) . ": " . formatPrice($remaining, $mainCurrencyCode, $mainCurrencySymbol);
+            $periodSummaryLine .= " | " . translate('remaining', $periodI18n) . ": " . formatPrice($remaining, $mainCurrencyCode, $mainCurrencySymbol);
         }
 
         $sendPeriodStartSummaryOnly = $periodSummaryAtPeriodStart === 1 && $isPeriodStart;
@@ -482,9 +486,13 @@ while ($userToNotify = $usersToNotify->fetchArray(SQLITE3_ASSOC)) {
                         }
                     }
 
-                    $mail->Subject = 'Wallos Notification';
                     $dialMailBase = wallos_get_admin_settings($db)['server_url'] ?? '';
-                    dial_mail_apply($mail, dial_mail_notifications('renewal', $perUser, $periodSummaryLine, $sendPeriodStartSummaryOnly, $dialMailBase, $defaultUser['language'] ?? 'en'), $message);
+                    $dialLanguage = $defaultUser['language'] ?? 'en';
+                    $mail->Subject = 'Wallos · ' . dial_mail_copy(
+                        empty($perUser) ? 'summary_title' : 'renewal', $dialLanguage);
+                    dial_mail_apply($mail,
+                        dial_mail_notifications('renewal', $perUser, $periodSummaryLine, $sendPeriodStartSummaryOnly, $dialMailBase, $dialLanguage),
+                        dial_mail_plain_notifications('renewal', $perUser, $periodSummaryLine, $sendPeriodStartSummaryOnly, $dialMailBase, $dialLanguage));
 
                     if ($mail->send()) {
                         echo "Email Notifications sent<br />";

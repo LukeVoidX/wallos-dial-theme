@@ -2,7 +2,7 @@
 
 require_once 'i18n/getlang.php';
 require_once __DIR__ . '/currency_rates.php';
-require_once __DIR__ . '/dial_logo_map.php';
+require_once __DIR__ . '/dial_icon_resolver.php';
 require_once __DIR__ . '/dial_categories.php';
 
 function getBillingCycle($cycle, $frequency, $i18n)
@@ -159,6 +159,11 @@ function printSubscriptions($subscriptions, $sort, $categories, $members, $i18n,
         'visa.png' => 'VISA',
         'wechat.png' => 'WECHAT',
     ];
+    $dialChangeIconLabel = match ($lang) {
+        'zh_cn' => '更换图标',
+        'zh_tw' => '更換圖標',
+        default => 'Change icon',
+    };
     if ($sort === "price") {
         usort($subscriptions, function ($a, $b) {
             return $a['price'] < $b['price'] ? 1 : -1;
@@ -294,30 +299,19 @@ function printSubscriptions($subscriptions, $sort, $categories, $members, $i18n,
                 $subscriptionExtraClasses .= " manual";
             }
 
-            $hasLogo = false;
-            if ($subscription['logo'] != "") {
-                $hasLogo = true;
-            }
-            $dialLogo = dialRedrawnLogoFor($subscription['logo'] ?? '');
+            $dialIcon = $subscription['dial_icon'] ?? dialOriginalIconDescriptor($subscription);
+            $hasLogo = $dialIcon['kind'] !== 'fallback';
             $dialPaymentLabel = $dialPaymentLabels[strtolower(basename($subscription['payment_method_icon'] ?? ''))] ?? null;
 
             ?>
 
             <div class="subscription<?= $subscriptionExtraClasses ?>"
                 onClick="showSubscriptionDetails(event, <?= $subscription['id'] ?>)" data-id="<?= $subscription['id'] ?>"
-                data-name="<?= $subscription['name'] ?>">
+                data-name="<?= $subscription['name'] ?>" data-testid="dial-subscription-<?= (int) $subscription['id'] ?>">
                 <div class="subscription-main">
                     <span class="logo <?= !$hasLogo ? 'hideOnMobile' : '' ?>">
-                        <span class="dial-logo-tile<?= $dialLogo ? '' : ' dial-logo-tile--fallback' ?>">
-                        <?php
-                        if ($dialLogo) {
-                            echo '<img class="dial-redrawn-logo" src="images/dial-logos/' . $dialLogo . '" alt="" loading="lazy">';
-                        } else if ($hasLogo) {
-                            echo renderThemedLogoImg($subscription['logo'], $subscription['logo_variant'] ?? null, $subscription['logo_text_color'] ?? null);
-                        } else {
-                            include $imagePath . "images/siteicons/svg/logo.php";
-                        }
-                        ?>
+                        <span class="dial-logo-tile<?= !$hasLogo ? ' dial-logo-tile--fallback' : '' ?>">
+                          <?= dialRenderIcon($dialIcon, 'dial-card-icon') ?>
                         </span>
                     </span>
                     <span class="name <?= $hasLogo ? 'hideOnMobile' : '' ?>"><?= $subscription['name'] ?></span>
@@ -363,6 +357,13 @@ function printSubscriptions($subscriptions, $sort, $categories, $members, $i18n,
                         $desktopMenuButtonClass = "mobileNavigationHideOnMobile";
                     }
                     ?>
+                    <button type="button" class="dial-quick-icon-button"
+                        data-testid="dial-icon-change-<?= (int) $subscription['id'] ?>"
+                        title="<?= htmlspecialchars($dialChangeIconLabel, ENT_QUOTES, 'UTF-8') ?>"
+                        aria-label="<?= htmlspecialchars($dialChangeIconLabel . ': ' . htmlspecialchars_decode($subscription['name']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>"
+                        onClick="openDialSubscriptionIcon(event, <?= (int) $subscription['id'] ?>)">
+                        <i class="fa-solid fa-image" aria-hidden="true"></i>
+                    </button>
                     <button type="button" class="actions-expand <?= $desktopMenuButtonClass ?>"
                         onClick="expandActions(event, <?= $subscription['id'] ?>)">
                         <i class="fas fa-ellipsis-v"></i>

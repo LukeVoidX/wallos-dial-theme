@@ -158,16 +158,6 @@ $mobileNavigation = $settings['mobile_nav'] ? "mobile-navigation" : "";
   <script type="text/javascript" src="scripts/dial-language.js?dial=<?= rawurlencode(DIAL_VERSION) ?>" defer></script>
   <script type="text/javascript" src="scripts/dial-category-refresh.js?dial=<?= rawurlencode(DIAL_VERSION) ?>" defer></script>
   <script type="text/javascript" src="scripts/password-toggle.js?<?= $version ?>"></script>
-  <?php if (basename($_SERVER['PHP_SELF']) !== 'categories.php'): ?>
-  <script>
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-      if (!sessionStorage.getItem('sw_prefetched')) {
-        navigator.serviceWorker.controller.postMessage({ type: 'PREFETCH_PAGES' });
-        sessionStorage.setItem('sw_prefetched', '1');
-      }
-    }
-  </script>
-  <?php endif; ?>
 </head>
 
 <body class="<?= $theme ?> <?= $languages[$lang]['dir'] ?> <?= $mobileNavigation ?> wallos-dial">

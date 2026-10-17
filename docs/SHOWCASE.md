@@ -2,9 +2,33 @@
 
 [Browse the six-part poster series in English](CAMPAIGN.md) · [查看六张中文主题海报](CAMPAIGN.zh-CN.md)
 
-The UI in these comparisons is captured directly from Wallos 5.8.1 and Wallos Dial 0.1.0 running with **the same synthetic demo database**. Service names, prices, user, logos, and payment method are fictitious. ImageGen was used for the editorial backgrounds; it did not redraw the UI screenshots.
+The historical UI comparisons below were captured directly from Wallos 5.8.1 and Wallos Dial 0.1.0 running with **the same synthetic demo database**. Service names, prices, user, logos, and payment method are fictitious. ImageGen was used for the editorial backgrounds; it did not redraw the UI screenshots. They show the original design change, not the pending 1.0.0 / Wallos 5.8.3 candidate.
 
 The email comparison below is a separate Dial 0.1.1 fixture: it renders the original Wallos 5.8.1 renewal message body and the actual Dial HTML template with the same two fictional subscriptions. The mail-client frame is presentation artwork; it is not an inbox capture or evidence that an SMTP message was delivered.
+
+## 1.0 local candidate — direct captures
+
+Dial 1.0.0 targets Wallos 5.8.3. These are direct browser captures of the **local release candidate** at a 1440 px CSS viewport and 100% browser zoom on 2026-10-17. The isolated fixture contains 30 fictional subscriptions; its service names, amounts, domains, and payment methods are demonstration data. The icon chooser uses real service names only as labels for nine independent, neutral pictograms. No personal subscription records or private SVGs appear in these images. **The public Demo and published image still run 0.1.1.** These captures do not claim that 1.0 has been published or deployed.
+
+### Overview and grouped subscriptions
+
+![Dial 1.0 local overview with monthly cost, date dial, upcoming payments, and countdown](assets/screenshots/dial-1.0-overview.png)
+
+![Dial 1.0 local subscription grid with fictional AI, Infra, Domains, and Media entries](assets/screenshots/dial-1.0-subscriptions-grid.png)
+
+### Category manager and icon chooser
+
+![Dial 1.0 local category manager showing account categories and subscription counts](assets/screenshots/dial-1.0-categories.png)
+
+![Dial 1.0 local icon chooser with nine neutral catalog symbols and light and dark previews](assets/screenshots/dial-1.0-icon-chooser.png)
+
+The [category guide](CATEGORIES.md) explains account-scoped ordering and merging; the [icon guide](ICONS.md) explains Original, built-in, and My Icons choices. The selected symbol is shown on warm and dark preview surfaces at its actual display size.
+
+### Statistics
+
+![Dial 1.0 local statistics with subdued charts and the same fictional account data](assets/screenshots/dial-1.0-statistics.png)
+
+The [release checklist](RELEASE-CHECKLIST-1.0.0.md) records the candidate image, fixture, viewport and browser QA before any public release. The older posters below document the original 0.1.0 redesign; they are not 1.0 screenshots.
 
 ## Design direction and product showcase
 

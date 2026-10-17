@@ -11,28 +11,20 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - name: Match tag and declared version
         run: |
-          test "${GITHUB_REF_NAME}" = "v$(cat VERSION)"
-          ./scripts/check-package.sh
-          docker compose config -q
+          version=$(cat VERSION)
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
+          test "$GITHUB_REF_NAME" = "v$version"
+      - name: Verify complete local Dial candidate before registry login
+        run: ./scripts/verify-1.0-candidate.sh wallos-dial:preflight
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v4
-      - name: Build and smoke test before publication
-        run: |
-          docker build -t wallos-dial:preflight .
-          ./scripts/smoke-image.sh wallos-dial:preflight
-          docker run --rm --entrypoint sh wallos-dial:preflight -lc '
-            for file in /var/www/html/index.php /var/www/html/subscriptions.php /var/www/html/calendar.php /var/www/html/stats.php /var/www/html/includes/header.php /var/www/html/includes/dial_logo_map.php /var/www/html/includes/dial_dashboard.php /var/www/html/includes/dial_stat_money.php /var/www/html/includes/dial_mail_theme.php /var/www/html/includes/list_subscriptions.php /var/www/html/endpoints/subscriptions/get.php /var/www/html/endpoints/user/set_dial_language.php /var/www/html/endpoints/cronjobs/sendnotifications.php /var/www/html/endpoints/cronjobs/sendcancellationnotifications.php /var/www/html/endpoints/cronjobs/sendverificationemails.php /var/www/html/endpoints/cronjobs/sendresetpasswordemails.php /var/www/html/endpoints/notifications/testemailnotifications.php; do
-              php -l "$file" >/dev/null || exit 1
-            done
-          '
-          docker run --rm --entrypoint php -v "$PWD/tests:/tests:ro" -v "$PWD/theme/includes:/theme/includes:ro" wallos-dial:preflight /tests/mail-theme.php
-          docker run --rm --entrypoint php -v "$PWD/tests:/tests:ro" -v "$PWD/theme/includes:/theme/includes:ro" wallos-dial:preflight /tests/mail-mime.php
       - name: Resolve version tag
         id: image
         run: echo "tag=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"

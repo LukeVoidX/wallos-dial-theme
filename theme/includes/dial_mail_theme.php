@@ -170,6 +170,36 @@ function dial_mail_notifications(string $kind, array $items, string $summary = '
         $content, $intro, $base, $base, dial_mail_copy('open', $language), $language);
 }
 
+function dial_mail_plain_notifications(string $kind, array $items, string $summary = '', bool $includeSummary = false,
+    string $baseUrl = '', string $language = 'en'): string
+{
+    $cancel = $kind === 'cancellation';
+    $empty = !$cancel && empty($items);
+    $lines = [
+        dial_mail_copy($empty ? 'summary_title' : ($cancel ? 'cancellation' : 'renewal'), $language),
+        '',
+        dial_mail_copy($empty ? 'summary_intro' : ($cancel ? 'cancellation_intro' : 'renewal_intro'), $language),
+        '',
+    ];
+    foreach ($items as $item) {
+        $days = max(0, (int) ($item['days'] ?? 0));
+        $status = $cancel ? dial_mail_copy('cancellation_group', $language)
+            : ($days === 0 ? dial_mail_copy('today', $language) : sprintf(dial_mail_copy('days', $language), $days));
+        $lines[] = ($item['name'] ?? '') . ' · ' . ($item['formatted_price'] ?? $item['price'] ?? '');
+        $lines[] = $status . ' · ' . dial_mail_copy('next', $language) . ' ' . ($item['date'] ?? '');
+        $lines[] = '';
+    }
+    if ($includeSummary) {
+        $lines[] = dial_mail_copy('period', $language) . ': ' . $summary;
+        $lines[] = '';
+    }
+    $base = dial_mail_base_url($baseUrl);
+    if ($base !== '') {
+        $lines[] = dial_mail_copy('open', $language) . ': ' . $base;
+    }
+    return rtrim(implode("\n", $lines)) . "\n";
+}
+
 function dial_mail_test(string $message, string $baseUrl = '', string $language = 'en'): string
 {
     $content = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="soft" style="padding:26px;background:#eeebe2">'

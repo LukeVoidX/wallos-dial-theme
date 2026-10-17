@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-image=${1:-wallos-dial:1.0.0-rc.1}
+image=${1:-wallos-dial:1.0.0}
 name="dial-smoke-$$"
 cleanup() { docker rm -f "$name" >/dev/null 2>&1 || true; }
 trap cleanup EXIT

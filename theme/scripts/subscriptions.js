@@ -39,6 +39,7 @@ function resetForm() {
   replacementSubscription.classList.add("hide");
   const form = document.querySelector("#subs-form");
   form.reset();
+  window.DialIconChooser?.reset?.();
   toggleOneTimeCycleUI(false);
   closeLogoSearch();
   const deleteButton = document.querySelector("#deletesub");
@@ -133,6 +134,8 @@ function fillEditFormFields(subscription) {
   deleteButton.style = 'display: block';
   deleteButton.setAttribute("onClick", `deleteSubscription(event, ${subscription.id})`);
 
+  window.DialIconChooser?.setFromSubscription?.(subscription);
+
   const modal = document.getElementById('subscription-form');
   modal.classList.add("is-open");
 }
@@ -148,12 +151,12 @@ function openEditSubscription(event, id) {
       if (response.ok) {
         return response.json();
       } else {
-        showErrorMessage(translate('failed_to_load_subscription'));
+        throw new Error(translate('failed_to_load_subscription'));
       }
     })
     .then((data) => {
-      if (data.error || data === "Error") {
-        showErrorMessage(translate('failed_to_load_subscription'));
+      if (!data || data.error || data === "Error") {
+        throw new Error(translate('failed_to_load_subscription'));
       } else {
         const subscription = data;
         fillEditFormFields(subscription);
@@ -161,7 +164,61 @@ function openEditSubscription(event, id) {
     })
     .catch((error) => {
       console.log(error);
-      showErrorMessage(translate('failed_to_load_subscription'));
+      document.body.classList.remove('no-scroll');
+      showErrorMessage(error.message || translate('failed_to_load_subscription'));
+    });
+}
+
+// A quick icon change must leave every billing and notification field intact.
+// The dedicated endpoint updates only the account-owned icon preference.
+function openDialSubscriptionIcon(event, id) {
+  event.stopPropagation();
+  event.preventDefault();
+  scrollTopBeforeOpening = window.scrollY;
+  fetch(`endpoints/subscription/get.php?id=${encodeURIComponent(id)}`)
+    .then((response) => {
+      if (!response.ok) throw new Error(translate('failed_to_load_subscription'));
+      return response.json();
+    })
+    .then((subscription) => {
+      if (!subscription || subscription.error) throw new Error(translate('failed_to_load_subscription'));
+      document.body.classList.add('no-scroll');
+      if (!window.DialIconChooser?.open) {
+        document.body.classList.remove('no-scroll');
+        throw new Error(translate('failed_to_load_subscription'));
+      }
+      window.DialIconChooser.open({
+        subscriptionId: id,
+        currentIcon: subscription,
+        onSelect: async (fields) => {
+          try {
+            const payload = new FormData();
+            payload.set('subscription_id', String(id));
+            for (const [name, value] of Object.entries(fields || {})) {
+              if (name.startsWith('dial_icon_')) payload.set(name, value ?? '');
+            }
+            const response = await fetch('endpoints/dial/subscription_icon.php', {
+              method: 'POST', headers: { 'X-CSRF-Token': window.csrfToken }, body: payload,
+            });
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+              console.warn('Dial icon save rejected:', result.code || response.status);
+              throw new Error(window.DialIconCopy?.saveError || translate('unknown_error'));
+            }
+            showSuccessMessage(translate('subscription_updated_successfuly'));
+            fetchSubscriptions(null, null, 'icon');
+          } catch (error) {
+            showErrorMessage(error.message || translate('unknown_error'));
+          } finally {
+            document.body.classList.remove('no-scroll');
+          }
+        },
+        onCancel: () => document.body.classList.remove('no-scroll'),
+      });
+    })
+    .catch((error) => {
+      document.body.classList.remove('no-scroll');
+      showErrorMessage(error.message || translate('failed_to_load_subscription'));
     });
 }
 
@@ -735,6 +792,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const formData = new FormData(subscriptionForm);
+    if (window.DialIconChooser && typeof window.DialIconChooser.formFields === 'function') {
+      const iconFields = window.DialIconChooser.formFields();
+      for (const [name, value] of Object.entries(iconFields || {})) {
+        if (name.startsWith('dial_icon_')) formData.set(name, value ?? '');
+      }
+    }
 
     const fileInput = document.querySelector("#logo");
     const file = fileInput.files[0];
