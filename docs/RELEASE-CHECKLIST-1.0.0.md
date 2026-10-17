@@ -6,7 +6,7 @@
 
 | Item | Evidence |
 | --- | --- |
-| Source commit SHA | pending final local commit |
+| Source commit SHA | Implementation commit `01bb613ff129e3901fd1c33b611d1945cb87d1a5`; any later documentation-only checklist commit must be included in the tag and recorded at the final approval. |
 | Root `VERSION`, image label, `DIAL_VERSION`, Compose and tag contract | `1.0.0` aligned; `tests/release/version-contract.sh` and full gate passed. Demo Compose default deliberately remains public `0.1.1` until its approved switch. |
 | Tested upstream | Wallos 5.8.3; `bellamy/wallos:5.8.3@sha256:0006879778f31a962a3873f7682514b92a3c7665dcbc4764fcc241ad968eaccd` |
 | SVG rasterizer | Alpine `rsvg-convert=2.62.3-r0` pinned in Dockerfile and verified in each built architecture |
@@ -17,19 +17,19 @@
 
 | Gate | Result and artifact |
 | --- | --- |
-| Full `scripts/verify-1.0-candidate.sh` and CI contract | Passed on `wallos-dial:release-candidate`; ignored `data/verify-1.0-final.log` ends with complete gate passed. CI/tag workflow contract passed. |
-| Package scan, Git history, build context and image-layer privacy audit | Passed. `scripts/check-package.sh` and independent OCI scan of both final architecture images: 28 layers each, exactly nine neutral catalog SVGs, zero personal SVG/domain paths or content, no private DB/keys/maps. Ignored reports: `data/release-audit-release-{amd64,arm64}.json`. The only image DB is the upstream empty template. |
+| Full `scripts/verify-1.0-candidate.sh` and CI contract | Passed on the exact implementation commit with `wallos-dial:commit-gate`; ignored `data/verify-1.0-commit.log` ends with complete gate passed. CI/tag workflow contract passed. |
+| Package scan, Git history, build context and image-layer privacy audit | Passed. `scripts/check-package.sh` and independent OCI scan of both exact-commit architecture images: 28 layers each, exactly nine neutral catalog SVGs, zero personal SVG/domain paths or content, no private DB/keys/maps. Ignored reports: `data/release-audit-commit-{amd64,arm64}.json`. The only image DB is the upstream empty template. |
 | Fresh Wallos 5.8.3 start and SQLite integrity | Fresh synthetic template, 30-record seed, image smoke and SQLite integrity passed in full gate; no private DB mounted. |
 | Dial 0.1.1 → 1.0.0 migration with database and Logo volume backup | `tests/compatibility/upgrade-rollback.sh` passed on disposable copies and checks the migrated schema; real user volumes were not touched. |
 | 0.1.1 rollback on a disposable copy, normal add/edit/delete, then re-upgrade | Same compatibility test passed, including old-image writes, rollback and re-upgrade. Tampered upstream hash rejected. |
 | Category CRUD/merge/starter and two-account isolation | PHP, HTTP and browser tests passed, including owned IDs, CSRF, Demo read-only and repeated `AI & Tools` encoding. |
 | Original/Catalog/My Icons across all views; malicious upload and foreign-image denial | HTTP/browser tests passed, including account isolation, 2 MiB/size limits, SVG rejection, low-resolution warning, quick Change preservation, list/grid/dashboard/calendar/details and original fallback. |
 | Old and new service-worker cache tests, including account switch | Passed. Browser report shows zero private images/account pages cached and foreign-image HTTP 404; old cache keys removed. |
-| Browser journey: English, 简体中文, 繁體中文; 900/1440/1920 px and 80/100/125% zoom | 28 synthetic screenshots, 30 fictional subscriptions, no browser errors or horizontal overflow in CSS zoom equivalents; ignored `data/qa-1.0/qa-manifest.json`. Final-image native macOS Chrome 80/100/125% zoom also passed across overview, subscriptions, categories, calendar and statistics (15 page/zoom combinations, DPR 1.6/2/2.5, three rendered ApexCharts); ignored `data/qa-1.0/native-chrome-zoom-stable-2026-10-17.json`. Five clean captures are in `docs/assets/screenshots/dial-1.0-*.png`. |
+| Browser journey: English, 简体中文, 繁體中文; 900/1440/1920 px and 80/100/125% zoom | 28 synthetic screenshots, 30 fictional subscriptions, no browser errors or horizontal overflow in CSS zoom equivalents; ignored `data/qa-1.0/qa-manifest.json`. Native macOS Chrome 80/100/125% zoom on the functional release candidate (followed only by PHP whitespace cleanup) passed across overview, subscriptions, categories, calendar and statistics (15 page/zoom combinations, DPR 1.6/2/2.5, three rendered ApexCharts); ignored `data/qa-1.0/native-chrome-zoom-stable-2026-10-17.json`. Five clean captures are in `docs/assets/screenshots/dial-1.0-*.png`. |
 | Five email paths through isolated SMTP capture | Passed per `en`, `zh_cn`, `zh_tw`: renewal, cancellation, SMTP test, verification, password reset; HTML/plain, localized subjects, RFC 2047, fictional URL and a two-account invalid-payer cancellation case. Ignored `data/mail-qa-1.0/manifest-*.json`. |
 | Other notification channel receipts or documented coverage gap | Nine local receipts through Discord, Gotify, Ntfy, Webhook and Mattermost on Docker `--internal` network passed. External URL channels and Web Push were not exercised end to end. |
-| `linux/amd64` image build and runtime smoke | `wallos-dial:release-amd64`, ID `sha256:c02ac081eec2eba8886f599e7e31f2f1d58488937265f9e6a8538b8f8fabc779`; health/theme smoke, SVG normalize and pinned rasterizer check passed. |
-| `linux/arm64` image build and runtime smoke | `wallos-dial:release-arm64`, ID `sha256:3c735d1c6debc2a5446403d12ed35e06c364069ef3e0dd78ee23815527247c60`; same smoke, SVG normalize and rasterizer check passed. These are local image IDs, not a published multiarch digest. |
+| `linux/amd64` image build and runtime smoke | Exact-commit `wallos-dial:commit-amd64`, ID `sha256:10ca3eeda35e3c6840a3620afb8ea99dc32ccb29d33841d77b06228b7ceefa9b`; health/theme smoke, SVG normalize, pinned rasterizer and OCI privacy checks passed. |
+| `linux/arm64` image build and runtime smoke | Exact-commit `wallos-dial:commit-arm64`, ID `sha256:f59c6df89553d2a3d6d2f6b57a9e445addd26d04f768da0355fee01a0779702e`; same checks passed. These are local image IDs, not a published multiarch digest. |
 | Local Demo Mode, Caddy allow-list and blocked mutation tests | Caddy/Nginx/HTTP and browser tests passed; reset preflight fails closed and injected DB swap, Logo copy, and public-smoke failures restore old synthetic DB plus Logos. |
 | Documentation contract and relative-link audit | Passed. Independent scan of 42 README/docs/HTML files and 297 links found no missing local target. |
 
