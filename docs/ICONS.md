@@ -22,6 +22,8 @@ Upload a PNG, JPEG, WebP, or a simple geometric SVG. The upload limit is **2 MiB
 
 Each account can keep up to **100 images** and **32 MiB** of normalized image data. Uploading the same image again reuses its existing asset. An image selected by a subscription cannot be deleted until you change that subscription's icon. Images are served only to their account through an authenticated, uncached endpoint.
 
+The chooser shows the current icon count and storage use. If either limit is reached, **Manage my icons** opens the library so you can delete an unused image and retry. Change a subscription's icon first if its image is still in use.
+
 Raster images whose longest side is under **128 px** are accepted with a visible low-resolution warning in the upload result and My Icons list. Resizing or increasing the display scale does not restore missing detail.
 
 My Icons live in the Wallos **SQLite database**. Original Wallos Logo uploads and any optional personal legacy SVGs remain in the **Logo volume**. Back up **both** the database and Logo volume before an upgrade. An older Dial image can still show the original Wallos Logo; keep the database and Logo backup together if you roll back. See [Updating and rollback](UPGRADING.md).

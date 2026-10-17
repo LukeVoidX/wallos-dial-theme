@@ -17,6 +17,10 @@ require_text .github/workflows/verify.yml './scripts/verify-1.0-candidate.sh wal
 require_text .github/workflows/publish-image.yml './scripts/verify-1.0-candidate.sh wallos-dial:preflight'
 require_text .github/workflows/publish-image.yml '[[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]'
 require_text .github/workflows/publish-image.yml 'test "$GITHUB_REF_NAME" = "v$version"'
+require_text tests/browser/run.sh 'node tests/category-browser.cjs "$image"'
+require_text tests/browser/run.sh 'node tests/stats-legend-browser.cjs "$image"'
+require_text tests/browser/run.sh 'node tests/browser/first-run-readiness.mjs "$image"'
+require_text tests/browser/run.sh 'node tests/browser/auth-first-run.mjs "$image"'
 
 python3 - <<'PY'
 import os

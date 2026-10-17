@@ -35,6 +35,66 @@
     status.setAttribute('role', isError ? 'alert' : 'status');
   }
 
+  function formatMiB(bytes) {
+    return (bytes / 1048576).toFixed(2).replace(/\.?0+$/, '');
+  }
+
+  function iconUsage(data) {
+    const count = Number(data?.count);
+    const bytes = Number(data?.bytes);
+    const limitCount = Number(data?.limit_count);
+    const limitBytes = Number(data?.limit_bytes);
+    if (![count, bytes, limitCount, limitBytes].every(Number.isSafeInteger) ||
+        count < 0 || bytes < 0 || limitCount <= 0 || limitBytes <= 0) return null;
+    return {
+      count: String(count), limitCount: String(limitCount),
+      usedMib: formatMiB(bytes), limitMib: formatMiB(limitBytes),
+    };
+  }
+
+  function formatUsage(template, values) {
+    return template.replace(/\{(count|limitCount|usedMib|limitMib)\}/g,
+      (_, key) => values[key]);
+  }
+
+  function renderUsage(data) {
+    const values = iconUsage(data);
+    for (const id of ['dial-icon-library-usage', 'dial-icon-upload-usage']) {
+      const label = document.getElementById(id);
+      label.textContent = values ? formatUsage(
+        copy.usage || 'My icons: {count}/{limitCount} · {usedMib}/{limitMib} MiB used', values) : '';
+    }
+    return values;
+  }
+
+  function showQuota(data) {
+    const values = renderUsage(data);
+    if (!values) {
+      setStatus(copy.uploadError || 'Could not upload the icon.', true);
+      return;
+    }
+    const message = data.code === 'icon_quota_count'
+      ? (copy.quotaCount || 'My icons is full ({count}/{limitCount}). Delete an unused icon.')
+      : (copy.quotaBytes || 'My icons storage is full ({usedMib}/{limitMib} MiB). Delete an unused icon.');
+    setStatus(formatUsage(message, values), true);
+    status.append(document.createTextNode(' '));
+    const manage = document.createElement('button');
+    manage.id = 'dial-icon-quota-manage';
+    manage.type = 'button';
+    manage.className = 'dial-icon-quota-manage';
+    manage.textContent = copy.manageIcons || 'Manage my icons';
+    manage.addEventListener('click', async () => {
+      activeTab = 'library';
+      sync();
+      sourceButtons.find(button => button.dataset.dialSource === 'library')?.focus();
+      await loadLibrary();
+      library.querySelector('.dial-icon-delete')?.focus();
+    });
+    status.append(manage);
+    status.scrollIntoView({ block: 'nearest' });
+    manage.focus();
+  }
+
   function safeImageName(value) {
     if (typeof value !== 'string') return '';
     return value.split(/[\\/]/).pop() || '';
@@ -95,6 +155,7 @@
     activeTab = 'original';
     assets = [];
     setStatus();
+    renderUsage(null);
     sync();
   }
 
@@ -269,12 +330,14 @@
     const version = ++libraryVersion;
     assets = [];
     library.textContent = copy.loading || 'Loading your icons…';
+    renderUsage(null);
     try {
       const response = await fetch('endpoints/dial/icons.php', { credentials: 'same-origin', cache: 'no-store' });
       const data = await response.json();
       if (!response.ok || data.success !== true || !Array.isArray(data.assets)) throw new Error('library_load_failed');
       if (version !== libraryVersion) return;
       assets = data.assets.filter(item => Number.isSafeInteger(Number(item.id)) && Number(item.id) > 0 && typeof item.label === 'string');
+      renderUsage(data.usage);
       renderLibrary();
     } catch (error) {
       if (version !== libraryVersion) return;
@@ -315,6 +378,10 @@
         headers: { 'X-CSRF-Token': window.csrfToken || '' }, body,
       });
       const data = await response.json();
+      if (!response.ok && ['icon_quota_count', 'icon_quota_bytes'].includes(data.code)) {
+        showQuota(data);
+        return;
+      }
       if (!response.ok || data.success !== true || !Number.isSafeInteger(Number(data.id))) throw new Error(data.code || 'upload_failed');
       await loadLibrary();
       if (!assets.some(item => Number(item.id) === Number(data.id))) throw new Error('library_load_failed');

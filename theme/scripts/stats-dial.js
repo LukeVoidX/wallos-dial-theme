@@ -63,7 +63,10 @@ function loadGraph(container, dataPoints, currency, run) {
     dataPoints.forEach((p, i) => {
         const item = document.createElement('button');
         item.className = 'graph-legend-item';
-        item.innerHTML = `<span class="graph-legend-dot" style="background:${t.palette[i % t.palette.length]}"></span>${p.label} (${fmt(p.y)})`;
+        const dot = document.createElement('span');
+        dot.className = 'graph-legend-dot';
+        dot.style.backgroundColor = t.palette[i % t.palette.length];
+        item.append(dot, document.createTextNode(`${p.label} (${fmt(p.y)})`));
         item.addEventListener('click', () => {
             hidden[i] = !hidden[i];
             item.classList.toggle('graph-legend-item--off', hidden[i]);

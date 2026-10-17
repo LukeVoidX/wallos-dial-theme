@@ -18,8 +18,9 @@
 
     const rows = () => [...list.querySelectorAll('[data-testid="dial-category-row"]')];
     const movable = () => rows().filter(row => !row.classList.contains('is-fixed'));
-    const rowName = row => row.querySelector('[data-testid="dial-category-name"]')?.value ||
-      row.querySelector('.dial-category-label')?.textContent.trim() || '';
+    // The editable input may contain an unsaved draft. Merge and delete
+    // confirmations must identify the category that the server will act on.
+    const rowName = row => row.querySelector('.dial-category-label')?.textContent.trim() || '';
     function announce(message, error = false) {
       status.textContent = message;
       status.dataset.state = error ? 'error' : 'ok';
@@ -133,8 +134,11 @@
         target.replaceChildren();
         rows().filter(item => item !== row).forEach(item =>
           target.add(new Option(rowName(item), item.dataset.categoryId)));
-        mergeDialog.querySelector('#dial-category-merge-help').textContent =
+        const help = mergeDialog.querySelector('#dial-category-merge-help');
+        help.removeAttribute('role');
+        help.textContent =
           `${row.dataset.categoryCount} ${copy.count}. ${copy.merge_help}`;
+        mergeDialog.querySelector('[data-testid="dial-category-merge-confirm"]').disabled = false;
         openDialog(mergeDialog, button);
       } else if (action === 'dial-category-delete') {
         deleteDialog.querySelector('#dial-category-delete-name').textContent = rowName(row);
@@ -143,36 +147,49 @@
     });
 
     mergeDialog.querySelector('[data-testid="dial-category-merge-confirm"]').addEventListener('click', async event => {
+      const confirmButton = event.currentTarget;
       const targetId = mergeDialog.querySelector('[data-testid="dial-category-merge-target"]').value;
-      if (!activeRow || !targetId || targetId === activeRow.dataset.categoryId) {
+      const targetRow = rows().find(item => item.dataset.categoryId === targetId);
+      if (!activeRow || !targetRow || targetId === activeRow.dataset.categoryId) {
         announce(copy.same_category, true); return;
       }
-      event.currentTarget.disabled = true;
+      confirmButton.disabled = true;
       try {
         await postCategory('endpoints/categories/dial_manage.php', {
           action: 'merge', sourceId: activeRow.dataset.categoryId, targetId,
+          sourceName: activeRow.dataset.categoryName,
+          targetName: targetRow.dataset.categoryName,
+          sourceCount: activeRow.dataset.categoryCount,
         });
         mergeDialog.close();
         finish(copy.saved, targetId, '[data-testid="dial-category-merge"]');
-      } catch (error) { showError(error); event.currentTarget.disabled = false; }
+      } catch (error) {
+        showError(error);
+        const help = mergeDialog.querySelector('#dial-category-merge-help');
+        help.textContent = copy[error?.message] || copy.write_failed;
+        help.setAttribute('role', 'alert');
+        confirmButton.disabled = error?.message === 'stale_selection';
+      }
     });
     deleteDialog.querySelector('[data-testid="dial-category-delete-confirm"]').addEventListener('click', async event => {
+      const confirmButton = event.currentTarget;
       if (!activeRow) return;
-      event.currentTarget.disabled = true;
+      confirmButton.disabled = true;
       try {
         await postCategory('endpoints/categories/category.php', { action: 'delete', categoryId: activeRow.dataset.categoryId });
         deleteDialog.close();
         finish(copy.saved, null, '[data-testid="dial-category-new-name"]');
-      } catch (error) { showError(error); event.currentTarget.disabled = false; }
+      } catch (error) { showError(error); confirmButton.disabled = false; }
     });
 
     const starterButton = root.querySelector('[data-testid="dial-category-starter"]');
     const starterChoices = [...starterDialog.querySelectorAll('[data-testid="dial-category-starter-delete"]')];
+    const starterKey = name => name.trim().toLowerCase();
     function updateStarterPreview() {
       const removed = new Set(starterChoices.filter(input => input.checked).map(input => input.dataset.categoryId));
       const present = new Set(rows().filter(row => !removed.has(row.dataset.categoryId))
-        .map(row => row.dataset.categoryName));
-      const missing = starterNames.filter(name => !present.has(name));
+        .map(row => starterKey(row.querySelector('.dial-category-label')?.textContent || '')));
+      const missing = starterNames.filter(name => !present.has(starterKey(name)));
       const box = starterDialog.querySelector('#dial-category-starter-missing');
       box.replaceChildren();
       (missing.length ? missing : [copy.starter_none]).forEach(name => {
@@ -188,17 +205,18 @@
     });
     starterChoices.forEach(input => input.addEventListener('change', updateStarterPreview));
     starterDialog.querySelector('[data-testid="dial-category-starter-confirm"]').addEventListener('click', async event => {
+      const confirmButton = event.currentTarget;
       const body = new URLSearchParams({ action: 'starter', confirm: '1' });
       starterChoices.filter(input => input.checked).forEach(input => {
         body.append('deleteIds[]', input.dataset.categoryId);
         body.append(`expectedNames[${input.dataset.categoryId}]`, input.dataset.storedName);
       });
-      event.currentTarget.disabled = true;
+      confirmButton.disabled = true;
       try {
         await postCategory('endpoints/categories/dial_manage.php', body);
         starterDialog.close();
         finish(copy.saved, null, '[data-testid="dial-category-new-name"]');
-      } catch (error) { showError(error); event.currentTarget.disabled = false; }
+      } catch (error) { showError(error); confirmButton.disabled = false; }
     });
 
     if (typeof Sortable !== 'undefined') {

@@ -7,7 +7,7 @@ $rows = dial_category_rows($db, (int) $userId);
 $demoReadOnly = getenv('DEMO_MODE') === '1';
 $totalSubscriptions = array_sum(array_column($rows, 'subscription_count'));
 $starterNames = ['AI', 'Infra', 'Domains', 'Media'];
-$existingNames = array_map(static fn(array $row): string => dial_category_name_for_input($row['name']), $rows);
+$existingNameKeys = array_map(static fn(array $row): string => dial_category_name_key($row['name']), $rows);
 $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 ?>
 <header class="dial-category-page-header">
@@ -115,7 +115,7 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
   <h3><?= $escape($copy['starter_missing']) ?></h3>
   <ul id="dial-category-starter-missing">
     <?php foreach ($starterNames as $starterName): ?>
-      <?php if (!in_array($starterName, $existingNames, true)): ?><li><?= $escape($starterName) ?></li><?php endif; ?>
+      <?php if (!in_array(dial_category_name_key($starterName), $existingNameKeys, true)): ?><li><?= $escape($starterName) ?></li><?php endif; ?>
     <?php endforeach; ?>
   </ul>
   <h3><?= $escape($copy['starter_remove']) ?></h3>

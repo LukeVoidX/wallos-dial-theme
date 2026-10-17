@@ -7,6 +7,7 @@ require_once 'includes/dial_icon_resolver.php';
 require_once 'includes/upcoming_payments.php';
 require_once 'includes/upcoming_cancellations.php';
 require_once 'includes/dial_stat_money.php';
+require_once 'includes/dial_stored_text.php';
 
 function formatPrice($price, $currencyCode, $currencies)
 {
@@ -163,7 +164,7 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                     <?php
 
                     foreach ($overdueSubscriptions as $subscription) {
-                        $subscriptionName = htmlspecialchars($subscription['name']);
+                        $subscriptionName = dialStoredHtml($subscription['name']);
                         $subscriptionPrice = $subscription['price'];
                         $subscriptionCurrency = $subscription['currency_id'];
                         $subscriptionNextPayment = $subscription['next_payment'];
@@ -201,7 +202,7 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                     <div class="dashboard-subscriptions-list">
                         <?php
                         foreach ($upcomingCancellations as $subscription) {
-                            $subscriptionName = htmlspecialchars($subscription['name']);
+                            $subscriptionName = dialStoredHtml($subscription['name']);
                             $subscriptionPrice = $subscription['price'];
                             $subscriptionCurrency = $subscription['currency_id'];
                             $subscriptionDisplayCancellationDate = formatDate($subscription['cancellation_date'], $lang);

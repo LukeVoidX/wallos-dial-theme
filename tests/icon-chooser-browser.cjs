@@ -222,6 +222,40 @@ print(json.dumps(dict(row)));db.close()
     }
     must(quickResults.every(item => item.preserved),
       `Quick icon update changed subscription data: ${JSON.stringify(quickResults.filter(item => !item.preserved))}`);
+
+    // Fill this account's private library without touching the other account.
+    // A real server quota response must show current usage and a path to free
+    // an unused asset, rather than the chooser's generic upload error.
+    execFileSync('python3', ['-c', `
+import hashlib,pathlib,sqlite3,sys
+db=sqlite3.connect(sys.argv[1])
+sample=pathlib.Path(sys.argv[2]).read_bytes()
+assert db.execute('SELECT COUNT(*) FROM dial_icon_assets WHERE user_id=1').fetchone()[0] == 0
+for number in range(100):
+    db.execute('INSERT INTO dial_icon_assets (user_id,label,mime,bytes,sha256,width,height) VALUES (1,?,?,?,?,1,1)',
+        ('Synthetic unused ' + str(number), 'image/png', sample, hashlib.sha256(('quota-fixture-' + str(number)).encode()).hexdigest()))
+db.commit();db.close()
+`, database, path.join(root, 'theme/images/dial-icon/favicon-32.png')]);
+    await page.locator('#dial-language').selectOption('en');
+    await page.waitForFunction(() => document.getElementById('dial-icon-chooser-title')?.textContent === 'Choose an icon');
+    await page.evaluate(() => addSubscription());
+    await page.getByTestId('dial-icon-open-form').click();
+    await page.getByTestId('dial-icon-source-upload').click();
+    await page.locator('#dial-icon-upload-usage').waitFor({ state: 'visible' });
+    await page.waitForFunction(() => document.getElementById('dial-icon-upload-usage')?.textContent.includes('100/100'));
+    await page.getByTestId('dial-icon-upload').setInputFiles(path.join(root, 'theme/images/dial-icon/favicon-32.png'));
+    await page.locator('#dial-icon-upload-action').click();
+    await page.locator('#dial-icon-status[data-state="error"]').waitFor();
+    must((await page.locator('#dial-icon-status').textContent()).includes('100/100'),
+      'Count quota must explain current usage');
+    await page.locator('#dial-icon-quota-manage').click();
+    must(await page.locator('#dial-icon-panel-library').isVisible(),
+      'Quota action must open My Icons so unused assets can be deleted');
+    page.once('dialog', prompt => prompt.accept());
+    await page.locator('.dial-icon-library-row .dial-icon-delete').first().click();
+    await page.waitForFunction(() => document.getElementById('dial-icon-library-usage')?.textContent.includes('99/100'));
+    await page.keyboard.press('Escape');
+
     must(errors.length === 0, `Browser errors: ${errors.join('; ')}`);
     process.stdout.write(JSON.stringify({ result: 'passed', languages: ['en','zh_cn','zh_tw'],
       catalog: first, uploaded, original, quickResults, listGeometry, gridGeometry,

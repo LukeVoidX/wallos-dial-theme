@@ -19,9 +19,10 @@ An existing installation may use a different container or Compose project name. 
 
 1. Confirm the source installation is healthy and record the subscription count, category assignments, selected language, visible Logos, notification settings and working image tag.
 2. Stop the old container for a consistent two-volume backup. Let the SQLite connection close before copying either volume. Keep the old container stopped through the cutover so two Wallos processes cannot write the same database.
-3. Choose absolute paths outside the mounted volumes for the backup, then run the commands below after replacing the placeholders. The `PRAGMA integrity_check` output must be `ok`; stop if it is anything else.
+3. Choose absolute paths outside the mounted volumes for the backup. The host needs the `sqlite3` and `tar` commands. Run the following in a Bash shell after replacing all three placeholders; it stops on any failed command. The `PRAGMA integrity_check` output must be `ok`.
 
    ```bash
+   set -euo pipefail
    DIAL_DB_DIR=/absolute/path/to/current/db
    DIAL_LOGOS_DIR=/absolute/path/to/current/logos
    DIAL_BACKUP_DIR=/absolute/path/to/backup-before-dial-1.0

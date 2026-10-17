@@ -2,6 +2,7 @@
 require_once 'includes/header.php';
 require_once 'includes/currency_rates.php';
 require_once 'includes/dial_stat_money.php';
+require_once 'includes/dial_stored_text.php';
 
 function getPriceConverted($price, $currency, $database, $userId)
 {
@@ -278,12 +279,12 @@ if ($weekStartsSunday) {
               <?php if (!empty($paymentsByDay[$day])) { ?>
                 <div class="calendar-cell-content">
                   <?php foreach ($paymentsByDay[$day] as $payment) {
-                    $paymentName = htmlspecialchars($payment['name'], ENT_QUOTES, 'UTF-8');
+                    $paymentName = dialStoredHtml($payment['name']);
                     $paymentCurrency = $currencyCodeById[(int) $payment['currency_id']] ?? null;
                     $paymentAmount = $paymentCurrency
                       ? CurrencyFormatter::format($payment['price'], $paymentCurrency)
                       : number_format((float) $payment['price'], 2);
-                    $paymentDetail = $payment['name'] . ' · ' . $paymentAmount;
+                    $paymentDetail = dialStoredPlainText($payment['name']) . ' · ' . $paymentAmount;
                     $paymentA11y = sprintf('%04d.%02d.%02d · %s', $calendarYear, $calendarMonth, $day, $paymentDetail);
                     ?>
                     <button type="button" class="calendar-event" onClick="showSubscriptionDetails(event, <?= (int) $payment['id'] ?>)"

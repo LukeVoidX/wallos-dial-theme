@@ -50,7 +50,13 @@ else
 fi
 DIAL_QA_IMAGE="$image" DIAL_BROWSER_CHANNEL="$browser_channel" \
   node tests/browser/release-journey.mjs "$fixture" "$output"
+NODE_PATH="$PWD/tests/browser/node_modules" DIAL_BROWSER_CHANNEL="$browser_channel" \
+  node tests/category-browser.cjs "$image"
+NODE_PATH="$PWD/tests/browser/node_modules" DIAL_BROWSER_CHANNEL="$browser_channel" \
+  node tests/stats-legend-browser.cjs "$image"
 NODE_PATH="$PWD/tests/browser/node_modules" node tests/icon-chooser-browser.cjs "$image"
 NODE_PATH="$PWD/tests/browser/node_modules" node tests/icon-detail-browser.cjs "$image"
 NODE_PATH="$PWD/tests/browser/node_modules" node tests/icon-cache-browser.cjs "$image"
+node tests/browser/first-run-readiness.mjs "$image"
+DIAL_BROWSER_CHANNEL="$browser_channel" node tests/browser/auth-first-run.mjs "$image"
 printf 'Synthetic browser evidence: %s\n' "$output"

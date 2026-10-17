@@ -3,6 +3,7 @@ require_once 'includes/header.php';
 require_once 'includes/logo_theme_variant.php';
 require_once 'includes/default_names.php';
 require_once 'includes/dial_stat_money.php';
+require_once 'includes/dial_stored_text.php';
 
 
 // Get code of main currency to display on statistics
@@ -252,7 +253,7 @@ $potentialMonthlySavings = get_upcoming_cancellations_monthly_value($upcomingCan
         <?php
         if (!empty($mostExpensiveSubscription['name'])) {
           ?>
-          <div class="subtitle"><?= htmlspecialchars($mostExpensiveSubscription['name'], ENT_QUOTES, 'UTF-8') ?></div>
+          <div class="subtitle"><?= dialStoredHtml($mostExpensiveSubscription['name']) ?></div>
           <?php
         }
         ?>
@@ -266,7 +267,7 @@ $potentialMonthlySavings = get_upcoming_cancellations_monthly_value($upcomingCan
           <?php
           if (!empty($cheapestSubscription['name'])) {
             ?>
-            <div class="subtitle"><?= htmlspecialchars($cheapestSubscription['name'], ENT_QUOTES, 'UTF-8') ?></div>
+            <div class="subtitle"><?= dialStoredHtml($cheapestSubscription['name']) ?></div>
             <?php
           }
           ?>
@@ -560,7 +561,7 @@ $potentialMonthlySavings = get_upcoming_cancellations_monthly_value($upcomingCan
               <?php
               if (!empty($oldestSubscription['name'])) {
                 ?>
-                <div class="subtitle"><?= htmlspecialchars($oldestSubscription['name'], ENT_QUOTES, 'UTF-8') ?></div>
+                <div class="subtitle"><?= dialStoredHtml($oldestSubscription['name']) ?></div>
                 <?php
               }
               ?>

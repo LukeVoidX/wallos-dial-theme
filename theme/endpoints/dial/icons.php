@@ -29,7 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         'id'=>$row['id'], 'label'=>$row['label'], 'width'=>$row['width'],
         'height'=>$row['height'], 'created_at'=>$row['created_at'],
     ], dialIconListAssets($db, (int) $userId));
-    dialIconResponse(200, 'ok', ['assets'=>$assets]);
+    dialIconResponse(200, 'ok', [
+        'assets'=>$assets,
+        'usage'=>dialIconAssetUsage($db, (int) $userId),
+    ]);
 }
 
 require_once '../../libs/csrf.php';
@@ -68,7 +71,12 @@ try {
     }
     dialIconResponse(400, 'invalid_action');
 } catch (DialIconQuotaError $error) {
-    dialIconResponse(409, $error->getMessage(), ['count'=>$error->count, 'bytes'=>$error->bytes]);
+    dialIconResponse(409, $error->getMessage(), [
+        'count'=>$error->count,
+        'bytes'=>$error->bytes,
+        'limit_count'=>DIAL_ICON_MAX_COUNT,
+        'limit_bytes'=>DIAL_ICON_MAX_BYTES,
+    ]);
 } catch (InvalidArgumentException $error) {
     dialIconResponse(400, $error->getMessage());
 } catch (Throwable $error) {

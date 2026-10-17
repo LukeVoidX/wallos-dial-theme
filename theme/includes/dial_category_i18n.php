@@ -11,6 +11,7 @@ function dial_category_message(string $code, string $lang): string
             'category_merged' => 'Categories merged.',
             'starter_applied' => 'Starter categories added.',
             'invalid_name' => 'Enter a category name with up to 60 characters.',
+            'duplicate_name' => 'This category name is in use. Rename it or choose another name.',
             'foreign_category' => 'That category is unavailable.',
             'last_category' => 'Keep at least one category.',
             'immutable_category' => 'The default category cannot be removed.',
@@ -31,6 +32,7 @@ function dial_category_message(string $code, string $lang): string
             'category_removed' => '已删除分类。', 'order_saved' => '已保存分类顺序。',
             'category_merged' => '已合并分类。', 'starter_applied' => '已加入初始分类。',
             'invalid_name' => '请输入不超过 60 个字符的分类名称。',
+            'duplicate_name' => '这个分类名称已在使用，请先重命名或换一个名称。',
             'foreign_category' => '无法使用该分类。', 'last_category' => '请至少保留一个分类。',
             'immutable_category' => '默认分类不能删除。',
             'category_in_use' => '此分类仍有订阅，请先合并。',
@@ -50,6 +52,7 @@ function dial_category_message(string $code, string $lang): string
             'category_removed' => '已刪除分類。', 'order_saved' => '已儲存分類順序。',
             'category_merged' => '已合併分類。', 'starter_applied' => '已加入初始分類。',
             'invalid_name' => '請輸入不超過 60 個字元的分類名稱。',
+            'duplicate_name' => '此分類名稱已在使用，請先重新命名或換一個名稱。',
             'foreign_category' => '無法使用該分類。', 'last_category' => '請至少保留一個分類。',
             'immutable_category' => '預設分類不能刪除。',
             'category_in_use' => '此分類仍有訂閱，請先合併。',
@@ -136,6 +139,7 @@ function dial_category_copy(string $language): array
             'fixed' => 'Protected default', 'cancel' => 'Cancel',
             'count' => 'Subscriptions', 'actions' => 'Actions',
             'saved' => 'Saved.', 'install' => 'Installation guide',
+            'duplicate_name' => 'This category name is in use. Rename it or choose another name.',
             'starter_unavailable' => 'Starter categories are available when this account has no subscriptions.',
         ],
         'zh_cn' => [
@@ -157,6 +161,7 @@ function dial_category_copy(string $language): array
             'fixed' => '受保护的默认分类', 'cancel' => '取消',
             'count' => '订阅数', 'actions' => '操作',
             'saved' => '已保存。', 'install' => '安装说明',
+            'duplicate_name' => '这个分类名称已在使用，请先重命名或换一个名称。',
             'starter_unavailable' => '此账户没有订阅时，才能加入初始分类。',
         ],
         'zh_tw' => [
@@ -178,6 +183,7 @@ function dial_category_copy(string $language): array
             'fixed' => '受保護的預設分類', 'cancel' => '取消',
             'count' => '訂閱數', 'actions' => '操作',
             'saved' => '已儲存。', 'install' => '安裝說明',
+            'duplicate_name' => '此分類名稱已在使用，請先重新命名或換一個名稱。',
             'starter_unavailable' => '此帳戶沒有訂閱時，才能加入初始分類。',
         ],
     ];

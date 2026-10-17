@@ -94,6 +94,8 @@ named = post(category, {'action':'add', 'name':'AI & Tools'})
 assert named['success'] and isinstance(named['categoryId'], int), named
 new_id = named['categoryId']
 assert db.execute('SELECT name FROM categories WHERE id=?',(new_id,)).fetchone()[0] == 'AI &amp; Tools'
+duplicate_add = post(category, {'action':'add','name':'  ai & tools  '})
+assert duplicate_add['success'] is False and duplicate_add['code'] == 'duplicate_name', duplicate_add
 renamed = post(category, {'action':'edit','categoryId':new_id,'name':'AI & Tools'})
 assert renamed['success'], renamed
 assert post(category, {'action':'edit','categoryId':new_id,'name':'AI & Tools'})['success']
@@ -101,6 +103,9 @@ assert db.execute('SELECT name FROM categories WHERE id=?',(new_id,)).fetchone()
 legacy = post(category, {'action':'add'})
 assert legacy['success'] and legacy['categoryId'], legacy
 assert db.execute('SELECT name FROM categories WHERE id=?',(legacy['categoryId'],)).fetchone()[0] == 'Category'
+legacy_duplicate = post(category, {'action':'add'})
+assert legacy_duplicate['success'] is False and legacy_duplicate['code'] == 'duplicate_name', legacy_duplicate
+assert db.execute("SELECT count(*) FROM categories WHERE user_id=1 AND name='Category'").fetchone()[0] == 1
 assert not post(category, {'action':'add','name':'  '})['success']
 assert not post(category, {'action':'edit','categoryId':900,'name':'stolen'})['success']
 assert db.execute('SELECT name FROM categories WHERE id=900').fetchone()[0] == 'Private'
@@ -115,9 +120,11 @@ assert not post(category, {'action':'sort','categoryIds[]':[owned[0],owned[0]]})
 assert list(db.execute('SELECT id,"order" FROM categories WHERE user_id=1 ORDER BY id')) == before
 source = db.execute("SELECT id FROM categories WHERE user_id=1 AND name='AI'").fetchone()[0]
 target = db.execute("SELECT id FROM categories WHERE user_id=1 AND name='Infra'").fetchone()[0]
-assert post(category, {'action':'edit','categoryId':source,'name':'AI & Tools'})['success']
-assert post(category, {'action':'edit','categoryId':source,'name':'AI & Tools'})['success']
-assert db.execute('SELECT name FROM categories WHERE id=?',(source,)).fetchone()[0] == 'AI &amp; Tools'
+duplicate_edit = post(category, {'action':'edit','categoryId':source,'name':'AI & Tools'})
+assert duplicate_edit['success'] is False and duplicate_edit['code'] == 'duplicate_name', duplicate_edit
+assert post(category, {'action':'edit','categoryId':source,'name':'AI & Research'})['success']
+assert post(category, {'action':'edit','categoryId':source,'name':'AI & Research'})['success']
+assert db.execute('SELECT name FROM categories WHERE id=?',(source,)).fetchone()[0] == 'AI &amp; Research'
 settings_html = opener.open(base + '/settings.php').read().decode()
 subscriptions_html = opener.open(base + '/subscriptions.php').read().decode()
 stats_html = opener.open(base + '/stats.php').read().decode()
@@ -126,17 +133,28 @@ assert 'value="AI &amp; Tools"' in settings_html and 'value="AI &amp;amp; Tools"
 for page_html in (settings_html, subscriptions_html):
     assert re.search(r'href="categories\.php"[^>]*data-testid="dial-category-manage-link"', page_html)
 for page_html in (subscriptions_html, fragment_html):
-    assert '>AI &amp; Tools</span>' in page_html and '>AI &amp;amp; Tools</span>' not in page_html
-assert re.search(rf'<option value="{source}">\s*AI &amp; Tools\s*</option>', subscriptions_html)
-assert re.search(rf'data-categoryid="{source}">\s*AI &amp; Tools\s*</div>', subscriptions_html)
-assert 'AI &amp; Tools' in stats_html
+    assert '>AI &amp; Research</span>' in page_html and '>AI &amp;amp; Research</span>' not in page_html
+assert re.search(rf'<option value="{source}">\s*AI &amp; Research\s*</option>', subscriptions_html)
+assert re.search(rf'data-categoryid="{source}">\s*AI &amp; Research\s*</div>', subscriptions_html)
+assert 'AI &amp; Research' in stats_html
 assert post(category, {'action':'edit','categoryId':source,'name':'AI'})['success']
 before_subs = list(db.execute('SELECT id,category_id FROM subscriptions WHERE user_id=1 ORDER BY id'))
 assert not post(manage, {'action':'merge','sourceId':source,'targetId':900})['success']
 assert list(db.execute('SELECT id,category_id FROM subscriptions WHERE user_id=1 ORDER BY id')) == before_subs
-merged = post(manage, {'action':'merge','sourceId':source,'targetId':target})
+stale = post(manage, {'action':'merge','sourceId':source,'targetId':target,
+                      'sourceName':'AI','targetName':'Outdated destination'})
+assert stale['success'] is False and stale['code'] == 'stale_selection', stale
+stale_count = post(manage, {'action':'merge','sourceId':source,'targetId':target,
+                            'sourceName':'AI','targetName':'Infra','sourceCount':0})
+assert stale_count['success'] is False and stale_count['code'] == 'stale_selection', stale_count
+assert list(db.execute('SELECT id,category_id FROM subscriptions WHERE user_id=1 ORDER BY id')) == before_subs
+merged = post(manage, {'action':'merge','sourceId':source,'targetId':target,
+                       'sourceName':'AI','targetName':'Infra',
+                       'sourceCount':sum(cat == source for _,cat in before_subs)})
 assert merged['success'] and merged['movedCount'] == sum(cat == source for _,cat in before_subs), merged
 assert db.execute('SELECT count(*) FROM subscriptions WHERE user_id=1 AND category_id=?',(source,)).fetchone()[0] == 0
+old_api = post(manage, {'action':'merge','sourceId':legacy['categoryId'],'targetId':target})
+assert old_api['success'] and old_api['movedCount'] == 0, old_api
 assert not post(manage, {'action':'starter','confirm':1})['success']
 manager = opener.open(base + '/categories.php').read().decode()
 for category_id, count in db.execute('SELECT c.id, COUNT(s.id) FROM categories c LEFT JOIN subscriptions s ON s.category_id=c.id AND s.user_id=1 WHERE c.user_id=1 GROUP BY c.id'):

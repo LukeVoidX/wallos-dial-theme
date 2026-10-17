@@ -108,6 +108,13 @@ owned_subscription = sqlite3.connect(args.database).execute(
 
 status, listing = decoded(request(one,path))
 assert status == 200 and len(listing['assets']) == (2 if args.demo else 0), listing
+def expected_usage(user_id):
+    with sqlite3.connect(args.database) as usage_db:
+        count, used_bytes = usage_db.execute(
+            'SELECT COUNT(*),COALESCE(SUM(length(bytes)),0) FROM dial_icon_assets WHERE user_id=?',
+            (user_id,)).fetchone()
+    return {'count':count, 'bytes':used_bytes, 'limit_count':100, 'limit_bytes':33554432}
+assert listing['usage'] == expected_usage(1), listing
 status, data = decoded(request(anonymous,path))
 assert status == 401 and data['code'] == 'session_expired'
 status, data = decoded(post(one,path,{'action':'delete','id':'1'}))
@@ -175,8 +182,9 @@ assert request(anonymous, f'/endpoints/dial/icon.php?id={icon_id}')[0] == 404
 status, listing = decoded(request(one,path))
 assert status == 200 and len(listing['assets']) == 2 and listing['assets'][0]['id'] == svg_id
 assert 'bytes' not in listing['assets'][0] and 'sha256' not in listing['assets'][0]
+assert listing['usage'] == expected_usage(1), listing
 status, listing = decoded(request(two,path))
-assert status == 200 and listing['assets'] == [], listing
+assert status == 200 and listing['assets'] == [] and listing['usage'] == expected_usage(2), listing
 
 status, data = decoded(multipart(one,one_token,'sample.png','image/png',png))
 assert status == 200 and data['id'] == icon_id, data

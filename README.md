@@ -69,6 +69,8 @@ For a server you access by SSH, keep the loopback binding and forward the port: 
 
 Verify the container with `docker compose ps` and `curl -fsS http://127.0.0.1:8282/health.php`. If startup or assets fail, see [Troubleshooting](docs/TROUBLESHOOTING.md).
 
+With Colima or a remote Docker daemon, confirm `./data/db/wallos.db` actually appears on the host before registering. If it does not, stop the container and correct directory sharing or the bind mount; a database visible only inside the VM is not a host backup.
+
 Contributors can build the same source locally with `docker compose -f compose.build.yaml up -d --build`.
 
 ## Use an existing Wallos database
@@ -107,7 +109,7 @@ Use the selector in the shared header to switch quickly between 简体中文, En
 
 ## Email notifications
 
-Dial 1.0 retains the email design introduced in 0.1.1 for renewal, cancellation, SMTP test, email verification, and password-reset messages. Recipient selection, notification timing, and SMTP settings continue to use Wallos's existing rules. Every HTML message has a plain-text alternative; renewal, cancellation, and optional period-summary text now follow the recipient's account language in English, Simplified Chinese, or Traditional Chinese. Other account languages fall back to English. User-entered names and amounts are never translated.
+Dial 1.0 retains the email design introduced in 0.1.1 for renewal, cancellation, SMTP test, email verification, and password-reset messages. Recipient selection, notification timing, and SMTP settings continue to use Wallos's existing rules. Every HTML message has a plain-text alternative; renewal, cancellation, and optional period-summary text now follow the recipient's account language in English, Simplified Chinese, or Traditional Chinese. Renewal, cancellation, verification, and password-reset subjects follow that language too. Other account languages fall back to English. User-entered names and amounts are never translated.
 
 The optional button in renewal, cancellation, and test emails uses the **Server URL** configured in Wallos Admin (or `WALLOS_SERVER_URL` if your Wallos deployment manages that setting). If it is empty or invalid, those messages omit the button. Verification and password-reset links require a valid absolute HTTP(S) Server URL; the queued email is left unsent until it is corrected. No repository domain is inserted into user emails. Configure SMTP in Wallos as usual and send a test email before relying on notifications.
 

@@ -26,6 +26,25 @@ function dial_category_validate_name(string $raw): string
     return validate($name);
 }
 
+/** Compare human-visible names, not Wallos's one-layer escaped storage. */
+function dial_category_name_key(string $stored): string
+{
+    return mb_strtolower(trim(dial_category_name_for_input($stored)), 'UTF-8');
+}
+
+function dial_category_name_taken(SQLite3 $db, int $userId, string $storedName, ?int $exceptId = null): bool
+{
+    $key = dial_category_name_key($storedName);
+    $result = dial_category_query($db,
+        'SELECT id,name FROM categories WHERE user_id=:userId', [':userId' => $userId]);
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        if ((int) $row['id'] !== $exceptId && dial_category_name_key($row['name']) === $key) {
+            return true;
+        }
+    }
+    return false;
+}
+
 /** @return SQLite3Result */
 function dial_category_query(SQLite3 $db, string $sql, array $parameters = []): SQLite3Result
 {
@@ -110,6 +129,9 @@ function dial_category_add(SQLite3 $db, int $userId, ?string $rawName): int
 {
     $name = dial_category_validate_name($rawName === null ? 'Category' : $rawName);
     return dial_category_transaction($db, function () use ($db, $userId, $name): int {
+        if (dial_category_name_taken($db, $userId, $name)) {
+            throw new DialCategoryError('duplicate_name');
+        }
         $order = (int) dial_category_scalar($db,
             'SELECT COALESCE(MAX("order"),0)+1 FROM categories WHERE user_id=:userId',
             [':userId' => $userId]);
@@ -124,11 +146,17 @@ function dial_category_rename(SQLite3 $db, int $userId, int $id, string $rawName
 {
     $name = dial_category_validate_name($rawName);
     dial_category_transaction($db, function () use ($db, $userId, $id, $name): void {
-        $owned = dial_category_scalar($db,
-            'SELECT id FROM categories WHERE id=:id AND user_id=:userId',
+        $owned = dial_category_query($db,
+            'SELECT name FROM categories WHERE id=:id AND user_id=:userId',
             [':id' => $id, ':userId' => $userId]);
-        if ($owned === null) {
+        $row = $owned->fetchArray(SQLITE3_ASSOC);
+        if ($row === false) {
             throw new DialCategoryError('foreign_category');
+        }
+        // Existing duplicate rows remain readable and can be saved unchanged.
+        if ($row['name'] === $name) return;
+        if (dial_category_name_taken($db, $userId, $name, $id)) {
+            throw new DialCategoryError('duplicate_name');
         }
         dial_category_query($db,
             'UPDATE categories SET name=:name WHERE id=:id AND user_id=:userId',
@@ -227,16 +255,29 @@ function dial_category_sort(SQLite3 $db, int $userId, array $movableIds): void
     });
 }
 
-function dial_category_merge(SQLite3 $db, int $userId, int $sourceId, int $targetId): int
+function dial_category_merge(
+    SQLite3 $db, int $userId, int $sourceId, int $targetId,
+    ?string $expectedSourceName = null, ?string $expectedTargetName = null,
+    ?int $expectedSourceCount = null
+): int
 {
-    return dial_category_transaction($db, function () use ($db, $userId, $sourceId, $targetId): int {
+    return dial_category_transaction($db, function () use (
+        $db, $userId, $sourceId, $targetId, $expectedSourceName, $expectedTargetName,
+        $expectedSourceCount
+    ): int {
         if ($sourceId === $targetId) throw new DialCategoryError('same_category');
         $rows = dial_category_rows($db, $userId);
-        $owned = array_column($rows, 'id');
-        if (!in_array($sourceId, $owned, true) || !in_array($targetId, $owned, true)) {
+        $byId = array_column($rows, null, 'id');
+        if (!isset($byId[$sourceId], $byId[$targetId])) {
             throw new DialCategoryError('foreign_category');
         }
         if ($sourceId === 1) throw new DialCategoryError('immutable_category');
+        if (($expectedSourceName !== null && $byId[$sourceId]['name'] !== $expectedSourceName) ||
+            ($expectedTargetName !== null && $byId[$targetId]['name'] !== $expectedTargetName) ||
+            ($expectedSourceCount !== null &&
+                (int) $byId[$sourceId]['subscription_count'] !== $expectedSourceCount)) {
+            throw new DialCategoryError('stale_selection');
+        }
         dial_category_query($db,
             'UPDATE subscriptions SET category_id=:target WHERE user_id=:userId AND category_id=:source',
             [':target' => $targetId, ':userId' => $userId, ':source' => $sourceId]);
@@ -276,22 +317,23 @@ function dial_category_apply_starter(SQLite3 $db, int $userId, array $selectedRo
             if ($selection['id'] === 1) throw new DialCategoryError('immutable_category');
             $deletedIds[] = $selection['id'];
         }
-        $names = [];
+        $nameKeys = [];
         foreach ($rows as $row) {
             if (!in_array($row['id'], $deletedIds, true)) {
-                $names[] = dial_category_name_for_input($row['name']);
+                $nameKeys[] = dial_category_name_key($row['name']);
             }
         }
         $addedIds = [];
         $order = count($rows) ? max(array_column($rows, 'display_order')) + 1 : 1;
         foreach (['AI', 'Infra', 'Domains', 'Media'] as $starterName) {
-            if (in_array($starterName, $names, true)) continue;
+            $starterKey = dial_category_name_key($starterName);
+            if (in_array($starterKey, $nameKeys, true)) continue;
             dial_category_query($db,
                 'INSERT INTO categories (name,"order",user_id) VALUES (:name,:displayOrder,:userId)',
                 [':name' => dial_category_validate_name($starterName),
                  ':displayOrder' => $order++, ':userId' => $userId]);
             $addedIds[] = (int) $db->lastInsertRowID();
-            $names[] = $starterName;
+            $nameKeys[] = $starterKey;
         }
         foreach ($deletedIds as $id) {
             dial_category_query($db,

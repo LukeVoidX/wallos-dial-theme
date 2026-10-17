@@ -1137,7 +1137,36 @@ body.wallos-dial > .dial-site-header > .dial-header-inner {
 .wallos-dial .dial-category-manage-link { min-height: 42px; padding-inline: 12px; border-color: var(--box-border-color); background: transparent; color: var(--text-muted); text-decoration: none; white-space: nowrap; }
 .wallos-dial .dial-category-manage-link:hover,
 .wallos-dial .dial-category-manage-link:focus-visible { border-color: var(--text-color); background: var(--surface-hover); color: var(--text-color); }
-.wallos-dial .empty-page .dial-category-manage-link { display: inline-flex; margin-top: 12px; }
+.wallos-dial .dial-empty-page {
+  box-sizing: border-box; max-width: 720px; min-height: 520px;
+  padding: 84px 35px 90px; text-align: center;
+}
+.wallos-dial .dial-empty-page .dial-empty-kicker {
+  margin: 0 0 16px; color: var(--text-muted); font-size: 12px;
+  letter-spacing: .16em; text-transform: uppercase;
+}
+.wallos-dial .dial-empty-readout {
+  display: flex; align-items: center; justify-content: center; gap: 17px;
+  color: var(--text-color); font-size: clamp(102px, 12vw, 166px);
+  font-weight: var(--dial-weight-number); line-height: .95;
+  font-variant-numeric: tabular-nums; letter-spacing: -.075em;
+}
+.wallos-dial .dial-empty-readout i {
+  align-self: flex-end; width: 10px; height: 10px; margin-bottom: 14px;
+  border-radius: 50%; background: var(--dial-signal);
+}
+.wallos-dial .dial-empty-page h2 {
+  margin: 21px 0 31px; color: var(--text-color);
+  font-size: clamp(20px, 2vw, 26px); font-weight: var(--dial-weight-heading);
+  line-height: 1.35;
+}
+.wallos-dial .dial-empty-actions {
+  display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.wallos-dial .dial-empty-actions > :is(button, a) {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  min-height: 47px; margin: 0; padding: 0 19px; box-sizing: border-box;
+}
 .wallos-dial .dial-category-settings-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; }
 .wallos-dial .dial-category-settings-heading h2 { margin-bottom: 25px; }
 .wallos-dial .dial-category-settings-heading a { color: var(--text-muted); text-decoration: none; white-space: nowrap; }
@@ -1309,6 +1338,7 @@ body.wallos-dial > .dial-site-header > .dial-header-inner {
 .wallos-dial .dial-icon-delete { min-width: 66px; border: 1px solid transparent; background: transparent; color: var(--text-muted); cursor: pointer; font: inherit; font-size: 12px; }
 .wallos-dial .dial-icon-delete:hover { color: var(--dial-signal); border-color: var(--dial-signal); }
 .wallos-dial .dial-icon-library-empty { grid-column: 1 / -1; margin: 15px 0; color: var(--text-muted); }
+.wallos-dial .dial-icon-usage { margin: 6px 0 12px; color: var(--text-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
 .wallos-dial .dial-icon-upload-fields { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; align-items: end; }
 .wallos-dial .dial-icon-upload-fields > label { grid-column: 1 / -1; margin: 5px 0 -5px; font-size: 13px; }
 .wallos-dial .dial-icon-upload-fields > input { grid-column: 1 / -1; min-width: 0; min-height: 44px; padding: 8px 10px; box-sizing: border-box; border: 1px solid var(--box-border-color); background: var(--input-background-color); color: var(--text-color); font: inherit; }
@@ -1342,6 +1372,8 @@ body.wallos-dial > .dial-site-header > .dial-header-inner {
 .wallos-dial .dial-icon-status { min-height: 19px; margin: 14px 0 0; font-size: 13px; }
 .wallos-dial .dial-icon-status[data-state="error"] { color: var(--dial-signal); }
 .wallos-dial .dial-icon-status[data-state="warning"] { color: var(--dial-signal); }
+.wallos-dial .dial-icon-quota-manage { margin-left: 4px; padding: 2px 0; border: 0; border-bottom: 1px solid currentColor; background: transparent; color: inherit; font: inherit; font-weight: 600; cursor: pointer; }
+.wallos-dial .dial-icon-quota-manage:hover { color: var(--text-color); }
 .wallos-dial .dial-icon-demo-note { margin: 10px 0 0; padding: 10px 13px; background: var(--dial-stat-surface); color: var(--text-muted); font-size: 13px; }
 .wallos-dial .dial-icon-dialog-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 13px; }
 .wallos-dial .dial-icon-dialog-actions button { min-height: 42px; padding: 0 19px; border-radius: 2px; font: inherit; cursor: pointer; }

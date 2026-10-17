@@ -2,6 +2,9 @@
 declare(strict_types=1);
 require_once __DIR__ . '/dial_icon_catalog.php';
 
+const DIAL_ICON_MAX_COUNT = 100;
+const DIAL_ICON_MAX_BYTES = 33554432;
+
 final class DialIconQuotaError extends RuntimeException
 {
     public int $count;
@@ -139,6 +142,19 @@ function dialIconListAssets(SQLite3 $db, int $userId): array
     return $rows;
 }
 
+function dialIconAssetUsage(SQLite3 $db, int $userId): array
+{
+    $row = dialIconOne($db,
+        'SELECT COUNT(*) AS count,COALESCE(SUM(length(bytes)),0) AS bytes FROM dial_icon_assets WHERE user_id=:user',
+        [':user'=>$userId]);
+    return [
+        'count'=>(int) ($row['count'] ?? 0),
+        'bytes'=>(int) ($row['bytes'] ?? 0),
+        'limit_count'=>DIAL_ICON_MAX_COUNT,
+        'limit_bytes'=>DIAL_ICON_MAX_BYTES,
+    ];
+}
+
 function dialIconAsset(SQLite3 $db, int $userId, int $assetId): ?array
 {
     return dialIconOne($db,
@@ -174,13 +190,11 @@ function dialIconSaveAsset(SQLite3 $db, int $userId, string $label, array $norma
             if (!@$db->exec('COMMIT')) throw new RuntimeException('icon_asset_write_failed');
             return (int) $existing['id'];
         }
-        $usage = dialIconOne($db,
-            'SELECT COUNT(*) AS count,COALESCE(SUM(length(bytes)),0) AS bytes FROM dial_icon_assets WHERE user_id=:user',
-            [':user'=>$userId]);
-        $count = (int) ($usage['count'] ?? 0);
-        $usedBytes = (int) ($usage['bytes'] ?? 0);
-        if ($count >= 100) throw new DialIconQuotaError('icon_quota_count', $count, $usedBytes);
-        if ($usedBytes + strlen($bytes) > 33554432) {
+        $usage = dialIconAssetUsage($db, $userId);
+        $count = $usage['count'];
+        $usedBytes = $usage['bytes'];
+        if ($count >= $usage['limit_count']) throw new DialIconQuotaError('icon_quota_count', $count, $usedBytes);
+        if ($usedBytes + strlen($bytes) > $usage['limit_bytes']) {
             throw new DialIconQuotaError('icon_quota_bytes', $count, $usedBytes);
         }
         $statement = $db->prepare(<<<'SQL'

@@ -1,0 +1,304 @@
+/* Wallos Dial identity for the upstream account flows. Keep the forms and
+   their PHP handlers intact; this stylesheet only changes their presentation. */
+html:has(.auth-split) {
+  --auth-paper: #f6f3e9;
+  --auth-input: #fbf9f1;
+  --auth-ink: #191817;
+  --auth-muted: #65615a;
+  --auth-line: #c9c5b9;
+  --auth-hover: #ece8dc;
+  --auth-signal: #d90b1c;
+  --main-color: #191817;
+  --main-color-rgb: 25, 24, 23;
+  --hover-color: #3b3934;
+}
+
+html:has(#dark-theme:not([disabled])) {
+  --auth-paper: #1c1c1a;
+  --auth-input: #2c2b27;
+  --auth-ink: #f6f3e9;
+  --auth-muted: #bdb7a9;
+  --auth-line: #555148;
+  --auth-hover: #2c2b27;
+  --main-color: #f6f3e9;
+  --main-color-rgb: 246, 243, 233;
+  --hover-color: #d9d4c6;
+}
+
+body:has(.auth-split) {
+  background: var(--auth-paper);
+  color: var(--auth-ink);
+  font-family: Barlow, "Helvetica Neue", Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+}
+
+body:has(.auth-split) .content.auth-split {
+  background: var(--auth-paper);
+}
+
+body:has(.auth-split) .auth-brand {
+  background: var(--auth-paper);
+  color: var(--auth-ink);
+  border-inline-end: 1px solid var(--auth-line);
+}
+
+body:has(.auth-split) .auth-brand::before,
+body:has(.auth-split) .auth-brand::after {
+  display: none;
+}
+
+body:has(.auth-split) .auth-brand-logo {
+  display: flex;
+  align-items: flex-start;
+  min-height: 48px;
+}
+
+body:has(.auth-split) .auth-brand-logo svg,
+body:has(.auth-split) .container > header .logo-image svg {
+  display: none;
+}
+
+body:has(.auth-split) .auth-brand-logo::before,
+body:has(.auth-split) .container > header .logo-image::before {
+  content: "WALLOS";
+  color: var(--auth-ink);
+  font-family: Barlow, "Helvetica Neue", Arial, sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+
+body:has(.auth-split) .auth-brand-text h1 {
+  color: var(--auth-ink);
+  font-size: clamp(34px, 3.3vw, 52px);
+  font-weight: 600;
+  letter-spacing: -.025em;
+  line-height: 1.08;
+  max-width: 13ch;
+}
+
+body:has(.auth-split) .auth-brand-text p,
+body:has(.auth-split) .auth-brand-footer {
+  color: var(--auth-muted);
+  opacity: 1;
+}
+
+body:has(.auth-split) .auth-brand-text p {
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+body:has(.auth-split) .auth-brand-footer {
+  font-size: 13px;
+  letter-spacing: .025em;
+}
+
+body:has(.auth-split) .content.auth-split > .container {
+  color: var(--auth-ink);
+  max-width: 520px;
+}
+
+body:has(.auth-split) .content.auth-split > .container.wide {
+  max-width: 700px;
+}
+
+body:has(.auth-split) .container > header p,
+body:has(.auth-split) .container > header h2 {
+  color: var(--auth-ink);
+  font-size: clamp(25px, 2.25vw, 32px);
+  font-weight: 600;
+  letter-spacing: -.015em;
+  line-height: 1.18;
+}
+
+body:has(.auth-split) .container > .message,
+body:has(.auth-split) .container > .message p {
+  color: var(--auth-muted);
+}
+
+body:has(.auth-split) .form-group {
+  margin-bottom: 18px;
+}
+
+body:has(.auth-split) label {
+  color: var(--auth-ink);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+body:has(.auth-split) :is(input[type="text"], input[type="email"], input[type="password"], select) {
+  min-height: 52px;
+  background-color: var(--auth-input);
+  border: 1px solid var(--auth-line);
+  border-radius: 2px;
+  box-shadow: none;
+  color: var(--auth-ink);
+  font-size: 16px;
+  /* Text color switches instantly with the theme; do not animate the surface
+     through a moment of invisible light-on-light or dark-on-dark text. */
+  transition: border-color .16s ease;
+}
+
+body:has(.auth-split) :is(input[type="text"], input[type="email"], input[type="password"])::placeholder {
+  color: var(--auth-muted);
+  opacity: 1;
+}
+
+body:has(.auth-split) :is(input[type="text"], input[type="email"], input[type="password"], select):focus {
+  border-color: var(--auth-ink);
+  box-shadow: none;
+}
+
+body:has(.auth-split) :is(input[type="text"], input[type="email"], input[type="password"], select):focus-visible,
+body:has(.auth-split) :is(input[type="submit"], input[type="button"], button, a):focus-visible {
+  outline: 2px solid var(--auth-signal);
+  outline-offset: 2px;
+}
+
+body:has(.auth-split) :is(input[type="submit"], input[type="button"], a.button) {
+  min-height: 52px;
+  background: var(--auth-ink);
+  border: 1px solid var(--auth-ink);
+  border-radius: 2px;
+  box-shadow: none;
+  color: var(--auth-paper);
+  font-size: 16px;
+  font-weight: 500;
+  transition: transform .16s ease;
+}
+
+body:has(.auth-split) :is(input[type="submit"], input[type="button"], a.button):hover {
+  background: var(--hover-color);
+  border-color: var(--hover-color);
+  color: var(--auth-paper);
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
+body:has(.auth-split) :is(input[type="button"].secondary-button, button.button.secondary-button, a.button.secondary-button) {
+  background: transparent;
+  border-color: var(--auth-line);
+  color: var(--auth-ink);
+  transition: none;
+}
+
+body:has(.auth-split) :is(input[type="button"].secondary-button, button.button.secondary-button, a.button.secondary-button):hover {
+  background: var(--auth-hover);
+  border-color: var(--auth-ink);
+  color: var(--auth-ink);
+}
+
+body:has(.auth-split) .password-field .password-toggle,
+body:has(.auth-split) .login-form-link a,
+body:has(.auth-split) .container > .message a {
+  color: var(--auth-ink);
+}
+
+body:has(.auth-split) :is(.login-form-link a, .container > .message a):hover {
+  color: var(--auth-signal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+body:has(.auth-split) .separator {
+  border-color: var(--auth-line);
+}
+
+body:has(.auth-split) .error-box,
+body:has(.auth-split) .success-box {
+  border-radius: 2px;
+  border: 1px solid var(--auth-line);
+}
+
+body:has(.auth-split) .error-box {
+  border-color: var(--auth-signal);
+  background: transparent;
+  color: var(--auth-signal);
+}
+
+body:has(.auth-split) .success-box {
+  background: var(--auth-hover);
+  color: var(--auth-ink);
+}
+
+body:has(.auth-split) .theme-toggle {
+  top: 28px;
+  right: 28px;
+  left: auto;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--auth-line);
+  border-radius: 2px;
+  background: var(--auth-paper);
+  box-shadow: none;
+  color: var(--auth-ink);
+  transition: none;
+}
+
+body.rtl:has(.auth-split) .theme-toggle {
+  right: auto;
+  left: 28px;
+}
+
+body:has(.auth-split) .theme-toggle:hover {
+  background: var(--auth-hover);
+  border-color: var(--auth-ink);
+  color: var(--auth-ink);
+}
+
+body:has(.auth-split) .toast,
+body:has(.auth-split) .subscription-modal {
+  background: var(--auth-paper);
+  border: 1px solid var(--auth-line);
+  border-radius: 2px;
+  box-shadow: 0 18px 50px rgba(25, 24, 23, .13);
+  color: var(--auth-ink);
+}
+
+body:has(.auth-split) .toast-content .message .text {
+  color: var(--auth-muted);
+}
+
+body:has(.auth-split) .toast-content .message .text.text-1 {
+  color: var(--auth-ink);
+}
+
+html:has(#dark-theme:not([disabled])) body:has(.auth-split) input {
+  color-scheme: dark;
+}
+
+@media (min-width: 900px) {
+  body:has(.auth-split) .auth-brand {
+    flex-basis: 40%;
+    max-width: 620px;
+    padding: clamp(36px, 4vw, 66px);
+  }
+
+  body:has(.auth-split) .content.auth-split > .container {
+    padding: 56px clamp(28px, 4vw, 58px);
+  }
+}
+
+@media (max-width: 899px) {
+  body:has(.auth-split) .content.auth-split > .container {
+    background: var(--auth-paper);
+    border: 0;
+    box-shadow: none;
+    padding: 80px 24px 32px;
+  }
+
+  body:has(.auth-split) .container > header .logo-image {
+    display: block;
+    width: auto;
+    height: auto;
+    margin-bottom: 32px;
+    text-align: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body:has(.auth-split) :is(input, button, a) { transition: none; }
+}

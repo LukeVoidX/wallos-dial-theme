@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/dial_icon_resolver.php';
+require_once __DIR__ . '/dial_stored_text.php';
 /**
  * Desktop dashboard composition. Existing Wallos detail, add, search and
  * settings flows remain the handlers for its controls.
@@ -120,7 +121,7 @@ $dialMonthlyDigits = dialMoneyDigits($dialMonthlyValue);
       <p class="dial-empty"><?= htmlspecialchars(translate('no_upcoming_payments', $i18n), ENT_QUOTES, 'UTF-8') ?></p>
     <?php else: ?>
       <?php foreach ($upcomingSubscriptions as $subscription):
-          $subscriptionName = htmlspecialchars($subscription['name'], ENT_QUOTES, 'UTF-8');
+          $subscriptionName = dialStoredHtml($subscription['name']);
           $subscriptionId = (int) $subscription['id'];
           $subscriptionDate = new DateTimeImmutable($subscription['next_payment']);
           $daysUntilPayment = (int) $dialToday->diff($subscriptionDate)->format('%r%a');

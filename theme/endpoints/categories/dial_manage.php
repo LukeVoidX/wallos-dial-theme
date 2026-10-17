@@ -10,10 +10,23 @@ try {
         case 'merge':
             $sourceId = dial_category_positive_id($_POST['sourceId'] ?? null);
             $targetId = dial_category_positive_id($_POST['targetId'] ?? null);
-            if ($sourceId === null || $targetId === null) {
+            $sourceName = $_POST['sourceName'] ?? null;
+            $targetName = $_POST['targetName'] ?? null;
+            $sourceCount = $_POST['sourceCount'] ?? null;
+            $expectedSourceCount = $sourceCount === null ? null : filter_var(
+                $sourceCount, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]
+            );
+            if ($sourceId === null || $targetId === null ||
+                $expectedSourceCount === false ||
+                ($sourceName !== null && (!is_string($sourceName) || $sourceName === '')) ||
+                ($targetName !== null && (!is_string($targetName) || $targetName === '')) ||
+                (($sourceName === null) !== ($targetName === null))) {
                 throw new DialCategoryError('invalid_request');
             }
-            $movedCount = dial_category_merge($db, (int) $userId, $sourceId, $targetId);
+            // Pre-1.0 API clients sent IDs only; the new manager sends both
+            // committed names so a stale dialog fails before moving rows.
+            $movedCount = dial_category_merge($db, (int) $userId, $sourceId, $targetId,
+                $sourceName, $targetName, $expectedSourceCount);
             dial_category_send(true, 'category_merged', $lang, ['movedCount' => $movedCount]);
             break;
 

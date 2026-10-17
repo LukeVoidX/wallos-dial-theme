@@ -6,6 +6,7 @@ require_once 'includes/logo_theme_variant.php';
 require_once 'includes/dial_icon_resolver.php';
 require_once 'includes/dial_categories.php';
 require_once 'includes/dial_category_i18n.php';
+require_once 'includes/dial_stored_text.php';
 $categoryCopy = dial_category_copy($lang);
 $dialIconCopies = [
   'en' => [
@@ -25,6 +26,10 @@ $dialIconCopies = [
     'loading' => 'Loading your icons…', 'loadError' => 'Could not load your icons.',
     'saveError' => 'Could not save the icon. Try again.',
     'uploadError' => 'Could not upload the icon.', 'uploadSuccess' => 'Icon added.',
+    'usage' => 'My icons: {count}/{limitCount} · {usedMib}/{limitMib} MiB used',
+    'quotaCount' => 'My icons is full ({count}/{limitCount} icons, {usedMib}/{limitMib} MiB). Delete an unused icon to make room.',
+    'quotaBytes' => 'My icons storage is full ({count}/{limitCount} icons, {usedMib}/{limitMib} MiB). Delete an unused icon to make room.',
+    'manageIcons' => 'Manage my icons',
     'lowResolution' => 'Low resolution; may look blurry.',
     'deleteSuccess' => 'Icon deleted.', 'deleteError' => 'This icon cannot be deleted while in use.',
     'deleteConfirm' => 'Delete this icon from your library?',
@@ -48,6 +53,10 @@ $dialIconCopies = [
     'loading' => '正在加载图标…', 'loadError' => '无法加载你的图标。',
     'saveError' => '图标保存失败，请重试。',
     'uploadError' => '图标上传失败。', 'uploadSuccess' => '已添加图标。',
+    'usage' => '我的图标：{count}/{limitCount} 张 · 已用 {usedMib}/{limitMib} MiB',
+    'quotaCount' => '我的图标已满（{count}/{limitCount} 张，已用 {usedMib}/{limitMib} MiB）。请删除未使用的图标后重试。',
+    'quotaBytes' => '图标存储空间已满（{count}/{limitCount} 张，已用 {usedMib}/{limitMib} MiB）。请删除未使用的图标后重试。',
+    'manageIcons' => '管理我的图标',
     'lowResolution' => '分辨率较低，放大后可能模糊。',
     'deleteSuccess' => '已删除图标。', 'deleteError' => '图标正在使用，无法删除。',
     'deleteConfirm' => '要从图标库删除此图标吗？',
@@ -71,6 +80,10 @@ $dialIconCopies = [
     'loading' => '正在載入圖標…', 'loadError' => '無法載入你的圖標。',
     'saveError' => '圖標儲存失敗，請重試。',
     'uploadError' => '圖標上傳失敗。', 'uploadSuccess' => '已新增圖標。',
+    'usage' => '我的圖標：{count}/{limitCount} 張 · 已用 {usedMib}/{limitMib} MiB',
+    'quotaCount' => '我的圖標已滿（{count}/{limitCount} 張，已用 {usedMib}/{limitMib} MiB）。請刪除未使用的圖標後重試。',
+    'quotaBytes' => '圖標儲存空間已滿（{count}/{limitCount} 張，已用 {usedMib}/{limitMib} MiB）。請刪除未使用的圖標後重試。',
+    'manageIcons' => '管理我的圖標',
     'lowResolution' => '解析度較低，放大後可能模糊。',
     'deleteSuccess' => '已刪除圖標。', 'deleteError' => '圖標正在使用，無法刪除。',
     'deleteConfirm' => '要從圖標庫刪除此圖標嗎？',
@@ -383,20 +396,21 @@ $dialGrouped = ($_COOKIE['subscriptionsGrouped'] ?? '1') !== '0';
 
     if (count($subscriptions) == 0) {
       ?>
-      <div class="empty-page">
-        <img src="images/siteimages/empty.png" alt="<?= translate('empty_page', $i18n) ?>" />
-        <p>
-          <?= translate('no_subscriptions_yet', $i18n) ?>
-        </p>
-        <button class="button" onClick="addSubscription()">
-          <i class="fa-solid fa-circle-plus"></i>
-          <?= translate('add_first_subscription', $i18n) ?>
-        </button>
-        <a href="categories.php" class="button secondary-button dial-category-manage-link"
-           data-testid="dial-category-manage-link" aria-label="<?= htmlspecialchars($categoryCopy['manage'], ENT_QUOTES, 'UTF-8') ?>">
-          <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-          <span><?= htmlspecialchars($categoryCopy['manage'], ENT_QUOTES, 'UTF-8') ?></span>
-        </a>
+      <div class="empty-page dial-empty-page">
+        <p class="dial-empty-kicker"><?= htmlspecialchars(translate('active_subscriptions', $i18n), ENT_QUOTES, 'UTF-8') ?></p>
+        <div class="dial-empty-readout" aria-hidden="true"><span>00</span><i></i></div>
+        <h2><?= htmlspecialchars(translate('no_subscriptions_yet', $i18n), ENT_QUOTES, 'UTF-8') ?></h2>
+        <div class="dial-empty-actions">
+          <button class="button" onClick="addSubscription()">
+            <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
+            <?= htmlspecialchars(translate('add_first_subscription', $i18n), ENT_QUOTES, 'UTF-8') ?>
+          </button>
+          <a href="categories.php" class="button secondary-button dial-category-manage-link"
+             data-testid="dial-category-manage-link" aria-label="<?= htmlspecialchars($categoryCopy['manage'], ENT_QUOTES, 'UTF-8') ?>">
+            <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+            <span><?= htmlspecialchars($categoryCopy['manage'], ENT_QUOTES, 'UTF-8') ?></span>
+          </a>
+        </div>
       </div>
       <?php
     }
@@ -664,7 +678,7 @@ $dialGrouped = ($_COOKIE['subscriptionsGrouped'] ?? '1') !== '0';
         foreach ($orderedSubscriptions as $sub) {
           if ($sub['inactive'] == 0) {
             ?>
-            <option value="<?= htmlspecialchars($sub['id']) ?>"><?= htmlspecialchars($sub['name']) ?>
+            <option value="<?= htmlspecialchars($sub['id']) ?>"><?= dialStoredHtml($sub['name']) ?>
             </option>
             <?php
           }
@@ -721,10 +735,12 @@ $dialGrouped = ($_COOKIE['subscriptionsGrouped'] ?? '1') !== '0';
     </section>
     <section id="dial-icon-panel-library" class="dial-icon-panel" hidden>
       <p><?= $dialIconHtml('libraryHint') ?></p>
+      <p id="dial-icon-library-usage" class="dial-icon-usage" aria-live="polite"></p>
       <div id="dial-icon-library-options" class="dial-icon-options" aria-live="polite"></div>
     </section>
     <section id="dial-icon-panel-upload" class="dial-icon-panel" hidden>
       <p><?= $dialIconHtml('fileLimit') ?></p>
+      <p id="dial-icon-upload-usage" class="dial-icon-usage" aria-live="polite"></p>
       <div class="dial-icon-upload-fields">
         <label for="dial-icon-upload-file"><?= $dialIconHtml('uploadFile') ?></label>
         <input id="dial-icon-upload-file" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml,.svg"

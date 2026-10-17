@@ -386,6 +386,53 @@ db.commit();db.close()
     }
   });
 
+  await step('stored names render once across desktop views', async () => {
+    // Wallos validate() stores one HTML-entity layer. Exercise actual browser
+    // text and attribute values after that layer passes through every view.
+    execFileSync('python3', ['-c', `
+import sqlite3,sys
+from datetime import date,timedelta
+db=sqlite3.connect(sys.argv[1])
+db.execute("UPDATE subscriptions SET name='Cinema &amp; &quot;Club&quot; &lt;tag&gt;', price=9999.99, next_payment=?,auto_renew=1 WHERE user_id=1 AND name='Cinema Club'",(date.today().isoformat(),))
+db.execute("UPDATE subscriptions SET name='Northstar &amp; &#039;VPS&#039;',next_payment=?,auto_renew=0,start_date='2010-01-01' WHERE user_id=1 AND name='Northstar VPS'",((date.today()-timedelta(days=1)).isoformat(),))
+db.execute("UPDATE subscriptions SET name='Orbit &amp; Models',price=0.01,cancellation_date=? WHERE user_id=1 AND name='Orbit Models'",((date.today()+timedelta(days=2)).isoformat(),))
+db.execute("UPDATE payment_methods SET name='Card &amp; Credits' WHERE user_id=1")
+db.commit();db.close()
+`, fixture.database]);
+
+    await page.goto(`${base}/`, { waitUntil: 'load' });
+    const upcomingName = page.locator('.dial-payment-row .dial-service-name')
+      .filter({ hasText: 'Cinema' }).first();
+    assert.equal(await upcomingName.textContent(), 'Cinema & "Club" <tag>');
+    assert.equal(await page.locator('.overdue-subscriptions .subscription-item-title')
+      .filter({ hasText: 'Northstar' }).first().textContent(), "Northstar & 'VPS'");
+    assert.equal(await page.locator('.cancellation-subscriptions .subscription-item-title')
+      .filter({ hasText: 'Orbit' }).first().textContent(), 'Orbit & Models');
+
+    await page.goto(`${base}/calendar.php`, { waitUntil: 'load' });
+    const calendarEvent = page.locator('.calendar-event')
+      .filter({ has: page.locator('.calendar-event-name', { hasText: 'Cinema' }) }).first();
+    assert.equal(await calendarEvent.locator('.calendar-event-name').textContent(), 'Cinema & "Club" <tag>');
+    assert((await calendarEvent.getAttribute('aria-label')).includes('Cinema & "Club" <tag>'));
+    assert((await calendarEvent.getAttribute('data-detail')).includes('Cinema & "Club" <tag>'));
+
+    await page.goto(`${base}/stats.php`, { waitUntil: 'load' });
+    const statNames = await page.locator('.statistic .subtitle').allTextContents();
+    assert(statNames.includes('Cinema & "Club" <tag>'), `Expensive stat name: ${JSON.stringify(statNames)}`);
+    assert(statNames.includes('Orbit & Models'), `Cheapest stat name: ${JSON.stringify(statNames)}`);
+    assert(statNames.includes("Northstar & 'VPS'"), `Oldest stat name: ${JSON.stringify(statNames)}`);
+
+    await page.goto(`${base}/subscriptions.php`, { waitUntil: 'load' });
+    await page.evaluate(() => addSubscription());
+    const replacementOption = await page.locator('#replacement_subscription_id option')
+      .filter({ hasText: 'Cinema' }).first().textContent();
+    assert.equal(replacementOption.trim(), 'Cinema & "Club" <tag>');
+    await page.evaluate(() => closeAddSubscription());
+    const paymentTooltip = await page.locator('.payment_method[title*="Card"]')
+      .first().getAttribute('title');
+    assert(paymentTooltip.includes('Card & Credits'), `Payment tooltip: ${paymentTooltip}`);
+  });
+
   await step('Demo UI denies category and icon writes', runDemoReadOnly);
   assert.deepEqual(report.errors, [], `browser script errors: ${JSON.stringify(report.errors)}`);
   fs.rmSync(path.join(output, 'qa-failure.json'), { force: true });

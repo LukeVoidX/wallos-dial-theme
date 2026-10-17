@@ -75,7 +75,7 @@ db=sqlite3.connect(sys.argv[1]);db.execute('INSERT INTO categories (name,"order"
       await page.locator('main[data-testid="dial-category-manager"]').waitFor();
     };
     const pageErrors = [];
-    page.on('pageerror', error => pageErrors.push(error.message));
+    page.on('pageerror', error => pageErrors.push(error.stack || error.message));
     page.on('response', async response => {
       if (!response.url().includes('/endpoints/categories/')) return;
       const type = response.headers()['content-type'] || '';
@@ -127,18 +127,42 @@ db=sqlite3.connect(sys.argv[1]);db.execute('INSERT INTO categories (name,"order"
 
     const ai = page.locator('[data-testid="dial-category-row"]').filter({ has: page.locator('input[value="AI"]') });
     const aiId = await ai.getAttribute('data-category-id');
+    const infraBeforeMerge = page.locator('[data-testid="dial-category-row"]').filter({ has: page.locator('input[value="Infra"]') });
+    const infraId = await infraBeforeMerge.getAttribute('data-category-id');
+    await infraBeforeMerge.locator('[data-testid="dial-category-name"]').fill('Unsaved destination');
     await ai.locator('[data-testid="dial-category-merge"]').focus();
     await page.keyboard.press('Enter');
     const mergeDialog = page.locator('[data-testid="dial-category-merge-dialog"]');
     must(await mergeDialog.evaluate(node => node.open), 'Merge dialog did not open');
+    must((await mergeDialog.locator(`[data-testid="dial-category-merge-target"] option[value="${infraId}"]`).textContent()).trim() === 'Infra',
+      'Merge target advertised an unsaved name instead of the committed category');
     await page.keyboard.press('Escape');
     must(await ai.locator('[data-testid="dial-category-merge"]').evaluate(node => node === document.activeElement), 'Merge focus not returned');
     await ai.locator('[data-testid="dial-category-merge"]').focus();
     await page.keyboard.press('Enter');
-    const infraId = await page.locator('[data-testid="dial-category-row"]').filter({ has: page.locator('input[value="Infra"]') }).getAttribute('data-category-id');
     const mergeTarget = mergeDialog.locator('[data-testid="dial-category-merge-target"]');
     await mergeTarget.selectOption(infraId);
     must((await mergeDialog.locator('#dial-category-merge-help').textContent()).includes('8'), 'Merge count not shown');
+    const otherTabRename = await context.request.post(`${origin}/endpoints/categories/category.php`, {
+      headers: { 'X-CSRF-Token': await page.evaluate(() => window.csrfToken) },
+      form: { action: 'edit', categoryId: infraId, name: 'Infra changed elsewhere' },
+    });
+    must((await otherTabRename.json()).success === true, 'Synthetic second-tab rename failed');
+    await mergeDialog.locator('[data-testid="dial-category-merge-confirm"]').click();
+    await page.waitForFunction(() => document.querySelector('#dial-category-status')?.textContent?.trim() ===
+      'The selected categories changed. Reload the preview.', null, { timeout: 10000 });
+    must(await rowById(aiId).count() === 1 && await mergeDialog.evaluate(node => node.open),
+      'Stale merge moved subscriptions or closed the dialog');
+    must((await mergeDialog.locator('#dial-category-merge-help').textContent()).trim() ===
+      'The selected categories changed. Reload the preview.' &&
+      await mergeDialog.locator('[data-testid="dial-category-merge-confirm"]').isDisabled(),
+    'Stale merge error is not visible inside the dialog');
+    await page.keyboard.press('Escape');
+    await page.reload({ waitUntil: 'load' });
+    await rowById(aiId).locator('[data-testid="dial-category-merge"]').click();
+    await mergeDialog.locator('[data-testid="dial-category-merge-target"]').selectOption(infraId);
+    must((await mergeDialog.locator(`[data-testid="dial-category-merge-target"] option[value="${infraId}"]`).textContent()).trim() ===
+      'Infra changed elsewhere', 'Reloaded merge target did not show committed rename');
     await activateAndWaitForReload(mergeDialog.locator('[data-testid="dial-category-merge-confirm"]'));
     if (await rowById(aiId).count() !== 0) {
       throw new Error(`Merge source remains: ${JSON.stringify({
@@ -153,6 +177,8 @@ db=sqlite3.connect(sys.argv[1]);db.execute('INSERT INTO categories (name,"order"
         pageErrors })}`);
     }
     must(await rowById(infraId).getAttribute('data-category-count') === '16', 'Merged subscriptions lost');
+    must(await rowById(infraId).locator('[data-testid="dial-category-name"]').inputValue() === 'Infra changed elsewhere',
+      'Merge unexpectedly committed the target input draft');
 
     custom = rowById(customId);
     await custom.locator('[data-testid="dial-category-delete"]').focus();
@@ -224,10 +250,10 @@ db=sqlite3.connect(sys.argv[1]);db.execute('INSERT INTO categories (name,"order"
       await screenshot(`layout-${label}`);
     }
     await page.setViewportSize({ width: 1280, height: 800 });
-    for (const [language, title, addLabel, mergeLabel, invalidName] of [
-      ['zh_cn', '分类管理', '新增分类', '合并', '请输入不超过 60 个字符的分类名称。'],
-      ['zh_tw', '分類管理', '新增分類', '合併', '請輸入不超過 60 個字元的分類名稱。'],
-      ['en', 'Categories', 'Add category', 'Merge', 'Enter a category name with up to 60 characters.'],
+    for (const [language, title, addLabel, mergeLabel, invalidName, duplicateName] of [
+      ['zh_cn', '分类管理', '新增分类', '合并', '请输入不超过 60 个字符的分类名称。', '这个分类名称已在使用，请先重命名或换一个名称。'],
+      ['zh_tw', '分類管理', '新增分類', '合併', '請輸入不超過 60 個字元的分類名稱。', '此分類名稱已在使用，請先重新命名或換一個名稱。'],
+      ['en', 'Categories', 'Add category', 'Merge', 'Enter a category name with up to 60 characters.', 'This category name is in use. Rename it or choose another name.'],
     ]) {
       await context.addCookies([{ name: 'language', value: language, url: origin }]);
       await openManager(page);
@@ -237,6 +263,14 @@ db=sqlite3.connect(sys.argv[1]);db.execute('INSERT INTO categories (name,"order"
       await page.locator('[data-testid="dial-category-new-name"]').fill('');
       await page.locator('[data-testid="dial-category-add"]').click();
       must((await page.locator('#dial-category-status').textContent()).trim() === invalidName, `Wrong ${language} validation copy`);
+      const categoryCountBeforeDuplicate = await page.locator('[data-testid="dial-category-row"]').count();
+      const duplicateCandidate = (await rowById(infraId).locator('.dial-category-label').textContent()).trim().toUpperCase();
+      await page.locator('[data-testid="dial-category-new-name"]').fill(`  ${duplicateCandidate}  `);
+      await page.locator('[data-testid="dial-category-add"]').click();
+      await page.waitForFunction(expected => document.querySelector('#dial-category-status')?.textContent?.trim() === expected,
+        duplicateName, { timeout: 10000 });
+      must(await page.locator('[data-testid="dial-category-row"]').count() === categoryCountBeforeDuplicate,
+        'Duplicate add created another category');
     }
 
     await page.goto(`${origin}/subscriptions.php`, { waitUntil: 'load' });
@@ -296,7 +330,7 @@ db=sqlite3.connect(sys.argv[1]);db.execute('DELETE FROM subscriptions WHERE user
 
     stop();
     run('python3', ['-c', `import sqlite3,sys
-db=sqlite3.connect(sys.argv[1]);db.execute('DELETE FROM subscriptions WHERE user_id=1');db.commit();db.close()`, `${scratch}/db/wallos.db`]);
+db=sqlite3.connect(sys.argv[1]);db.execute('DELETE FROM subscriptions WHERE user_id=1');db.execute('INSERT INTO categories (name,"order",user_id) VALUES ("ai",999,1)');db.commit();db.close()`, `${scratch}/db/wallos.db`]);
     await start(false);
     await openManager(page);
     const starter = page.locator('[data-testid="dial-category-starter"]');
@@ -311,11 +345,16 @@ db=sqlite3.connect(sys.argv[1]);db.execute('DELETE FROM subscriptions WHERE user
     await starter.focus();
     await page.keyboard.press('Enter');
     must(await starterDialog.locator('[data-testid="dial-category-starter-delete"]').count() > 0, 'No empty deletion choices');
+    must(!(await starterDialog.locator('#dial-category-starter-missing li').allTextContents()).includes('AI'),
+      'Lowercase AI must not be advertised as a missing starter category');
     const emptyId = await page.locator('[data-testid="dial-category-row"]').filter({ hasText: 'Empty sample' }).getAttribute('data-category-id');
     await starterDialog.locator(`[data-category-id="${emptyId}"]`).check();
     await activateAndWaitForReload(starterDialog.locator('[data-testid="dial-category-starter-confirm"]'));
     must(await rowById(emptyId).count() === 0, 'Selected starter deletion not applied');
-    must(await page.locator('[data-testid="dial-category-row"]').filter({ has: page.locator('input[value="AI"]') }).count() === 1, 'Missing AI starter not added');
+    must(await page.locator('[data-testid="dial-category-row"]').filter({ has: page.locator('input[value="ai"]') }).count() === 1,
+      'Existing lowercase AI category preserved');
+    must(await page.locator('[data-testid="dial-category-row"]').filter({ has: page.locator('input[value="AI"]') }).count() === 0,
+      'Starter did not create a duplicate uppercase AI category');
 
     stop();
     await start(true);
