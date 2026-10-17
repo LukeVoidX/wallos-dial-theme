@@ -2,7 +2,7 @@
 
 # Wallos Dial
 
-[Product site](https://lukevoidx.github.io/wallos-dial-theme/) · [Try the interactive demo](https://wallos-demo.mostai.org/) · [English](README.md) · [简体中文](README.zh-CN.md) · [Poster gallery](docs/CAMPAIGN.md) · [Before / after](docs/SHOWCASE.md) · [Install and upgrade](docs/UPGRADING.md)
+[Product site](https://lukevoidx.github.io/wallos-dial-theme/) · [Try the interactive demo](https://wallos-demo.mostai.org/) · [English](README.md) · [简体中文](README.zh-CN.md) · [Manage categories](docs/CATEGORIES.md) · [Poster gallery](docs/CAMPAIGN.md) · [Before / after](docs/SHOWCASE.md) · [Install and upgrade](docs/UPGRADING.md)
 
 A precise, warm, desktop-focused interface for [Wallos](https://github.com/ellite/Wallos). The theme adds an instrument-style dashboard timeline, a restrained type and color system, grouped subscription cards, clearer statistics, focused interaction states, a persistent language switch, and matching HTML email notifications. Wallos's subscription, calendar, settings, search, and notification features remain available.
 
@@ -37,6 +37,7 @@ The design uses warm off-white, dark numerals, fine lines, and a small red signa
 | Monthly total and precise date dial | Read the recurring commitment and its timing at a glance. |
 | Upcoming-payment countdown | See calendar days until the next three payments. |
 | Grouped subscription ledger | Scan AI, infrastructure, domains, media, or your own categories. |
+| Category manager | Add, rename, reorder, merge, and remove categories while keeping subscription records intact. [Read the guide](docs/CATEGORIES.md). |
 | Unified calendar and statistics | Move between dates and costs without a change in visual language. |
 | Quick language selector | Switch between English, Simplified Chinese, Traditional Chinese, and Wallos's other locales. |
 | Matching email templates | Renewal, cancellation, test, verification, and password-reset emails share Dial's typography and warm palette. |

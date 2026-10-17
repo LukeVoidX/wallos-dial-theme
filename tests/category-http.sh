@@ -41,10 +41,10 @@ db.close()
 PY
 
 start "$name" 0
-python3 - "$address" "$scratch/db/wallos.db" <<'PY'
-import http.cookiejar, json, re, sqlite3, sys, urllib.parse, urllib.request
+python3 - "$address" "$scratch/db/wallos.db" "$scratch/logos" <<'PY'
+import hashlib, http.cookiejar, json, pathlib, re, sqlite3, sys, urllib.parse, urllib.request
 from urllib.error import HTTPError
-base, dbpath = 'http://' + sys.argv[1], sys.argv[2]
+base, dbpath, logo_dir = 'http://' + sys.argv[1], sys.argv[2], pathlib.Path(sys.argv[3])
 opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
 page = opener.open(base + '/').read().decode()
 match = re.search(r'window\.csrfToken\s*=\s*"([^"]+)"', page)
@@ -66,6 +66,30 @@ category = '/endpoints/categories/category.php'
 manage = '/endpoints/categories/dial_manage.php'
 db = sqlite3.connect(dbpath)
 db.execute('PRAGMA busy_timeout=5000')
+def subscription_snapshot():
+    rows = list(db.execute('SELECT id,name,category_id,logo,logo_variant FROM subscriptions ORDER BY id'))
+    logos = {str(path.relative_to(logo_dir)):hashlib.sha256(path.read_bytes()).hexdigest()
+             for path in logo_dir.rglob('*') if path.is_file()}
+    return rows, logos
+
+before_foreign = subscription_snapshot()
+currency_id = db.execute('SELECT id FROM currencies WHERE user_id=1 LIMIT 1').fetchone()[0]
+foreign_payload = {
+    'name':'Foreign category attempt', 'price':'19.00', 'currency_id':currency_id,
+    'frequency':'1', 'cycle':'3', 'next_payment':'2026-11-01',
+    'start_date':'2026-10-01', 'payment_method_id':'', 'payer_user_id':'',
+    'category_id':'900', 'notes':'', 'url':'', 'logo-url':'',
+    'notify_days_before':'7', 'replacement_subscription_id':'0', 'cancellation_date':''
+}
+foreign_error = 'The specified category does not exist or does not belong to you.'
+result = post('/endpoints/subscription/add.php', foreign_payload)
+assert result.get('status') == 'Error' and result.get('message') == foreign_error, result
+assert subscription_snapshot() == before_foreign, 'foreign add changed a row or logo'
+owned_subscription = db.execute('SELECT id FROM subscriptions WHERE user_id=1 LIMIT 1').fetchone()[0]
+result = post('/endpoints/subscription/add.php', dict(foreign_payload, id=owned_subscription))
+assert result.get('status') == 'Error' and result.get('message') == foreign_error, result
+assert subscription_snapshot() == before_foreign, 'foreign edit changed a row or logo'
+
 named = post(category, {'action':'add', 'name':'AI & Tools'})
 assert named['success'] and isinstance(named['categoryId'], int), named
 new_id = named['categoryId']

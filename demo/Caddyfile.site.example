@@ -22,7 +22,7 @@ wallos-demo.mostai.org {
         method GET
     }
     @read_page {
-        path / /index.php /login.php /subscriptions.php /calendar.php /stats.php /about.php /manifest.php /service-worker.js /health.php /favicon.ico /styles/* /scripts/* /images/* /webfonts/*
+        path / /index.php /login.php /subscriptions.php /categories.php /calendar.php /stats.php /about.php /manifest.php /service-worker.js /health.php /favicon.ico /styles/* /scripts/* /images/* /webfonts/*
         method GET HEAD
     }
 

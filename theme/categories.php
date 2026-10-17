@@ -22,7 +22,7 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
 <?php if ($demoReadOnly): ?>
   <p class="dial-category-readonly" data-testid="dial-category-readonly">
     <?= $escape($copy['readonly']) ?>
-    <a href="https://github.com/LukeVoidX/wallos-dial-theme#installation" target="_blank" rel="noopener noreferrer"><?= $escape($copy['install']) ?> ↗</a>
+    <a href="https://github.com/LukeVoidX/wallos-dial-theme#install-a-new-instance" target="_blank" rel="noopener noreferrer"><?= $escape($copy['install']) ?> ↗</a>
   </p>
 <?php else: ?>
   <form id="dial-category-add-form" class="dial-category-add-form">

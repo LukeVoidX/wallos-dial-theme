@@ -2,7 +2,7 @@
 
 ![Wallos Dial 主视觉：每一次续订，都心中有数](docs/assets/posters/campaign-hero-zh.png)
 
-[中文介绍页](https://lukevoidx.github.io/wallos-dial-theme/zh-CN/) · [立即体验在线 Demo](https://wallos-demo.mostai.org/) · [English](README.md) · [中文海报](docs/CAMPAIGN.zh-CN.md) · [改版前后与原始截图](docs/SHOWCASE.md) · [安装、升级和回退](docs/UPGRADING.md)
+[中文介绍页](https://lukevoidx.github.io/wallos-dial-theme/zh-CN/) · [立即体验在线 Demo](https://wallos-demo.mostai.org/) · [English](README.md) · [分类管理](docs/CATEGORIES.zh-CN.md) · [中文海报](docs/CAMPAIGN.zh-CN.md) · [改版前后与原始截图](docs/SHOWCASE.md) · [安装、升级和回退](docs/UPGRADING.md)
 
 Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界面改版。暖白底、黑色数字、细线和少量红色贯穿总览、订阅、日历与统计页面。首页集中显示月度费用、日期刻度、近期付款和倒计时；订阅页增加分类区块。原有搜索、筛选、排序、新增与编辑、通知和设置功能继续由 Wallos 处理。
 
@@ -62,6 +62,8 @@ ssh -L 8282:127.0.0.1:8282 user@your-server
 4. 登录后核对订阅数量、Logo、总览、日历、统计、设置和通知。无需重新录入订阅。
 
 如果原部署还有额外环境变量、代理或自定义端口，应按实际情况带入新部署。[升级与回退说明](docs/UPGRADING.md)包含版本切换和数据库迁移边界。
+
+分类可以在订阅页或设置页打开独立的管理界面，支持新增、改名、排序、合并和删除空分类。初始分类为可选操作，不会覆盖已有订阅。[查看分类管理说明](docs/CATEGORIES.zh-CN.md)。
 
 ## 自定义 Logo 与语言
 
