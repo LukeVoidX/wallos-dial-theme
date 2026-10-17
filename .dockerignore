@@ -1,5 +1,6 @@
 .git
 .gitignore
+/.superpowers
 /data
 .env*
 *.db

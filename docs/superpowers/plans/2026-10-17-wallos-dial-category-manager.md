@@ -243,7 +243,8 @@ git commit -m "feat: make category sort merge and starter atomic"
 set -euo pipefail
 image=wallos-dial:category
 if test "$#" -ge 1; then image=$1; fi
-scratch=$(mktemp -d)
+mkdir -p data
+scratch=$(mktemp -d "$PWD/data/.dial-category.XXXXXX")
 name="dial-category-http-$$"
 cleanup() {
   docker rm -f "$name" "$name-demo" >/dev/null 2>&1 || true
@@ -258,7 +259,8 @@ docker run -d --name "$name" -p 127.0.0.1::80 \
 address=$(docker port "$name" 80/tcp | head -n 1)
 for attempt in $(seq 1 40); do
   if test -s "$scratch/db/wallos.db" &&
-     curl -fsS "http://$address/health.php" >/dev/null 2>&1; then break; fi
+     curl -fsS "http://$address/health.php" >/dev/null 2>&1 &&
+     docker logs "$name" 2>&1 | grep -F 'Updated next payment dates' >/dev/null; then break; fi
   sleep 1
 done
 test -s "$scratch/db/wallos.db"
