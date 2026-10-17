@@ -293,14 +293,18 @@ self.addEventListener('fetch', function (event) {
     // stats charts) would stay broken offline forever.
     if (staticAssets.some(asset => url.pathname.endsWith(asset))) {
         event.respondWith(
-            caches.match(request, { ignoreSearch: true }).then(cached => {
-                if (cached) return cached;
-                return fetch(request).then(networkResponse => {
-                    if (networkResponse.ok) {
-                        const clone = networkResponse.clone();
-                        caches.open(STATIC_CACHE).then(cache => cache.put(request, clone));
-                    }
-                    return networkResponse;
+            caches.open(STATIC_CACHE).then(cache => {
+                // A prior release could have placed a script in PAGES_CACHE.
+                // Searching every cache would return that stale response first,
+                // even after the new static cache was populated.
+                return cache.match(request, { ignoreSearch: true }).then(cached => {
+                    if (cached) return cached;
+                    return fetch(request).then(networkResponse => {
+                        if (networkResponse.ok) {
+                            cache.put(request, networkResponse.clone());
+                        }
+                        return networkResponse;
+                    });
                 });
             })
         );
