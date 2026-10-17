@@ -3,6 +3,7 @@
 require_once 'i18n/getlang.php';
 require_once __DIR__ . '/currency_rates.php';
 require_once __DIR__ . '/dial_logo_map.php';
+require_once __DIR__ . '/dial_categories.php';
 
 function getBillingCycle($cycle, $frequency, $i18n)
 {
@@ -194,7 +195,7 @@ function printSubscriptions($subscriptions, $sort, $categories, $members, $i18n,
             <details class="dial-category-group" data-category-id="<?= (int) $categoryId ?>" open>
                 <summary class="dial-category-heading">
                     <span class="dial-category-index"><?= str_pad((string) $groupNumber, 2, '0', STR_PAD_LEFT) ?></span>
-                    <span class="dial-category-name"><?= htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8') ?></span>
+                    <span class="dial-category-name"><?= isset($categories[$categoryId]) && $categoryId != 1 ? dial_category_html($categoryName) : htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8') ?></span>
                     <span class="dial-category-count"><?= count($categorySubscriptions) ?></span>
                     <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
                 </summary>
@@ -225,9 +226,11 @@ function printSubscriptions($subscriptions, $sort, $categories, $members, $i18n,
             <div class="subscription-list-title">
                 <?php
                 if ($subscription['category_id'] == 1) {
-                    echo translate('no_category', $i18n);
+                    echo htmlspecialchars(translate('no_category', $i18n), ENT_QUOTES, 'UTF-8');
                 } else {
-                    echo $categories[$subscription['category_id']]['name'];
+                    echo isset($categories[$subscription['category_id']])
+                        ? dial_category_html($categories[$subscription['category_id']]['name'])
+                        : htmlspecialchars(translate('no_category', $i18n), ENT_QUOTES, 'UTF-8');
                 }
                 ?>
             </div>

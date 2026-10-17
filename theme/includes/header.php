@@ -156,6 +156,7 @@ $mobileNavigation = $settings['mobile_nav'] ? "mobile-navigation" : "";
   <script type="text/javascript" src="scripts/i18n/<?= $lang ?>.js?<?= $version ?>"></script>
   <script type="text/javascript" src="scripts/i18n/getlang.js?<?= $version ?>"></script>
   <script type="text/javascript" src="scripts/dial-language.js?dial=<?= rawurlencode(DIAL_VERSION) ?>" defer></script>
+  <script type="text/javascript" src="scripts/dial-category-refresh.js?dial=<?= rawurlencode(DIAL_VERSION) ?>" defer></script>
   <script type="text/javascript" src="scripts/password-toggle.js?<?= $version ?>"></script>
   <?php if (basename($_SERVER['PHP_SELF']) !== 'categories.php'): ?>
   <script>
@@ -199,7 +200,7 @@ $mobileNavigation = $settings['mobile_nav'] ? "mobile-navigation" : "";
         </span>
         <a href="subscriptions.php?focus=search" class="dial-search-link" title="<?= translate('search', $i18n) ?>" aria-label="<?= translate('search', $i18n) ?>"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a>
         <div class="dropdown">
-          <button class="dropbtn dial-settings-button" type="button" onClick="toggleDropdown()" title="<?= translate('settings', $i18n) ?>" aria-label="<?= translate('settings', $i18n) ?>">
+          <button class="dropbtn dial-settings-button<?= in_array($dialPage, ['settings.php', 'categories.php'], true) ? ' is-active' : '' ?>" type="button" onClick="toggleDropdown()" title="<?= translate('settings', $i18n) ?>" aria-label="<?= translate('settings', $i18n) ?>">
             <i class="fa-solid fa-gear" aria-hidden="true"></i>
           </button>
           <div class="dropdown-content">
@@ -253,7 +254,7 @@ $mobileNavigation = $settings['mobile_nav'] ? "mobile-navigation" : "";
   $subscriptionsClass = $page === 'subscriptions.php' ? 'active' : '';
   $calendarClass = $page === 'calendar.php' ? 'active' : '';
   $statsClass = $page === 'stats.php' ? 'active' : '';
-  $settingsClass = $page === 'settings.php' ? 'active' : '';
+  $settingsClass = in_array($page, ['settings.php', 'categories.php'], true) ? 'active' : '';
   $profileClass = $page === 'profile.php' ? 'active' : '';
   ?>
 

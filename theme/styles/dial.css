@@ -1101,6 +1101,16 @@ body.wallos-dial > .dial-site-header > .dial-header-inner {
 .wallos-dial .dial-category-back { flex: none; padding: 9px 0; color: var(--text-muted); text-decoration: none; font-size: 14px; }
 .wallos-dial .dial-category-back:hover,
 .wallos-dial .dial-category-back:focus-visible { color: var(--text-color); }
+.wallos-dial .dial-category-manage-link { min-height: 42px; padding-inline: 12px; border-color: var(--box-border-color); background: transparent; color: var(--text-muted); text-decoration: none; white-space: nowrap; }
+.wallos-dial .dial-category-manage-link:hover,
+.wallos-dial .dial-category-manage-link:focus-visible { border-color: var(--text-color); background: var(--surface-hover); color: var(--text-color); }
+.wallos-dial .empty-page .dial-category-manage-link { display: inline-flex; margin-top: 12px; }
+.wallos-dial .dial-category-settings-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; }
+.wallos-dial .dial-category-settings-heading h2 { margin-bottom: 25px; }
+.wallos-dial .dial-category-settings-heading a { color: var(--text-muted); text-decoration: none; white-space: nowrap; }
+.wallos-dial .dial-category-settings-heading a:hover,
+.wallos-dial .dial-category-settings-heading a:focus-visible { color: var(--text-color); text-decoration: underline; text-underline-offset: 4px; }
+.wallos-dial .dial-settings-button.is-active { background: var(--surface-hover); }
 .wallos-dial .dial-category-readonly { display: flex; justify-content: space-between; gap: 18px; padding: 18px 20px; background: var(--dial-stat-surface); color: var(--text-muted); }
 .wallos-dial .dial-category-readonly a { color: var(--text-color); white-space: nowrap; }
 .wallos-dial .dial-category-add-form { display: grid; gap: 8px; margin-bottom: 28px; }
@@ -1164,6 +1174,7 @@ body.wallos-dial > .dial-site-header > .dial-header-inner {
 .wallos-dial #dial-category-starter-missing li { padding: 5px 9px; background: var(--dial-stat-surface); font-size: 13px; }
 .wallos-dial .dial-category-manager :is(button, input, select, a):focus-visible { outline: 2px solid var(--dial-signal); outline-offset: 2px; }
 @media (max-width: 1000px) {
+  .wallos-dial #main-actions .top-actions { flex-wrap: wrap; }
   .wallos-dial .dial-category-list-header { grid-template-columns: minmax(0, 1fr) 70px; padding-left: 70px; }
   .wallos-dial .dial-category-list-header span:last-child { display: none; }
   .wallos-dial .dial-category-row { grid-template-columns: 26px 28px minmax(0,1fr) 70px; }

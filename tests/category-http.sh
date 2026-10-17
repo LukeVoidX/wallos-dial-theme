@@ -70,9 +70,10 @@ named = post(category, {'action':'add', 'name':'AI & Tools'})
 assert named['success'] and isinstance(named['categoryId'], int), named
 new_id = named['categoryId']
 assert db.execute('SELECT name FROM categories WHERE id=?',(new_id,)).fetchone()[0] == 'AI &amp; Tools'
-renamed = post(category, {'action':'edit','categoryId':new_id,'name':'AI & Tools revised'})
+renamed = post(category, {'action':'edit','categoryId':new_id,'name':'AI & Tools'})
 assert renamed['success'], renamed
-assert db.execute('SELECT name FROM categories WHERE id=?',(new_id,)).fetchone()[0] == 'AI &amp; Tools revised'
+assert post(category, {'action':'edit','categoryId':new_id,'name':'AI & Tools'})['success']
+assert db.execute('SELECT name FROM categories WHERE id=?',(new_id,)).fetchone()[0] == 'AI &amp; Tools'
 legacy = post(category, {'action':'add'})
 assert legacy['success'] and legacy['categoryId'], legacy
 assert db.execute('SELECT name FROM categories WHERE id=?',(legacy['categoryId'],)).fetchone()[0] == 'Category'
@@ -90,6 +91,22 @@ assert not post(category, {'action':'sort','categoryIds[]':[owned[0],owned[0]]})
 assert list(db.execute('SELECT id,"order" FROM categories WHERE user_id=1 ORDER BY id')) == before
 source = db.execute("SELECT id FROM categories WHERE user_id=1 AND name='AI'").fetchone()[0]
 target = db.execute("SELECT id FROM categories WHERE user_id=1 AND name='Infra'").fetchone()[0]
+assert post(category, {'action':'edit','categoryId':source,'name':'AI & Tools'})['success']
+assert post(category, {'action':'edit','categoryId':source,'name':'AI & Tools'})['success']
+assert db.execute('SELECT name FROM categories WHERE id=?',(source,)).fetchone()[0] == 'AI &amp; Tools'
+settings_html = opener.open(base + '/settings.php').read().decode()
+subscriptions_html = opener.open(base + '/subscriptions.php').read().decode()
+stats_html = opener.open(base + '/stats.php').read().decode()
+fragment_html = opener.open(base + '/endpoints/subscriptions/get.php').read().decode()
+assert 'value="AI &amp; Tools"' in settings_html and 'value="AI &amp;amp; Tools"' not in settings_html
+for page_html in (settings_html, subscriptions_html):
+    assert re.search(r'href="categories\.php"[^>]*data-testid="dial-category-manage-link"', page_html)
+for page_html in (subscriptions_html, fragment_html):
+    assert '>AI &amp; Tools</span>' in page_html and '>AI &amp;amp; Tools</span>' not in page_html
+assert re.search(rf'<option value="{source}">\s*AI &amp; Tools\s*</option>', subscriptions_html)
+assert re.search(rf'data-categoryid="{source}">\s*AI &amp; Tools\s*</div>', subscriptions_html)
+assert 'AI &amp; Tools' in stats_html
+assert post(category, {'action':'edit','categoryId':source,'name':'AI'})['success']
 before_subs = list(db.execute('SELECT id,category_id FROM subscriptions WHERE user_id=1 ORDER BY id'))
 assert not post(manage, {'action':'merge','sourceId':source,'targetId':900})['success']
 assert list(db.execute('SELECT id,category_id FROM subscriptions WHERE user_id=1 ORDER BY id')) == before_subs
@@ -102,7 +119,7 @@ for category_id, count in db.execute('SELECT c.id, COUNT(s.id) FROM categories c
     assert f'data-category-id="{category_id}"' in manager, category_id
     assert f'data-category-count="{count}"' in manager, (category_id, count)
 assert '>Private<' not in manager
-assert '>AI &amp; Tools revised</span>' in manager and '>AI &amp;amp; Tools revised</span>' not in manager
+assert '>AI &amp; Tools</span>' in manager and '>AI &amp;amp; Tools</span>' not in manager
 for testid in ('dial-category-manager','dial-category-row','dial-category-new-name',
                'dial-category-name','dial-category-add','dial-category-save',
                'dial-category-move-up','dial-category-move-down','dial-category-merge',

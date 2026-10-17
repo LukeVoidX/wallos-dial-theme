@@ -42,6 +42,8 @@ const staticAssets = [
     'scripts/dashboard.js',
     'scripts/subscriptions.js',
     'scripts/dial-interaction.js',
+    'scripts/dial-categories.js',
+    'scripts/dial-category-refresh.js',
     'scripts/dial-language.js',
     'scripts/stats-dial.js',
     'scripts/subscription-details.js',

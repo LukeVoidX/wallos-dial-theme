@@ -3,6 +3,9 @@
 require_once 'includes/header.php';
 require_once 'includes/getdbkeys.php';
 require_once 'includes/logo_theme_variant.php';
+require_once 'includes/dial_categories.php';
+require_once 'includes/dial_category_i18n.php';
+$categoryCopy = dial_category_copy($lang);
 
 include_once 'includes/list_subscriptions.php';
 
@@ -163,6 +166,13 @@ $dialGrouped = ($_COOKIE['subscriptionsGrouped'] ?? '1') !== '0';
       <i class="fa-solid fa-circle-plus"></i>
       <?= translate('new_subscription', $i18n) ?>
     </button>
+    <?php if (count($subscriptions) > 0): ?>
+    <a href="categories.php" class="button secondary-button dial-category-manage-link"
+       data-testid="dial-category-manage-link" aria-label="<?= htmlspecialchars($categoryCopy['manage'], ENT_QUOTES, 'UTF-8') ?>">
+      <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+      <span><?= htmlspecialchars($categoryCopy['manage'], ENT_QUOTES, 'UTF-8') ?></span>
+    </a>
+    <?php endif; ?>
     <div class="top-actions">
       <button class="button secondary-button mobile-search-toggle" id="mobile-search-toggle"
         title="<?= translate('search', $i18n) ?>" onClick="toggleMobileSearch()">
@@ -307,6 +317,11 @@ $dialGrouped = ($_COOKIE['subscriptionsGrouped'] ?? '1') !== '0';
           <i class="fa-solid fa-circle-plus"></i>
           <?= translate('add_first_subscription', $i18n) ?>
         </button>
+        <a href="categories.php" class="button secondary-button dial-category-manage-link"
+           data-testid="dial-category-manage-link" aria-label="<?= htmlspecialchars($categoryCopy['manage'], ENT_QUOTES, 'UTF-8') ?>">
+          <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+          <span><?= htmlspecialchars($categoryCopy['manage'], ENT_QUOTES, 'UTF-8') ?></span>
+        </a>
       </div>
       <?php
     }
@@ -480,7 +495,7 @@ $dialGrouped = ($_COOKIE['subscriptionsGrouped'] ?? '1') !== '0';
         foreach ($categories as $category) {
           ?>
           <option value="<?= $category['id'] ?>">
-            <?= $category['name'] ?>
+            <?= dial_category_html($category['name']) ?>
           </option>
           <?php
         }

@@ -38,8 +38,12 @@ const must = (condition, message) => { if (!condition) throw new Error(message);
 async function openManager(page) {
   // The synthetic no-password account first redirects through login.php.
   await page.goto(`${origin}/`, { waitUntil: 'load' });
-  await page.goto(`${origin}/categories.php`, { waitUntil: 'load' });
-  await page.locator('main[data-testid="dial-category-manager"]').waitFor();
+  const response = await page.goto(`${origin}/categories.php`, { waitUntil: 'load' });
+  try { await page.locator('main[data-testid="dial-category-manager"]').waitFor({ timeout: 10000 }); }
+  catch (_) {
+    throw new Error(`Manager did not render: ${JSON.stringify({ url: page.url(), status: response?.status(),
+      title: await page.title(), html: (await page.content()).slice(0, 800), logs: logs().slice(-1800) })}`);
+  }
 }
 
 (async () => {
@@ -235,6 +239,61 @@ db=sqlite3.connect(sys.argv[1]);db.execute('INSERT INTO categories (name,"order"
       must((await page.locator('#dial-category-status').textContent()).trim() === invalidName, `Wrong ${language} validation copy`);
     }
 
+    await page.goto(`${origin}/subscriptions.php`, { waitUntil: 'load' });
+    const subscriptionsManage = page.locator('a[href="categories.php"][data-testid="dial-category-manage-link"]');
+    must(await subscriptionsManage.count() === 1, 'Subscriptions manager link absent');
+    await page.setViewportSize({ width: 853, height: 800 });
+    must(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Subscriptions toolbar overflows at 853px');
+    await screenshot('subscriptions-853');
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.evaluate(() => window.addEventListener('pageshow', event =>
+      sessionStorage.setItem('dialBackWasBfcache', String(event.persisted))));
+    await subscriptionsManage.click();
+    await page.locator('main[data-testid="dial-category-manager"]').waitFor();
+    const infraInput = rowById(infraId).locator('[data-testid="dial-category-name"]');
+    await infraInput.fill('Infra & Ops');
+    await activateAndWaitForReload(rowById(infraId).locator('[data-testid="dial-category-save"]'));
+    const revisionAfterEdit = await page.evaluate(() => sessionStorage.getItem('dialCategoryRevision'));
+    must(!!revisionAfterEdit, 'Category revision was not stored');
+    await page.goBack({ waitUntil: 'load' });
+    await page.locator('#category').waitFor({ state: 'attached' });
+    must((await page.locator(`#category option[value="${infraId}"]`).textContent()).trim() === 'Infra & Ops', 'Back restored a stale Add/Edit option');
+    must((await page.locator(`#filter-category [data-categoryid="${infraId}"]`).textContent()).trim() === 'Infra & Ops', 'Back restored a stale filter');
+    must((await page.locator(`.dial-category-group[data-category-id="${infraId}"] .dial-category-name`).textContent()).trim() === 'Infra & Ops', 'Back restored a stale group');
+    const backUsedCache = await page.evaluate(() => sessionStorage.getItem('dialBackWasBfcache'));
+    const syntheticReload = page.waitForEvent('load', { timeout: 10000 });
+    await page.evaluate(() => {
+      sessionStorage.setItem('dialCategoryRevision', `simulated-bfcache-${Date.now()}`);
+      window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+    });
+    await syntheticReload;
+    must((await page.locator(`#category option[value="${infraId}"]`).textContent()).trim() === 'Infra & Ops', 'bfcache refresh branch lost current category');
+    await page.goto(`${origin}/settings.php`, { waitUntil: 'load' });
+    const settingsManage = page.locator('a[href="categories.php"][data-testid="dial-category-manage-link"]');
+    must(await settingsManage.count() === 1, 'Settings manager link absent');
+    await settingsManage.click();
+    await page.locator('main[data-testid="dial-category-manager"]').waitFor();
+    must(await page.locator('.dial-settings-button.is-active').count() === 1, 'Category navigation state unclear');
+
+    await page.goto(`${origin}/subscriptions.php`, { waitUntil: 'load' });
+    await page.goto(`${origin}/settings.php`, { waitUntil: 'load' });
+    const revisionBeforeSettingsEdit = await page.evaluate(() => sessionStorage.getItem('dialCategoryRevision'));
+    const settingsCategory = page.locator(`#categories [data-categoryid="${infraId}"]`);
+    await settingsCategory.locator('input[name="category"]').fill('Infra & Settings');
+    await settingsCategory.locator('button[name="save"]').click();
+    await page.waitForFunction(previous => sessionStorage.getItem('dialCategoryRevision') !== previous,
+      revisionBeforeSettingsEdit, { timeout: 10000 });
+    await page.goBack({ waitUntil: 'load' });
+    must((await page.locator(`.dial-category-group[data-category-id="${infraId}"] .dial-category-name`).textContent()).trim() === 'Infra & Settings',
+      'Back after Settings edit restored a stale category group');
+
+    run('python3', ['-c', `import sqlite3,sys
+db=sqlite3.connect(sys.argv[1]);db.execute('DELETE FROM subscriptions WHERE user_id=1');db.commit();db.close()`, `${scratch}/db/wallos.db`]);
+    await page.goto(`${origin}/subscriptions.php`, { waitUntil: 'load' });
+    const emptyManage = page.locator('.empty-page a[href="categories.php"][data-testid="dial-category-manage-link"]');
+    must(await emptyManage.isVisible(), 'Empty subscription page hides category management');
+    await screenshot('subscriptions-empty');
+
     stop();
     run('python3', ['-c', `import sqlite3,sys
 db=sqlite3.connect(sys.argv[1]);db.execute('DELETE FROM subscriptions WHERE user_id=1');db.commit();db.close()`, `${scratch}/db/wallos.db`]);
@@ -269,6 +328,8 @@ db=sqlite3.connect(sys.argv[1]);db.execute('DELETE FROM subscriptions WHERE user
       mergeTargetSelect: 'selected by Playwright; native keyboard pending headed Chrome QA',
       pointer: ['drag'], focusReturn: ['merge', 'delete', 'starter'],
       layoutWidths: [1280, 1024, 853], demoReadOnly: true,
+      backNavigation: { updated: true, bfcacheObserved: backUsedCache, persistedEventBranch: 'simulated and reloaded' },
+      settingsCategoryRevision: true, emptyPageManageLink: true,
       screenshotCount: screenshots.length, pageErrors }, null, 2));
   } finally {
     if (context) await context.close();

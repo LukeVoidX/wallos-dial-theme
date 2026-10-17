@@ -15,4 +15,6 @@ Observed 2026-10-17 with Chrome 155 via Playwright, Wallos Dial 1.0.0-rc.1, and 
 - [x] Desktop layout at 1280, 1024, and 853 CSS pixels: no horizontal overflow or overlapping controls in synthetic screenshots. The latter two widths approximate 125% and 150% zoom on a 1280-pixel viewport.
 - [ ] Manual follow-up: test the native merge-target select with keyboard in headed Chrome; headless Chrome 155 did not change even a two-option standalone `<select>` with ArrowDown.
 - [ ] Manual follow-up: test Chrome's actual 125%/150% browser zoom; the automated run tested equivalent effective viewport widths.
-- [ ] Task 5: return to subscriptions with browser Back and verify category choices, filters, and groups reflect the saved state.
+- [x] Return to subscriptions with browser Back after a category rename: Add/Edit option, filter, and grouped heading all show the new name. Headless Chrome performed a normal Back navigation; a synthetic `pageshow.persisted=true` event confirmed the refresh branch reloads. An actual bfcache restoration remains unobserved in this run.
+- [x] Renaming a category from the inherited Settings control updates the revision marker, and returning to the subscription list shows the new name.
+- [x] With zero subscriptions, the empty state still shows a working Manage categories entry. At 853 CSS pixels, the populated subscription toolbar has no horizontal overflow; a synthetic screenshot is retained with the run report.
