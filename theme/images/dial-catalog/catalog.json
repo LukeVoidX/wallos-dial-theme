@@ -1,0 +1,92 @@
+{
+  "apple-one": {
+    "file": "apple-one.svg",
+    "label": "Apple One",
+    "source": "Wallos Dial original artwork",
+    "source_url": "https://github.com/LukeVoidX/wallos-dial-theme/blob/main/theme/images/dial-catalog/apple-one.svg",
+    "license_note": "Original neutral pictogram drawn for Wallos Dial and licensed under GPLv3 with the theme; this does not license third-party names or marks.",
+    "trademark_note": "Apple One is named only to identify a service. The pictogram is generic and implies no affiliation or endorsement.",
+    "optical_scale": 1.04,
+    "rights_status": "first_party_original"
+  },
+  "chatgpt": {
+    "file": "chatgpt.svg",
+    "label": "ChatGPT",
+    "source": "Wallos Dial original artwork",
+    "source_url": "https://github.com/LukeVoidX/wallos-dial-theme/blob/main/theme/images/dial-catalog/chatgpt.svg",
+    "license_note": "Original neutral pictogram drawn for Wallos Dial and licensed under GPLv3 with the theme; this does not license third-party names or marks.",
+    "trademark_note": "ChatGPT is named only to identify a service. The pictogram is generic and implies no affiliation or endorsement.",
+    "optical_scale": 1.04,
+    "rights_status": "first_party_original"
+  },
+  "claude": {
+    "file": "claude.svg",
+    "label": "Claude",
+    "source": "Wallos Dial original artwork",
+    "source_url": "https://github.com/LukeVoidX/wallos-dial-theme/blob/main/theme/images/dial-catalog/claude.svg",
+    "license_note": "Original neutral pictogram drawn for Wallos Dial and licensed under GPLv3 with the theme; this does not license third-party names or marks.",
+    "trademark_note": "Claude is named only to identify a service. The pictogram is generic and implies no affiliation or endorsement.",
+    "optical_scale": 1.04,
+    "rights_status": "first_party_original"
+  },
+  "jianying": {
+    "file": "jianying.svg",
+    "label": "Jianying",
+    "source": "Wallos Dial original artwork",
+    "source_url": "https://github.com/LukeVoidX/wallos-dial-theme/blob/main/theme/images/dial-catalog/jianying.svg",
+    "license_note": "Original neutral pictogram drawn for Wallos Dial and licensed under GPLv3 with the theme; this does not license third-party names or marks.",
+    "trademark_note": "Jianying is named only to identify a service. The pictogram is generic and implies no affiliation or endorsement.",
+    "optical_scale": 1.04,
+    "rights_status": "first_party_original"
+  },
+  "netcup": {
+    "file": "netcup.svg",
+    "label": "netcup",
+    "source": "Wallos Dial original artwork",
+    "source_url": "https://github.com/LukeVoidX/wallos-dial-theme/blob/main/theme/images/dial-catalog/netcup.svg",
+    "license_note": "Original neutral pictogram drawn for Wallos Dial and licensed under GPLv3 with the theme; this does not license third-party names or marks.",
+    "trademark_note": "netcup is named only to identify a service. The pictogram is generic and implies no affiliation or endorsement.",
+    "optical_scale": 0.98,
+    "rights_status": "first_party_original"
+  },
+  "nmcloud": {
+    "file": "nmcloud.svg",
+    "label": "NMCloud",
+    "source": "Wallos Dial original artwork",
+    "source_url": "https://github.com/LukeVoidX/wallos-dial-theme/blob/main/theme/images/dial-catalog/nmcloud.svg",
+    "license_note": "Original neutral pictogram drawn for Wallos Dial and licensed under GPLv3 with the theme; this does not license third-party names or marks.",
+    "trademark_note": "NMCloud is named only to identify a service. The pictogram is generic and implies no affiliation or endorsement.",
+    "optical_scale": 1.02,
+    "rights_status": "first_party_original"
+  },
+  "proxy-seller": {
+    "file": "proxy-seller.svg",
+    "label": "Proxy-Seller",
+    "source": "Wallos Dial original artwork",
+    "source_url": "https://github.com/LukeVoidX/wallos-dial-theme/blob/main/theme/images/dial-catalog/proxy-seller.svg",
+    "license_note": "Original neutral pictogram drawn for Wallos Dial and licensed under GPLv3 with the theme; this does not license third-party names or marks.",
+    "trademark_note": "Proxy-Seller is named only to identify a service. The pictogram is generic and implies no affiliation or endorsement.",
+    "optical_scale": 1.02,
+    "rights_status": "first_party_original"
+  },
+  "racknerd": {
+    "file": "racknerd.svg",
+    "label": "RackNerd",
+    "source": "Wallos Dial original artwork",
+    "source_url": "https://github.com/LukeVoidX/wallos-dial-theme/blob/main/theme/images/dial-catalog/racknerd.svg",
+    "license_note": "Original neutral pictogram drawn for Wallos Dial and licensed under GPLv3 with the theme; this does not license third-party names or marks.",
+    "trademark_note": "RackNerd is named only to identify a service. The pictogram is generic and implies no affiliation or endorsement.",
+    "optical_scale": 1.08,
+    "rights_status": "first_party_original"
+  },
+  "vmiss": {
+    "file": "vmiss.svg",
+    "label": "VMISS",
+    "source": "Wallos Dial original artwork",
+    "source_url": "https://github.com/LukeVoidX/wallos-dial-theme/blob/main/theme/images/dial-catalog/vmiss.svg",
+    "license_note": "Original neutral pictogram drawn for Wallos Dial and licensed under GPLv3 with the theme; this does not license third-party names or marks.",
+    "trademark_note": "VMISS is named only to identify a service. The pictogram is generic and implies no affiliation or endorsement.",
+    "optical_scale": 1.02,
+    "rights_status": "first_party_original"
+  }
+}

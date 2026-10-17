@@ -9,3 +9,5 @@
 docs
 demo
 config
+/theme/images/dial-logos/*
+!/theme/images/dial-logos/.gitkeep

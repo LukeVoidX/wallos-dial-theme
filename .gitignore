@@ -2,6 +2,8 @@
 /data/
 /config/logo-map.local.php
 /config/icons/
+/theme/images/dial-logos/*
+!/theme/images/dial-logos/.gitkeep
 *.db
 *.db-shm
 *.db-wal
