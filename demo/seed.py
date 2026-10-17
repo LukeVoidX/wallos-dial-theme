@@ -70,6 +70,9 @@ def seed(db_path: Path, logo_dir: Path, base_date: date) -> None:
             if count:
                 raise SystemExit(f"Refusing to seed: {table} already has {count} records")
         db.execute("INSERT INTO user (id, username, email, password, main_currency, firstname, language, budget) VALUES (1, 'demo', 'demo@example.invalid', '!disabled-demo-login!', 2, 'Demo', 'en', 0)")
+        # Wallos's remember-me recovery still requires a token row when
+        # login_disabled=1. The public demo's login.php sets this fixed token.
+        db.execute("INSERT INTO login_tokens (user_id, token) VALUES (1, 'abc123ABC')")
         db.execute("INSERT INTO household (id, name, email, user_id) VALUES (1, 'Demo', 'demo@example.invalid', 1)")
         db.execute("DELETE FROM categories WHERE user_id=1")
         db.execute('INSERT INTO categories (id, name, "order", user_id) VALUES (1, "No category", 0, 1)')

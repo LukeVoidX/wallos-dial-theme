@@ -8,6 +8,7 @@ root=$(cd "$root" && pwd -P)
 container=${WALLOS_DEMO_CONTAINER:-wallos-dial-public-demo}
 health_url=${WALLOS_DEMO_HEALTH_URL:-http://127.0.0.1:8296/health.php}
 seed_script=$(cd "$(dirname "$0")" && pwd -P)/seed.py
+smoke_script=$(cd "$(dirname "$0")" && pwd -P)/smoke.sh
 
 [[ -f "$root/.wallos-dial-demo-only" ]] || { echo 'Missing demo-only marker' >&2; exit 1; }
 [[ -f "$root/template/wallos.db" ]] || { echo 'Missing clean migrated template' >&2; exit 1; }
@@ -32,8 +33,9 @@ if ! docker start "$container" >/dev/null; then
     exit 1
 fi
 for attempt in {1..25}; do
-    if curl -fsS "$health_url" >/dev/null 2>&1; then
-        echo 'Isolated demo reset and health check passed.'
+    if curl -fsS "$health_url" >/dev/null 2>&1 &&
+       bash "$smoke_script" "${health_url%/health.php}/" >/dev/null 2>&1; then
+        echo 'Isolated demo reset, health, and dashboard checks passed.'
         exit 0
     fi
     sleep 1
@@ -41,5 +43,5 @@ done
 docker stop --time 15 "$container" >/dev/null || true
 mv "$scratch/previous.db" "$root/db/wallos.db"
 docker start "$container" >/dev/null || true
-echo 'Demo health check failed; previous synthetic database restored' >&2
+echo 'Demo health or dashboard check failed; previous synthetic database restored' >&2
 exit 1

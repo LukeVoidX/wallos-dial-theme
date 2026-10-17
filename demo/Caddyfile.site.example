@@ -13,6 +13,10 @@ wallos-demo.mostai.org {
         path /endpoints/user/set_dial_language.php
         method POST
     }
+    @logout {
+        path /logout.php
+        method GET HEAD
+    }
     @read_endpoint {
         path /endpoints/subscription/get.php /endpoints/subscription/getcalendar.php /endpoints/subscriptions/get.php
         method GET
@@ -24,6 +28,9 @@ wallos-demo.mostai.org {
 
     route {
         respond @not_cloudflare 403
+        handle @logout {
+            redir * / 302
+        }
         handle @language {
             reverse_proxy 127.0.0.1:8296
         }
