@@ -1,6 +1,6 @@
 # Wallos Dial live demo operations
 
-This directory prepares the **actual Wallos Dial 0.1.0 image** for an isolated public read-only demo. The private Wallos container, its SQLite database, and its uploaded logos must never be reused.
+This directory prepares the **actual Wallos Dial 0.1.1 image** for an isolated public read-only demo. The private Wallos container, its SQLite database, and its uploaded logos must never be reused.
 
 ## Topology
 
@@ -18,7 +18,7 @@ GitHub Pages cannot execute PHP; its bilingual pages explain the theme and offer
    ```dotenv
    WALLOS_DEMO_DB_DIR=/srv/wallos-dial-public-demo/db
    WALLOS_DEMO_LOGOS_DIR=/srv/wallos-dial-public-demo/logos
-   WALLOS_DEMO_IMAGE=ghcr.io/lukevoidx/wallos-dial:0.1.0
+   WALLOS_DEMO_IMAGE=ghcr.io/lukevoidx/wallos-dial:0.1.1
    TZ=Asia/Taipei
    ```
 

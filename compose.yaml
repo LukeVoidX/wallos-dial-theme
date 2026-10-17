@@ -2,7 +2,7 @@
 # existing db and uploaded-logo directories after making a backup.
 services:
   wallos:
-    image: ghcr.io/lukevoidx/wallos-dial:0.1.0
+    image: ghcr.io/lukevoidx/wallos-dial:0.1.1
     container_name: wallos-dial
     ports:
       - "127.0.0.1:8282:80"

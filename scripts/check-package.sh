@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-required=(VERSION WALLOS_VERSION Dockerfile compose.yaml compose.build.yaml compat/upstream-files.sha256 LICENSE.md README.md theme/index.php theme/subscriptions.php theme/calendar.php theme/stats.php theme/includes/header.php theme/includes/dial_logo_map.php theme/endpoints/user/set_dial_language.php theme/styles/dial.css theme/scripts/stats-dial.js theme/scripts/dial-interaction.js theme/scripts/dial-language.js theme/images/dial-icon/favicon.svg theme/images/dial-icon/favicon-16.png theme/images/dial-icon/favicon-32.png)
+required=(VERSION WALLOS_VERSION Dockerfile compose.yaml compose.build.yaml compat/upstream-files.sha256 LICENSE.md README.md theme/index.php theme/subscriptions.php theme/calendar.php theme/stats.php theme/includes/header.php theme/includes/dial_logo_map.php theme/includes/dial_mail_theme.php theme/endpoints/user/set_dial_language.php theme/endpoints/cronjobs/sendnotifications.php theme/endpoints/cronjobs/sendcancellationnotifications.php theme/endpoints/cronjobs/sendverificationemails.php theme/endpoints/cronjobs/sendresetpasswordemails.php theme/endpoints/notifications/testemailnotifications.php theme/styles/dial.css theme/scripts/stats-dial.js theme/scripts/dial-interaction.js theme/scripts/dial-language.js theme/images/dial-icon/favicon.svg theme/images/dial-icon/favicon-16.png theme/images/dial-icon/favicon-32.png tests/mail-theme.php tests/mail-mime.php tests/mail-smtp.php)
 for file in "${required[@]}"; do
   [[ -f "$file" ]] || { echo "Missing: $file" >&2; exit 1; }
 done
@@ -22,6 +22,7 @@ else
 fi
 if command -v php >/dev/null; then
   while IFS= read -r -d '' file; do php -l "$file" >/dev/null; done < <(find theme -name '*.php' -print0)
+  php tests/mail-theme.php
 else
   echo 'PHP missing: use the Docker image for PHP syntax verification' >&2
 fi

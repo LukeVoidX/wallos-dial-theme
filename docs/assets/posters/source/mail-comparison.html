@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1920,initial-scale=1">
+  <title>Wallos Dial · 邮件通知对比</title>
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;width:1920px;height:1080px;overflow:hidden}
+    body{font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif;color:#191817;background:#e8e5dc url('compare-backdrop.jpg') center/cover no-repeat}
+    .mark{position:absolute;left:95px;top:70px;font-size:19px;letter-spacing:.18em;font-weight:700}
+    .mark b{color:#c90019}
+    h1{position:absolute;left:95px;top:122px;margin:0;font-size:66px;line-height:1.1;letter-spacing:-.055em}
+    .sub{position:absolute;left:99px;top:219px;margin:0;color:#625e58;font-size:24px}
+    .columns{position:absolute;left:95px;right:95px;top:305px;display:grid;grid-template-columns:1fr 1fr;gap:76px}
+    .label{height:46px;display:flex;align-items:center;gap:20px;font-size:19px;letter-spacing:.14em;font-weight:700}
+    .label em{font-style:normal;color:#c90019}
+    .label small{font-size:16px;letter-spacing:.1em;color:#635f58;margin-left:auto}
+    .window{height:580px;border:1px solid #b4afa4;background:#fff;box-shadow:0 24px 55px rgba(18,18,17,.15);overflow:hidden}
+    .window-head{height:48px;border-bottom:1px solid #dad7d0;background:#f7f7f6;display:flex;align-items:center;padding:0 22px;gap:9px}
+    .window-head i{width:9px;height:9px;border-radius:50%;background:#c9c6bf}
+    .window-head span{margin-left:18px;font-size:14px;color:#68645e;letter-spacing:.02em}
+    .original .email{padding:28px 42px;color:#222;background:#fff;height:531px;font-family:Arial,sans-serif}
+    .original .meta{font-size:15px;border-bottom:1px solid #e4e4e4;padding-bottom:20px;line-height:1.9}
+    .original .meta b{display:inline-block;width:82px;color:#777;font-weight:400}
+    .original pre{white-space:pre-wrap;margin:36px 0;font-size:18px;line-height:1.6;font-family:Arial,sans-serif}
+    .dial iframe{display:block;width:100%;height:532px;border:0;pointer-events:none}
+    .foot{position:absolute;left:95px;right:95px;bottom:63px;border-top:2px solid rgba(25,24,23,.55);padding-top:21px;display:flex;justify-content:space-between;align-items:end}
+    .foot strong{font-size:28px;letter-spacing:-.03em}.foot small{font-size:17px;letter-spacing:.07em;font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="mark">WALLOS <b>DIAL</b> / NOTIFICATIONS</div>
+  <h1>邮件通知，也有同一套设计语言。</h1>
+  <p class="sub">同一组虚构订阅 · 原版纯文本邮件与 Dial 0.1.1 HTML 模板</p>
+  <div class="columns">
+    <section class="original">
+      <div class="label"><em>01</em> ORIGINAL WALLOS <small>PLAIN TEXT</small></div>
+      <div class="window">
+        <div class="window-head"><i></i><i></i><i></i><span>Inbox / Wallos Notification</span></div>
+        <div class="email"><div class="meta"><div><b>From</b> Wallos App</div><div><b>Subject</b> Wallos Notification</div></div><pre>The following subscriptions are up for renewal:
+
+Aster AI for US$19.00 (In 3 days)
+Northstar VPS for US$8.00 (In 7 days)</pre></div>
+      </div>
+    </section>
+    <section class="dial">
+      <div class="label"><em>02</em> WALLOS DIAL <small>THEMED HTML</small></div>
+      <div class="window"><div class="window-head"><i></i><i></i><i></i><span>Inbox / Wallos Notification</span></div><iframe title="Actual Dial email template" src="mail-dial-render.html"></iframe></div>
+    </section>
+  </div>
+  <div class="foot"><strong>提醒看得清，邮件也保持克制。</strong><small>RENDERED TEMPLATE · FICTIONAL DATA</small></div>
+</body>
+</html>

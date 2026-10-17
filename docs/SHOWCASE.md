@@ -4,6 +4,8 @@
 
 The UI in these comparisons is captured directly from Wallos 5.8.1 and Wallos Dial 0.1.0 running with **the same synthetic demo database**. Service names, prices, user, logos, and payment method are fictitious. ImageGen was used for the editorial backgrounds; it did not redraw the UI screenshots.
 
+The email comparison below is a separate Dial 0.1.1 fixture: it renders the original Wallos 5.8.1 renewal message body and the actual Dial HTML template with the same two fictional subscriptions. The mail-client frame is presentation artwork; it is not an inbox capture or evidence that an SMTP message was delivered.
+
 ## Design direction and product showcase
 
 ![Design principles: measured hierarchy, calibrated time, useful grouping, restrained signal](assets/posters/design-principles.png)
@@ -43,3 +45,9 @@ Dial groups subscriptions into categories while retaining search, filters, sorti
 Full-resolution captures: [calendar](assets/screenshots/after-calendar.png) · [statistics](assets/screenshots/after-stats.png)
 
 These are presentation images, not a promise of identical appearance on every screen size. Dial is designed primarily for desktop. The screenshots were captured at a 1600×1000 CSS viewport on 2026-09-27. No personal subscription records or private logos are included.
+
+## Email notifications
+
+![Original Wallos plain-text renewal message beside the rendered Dial 0.1.1 HTML template](assets/posters/compare-email.png)
+
+The source fixture is [`render-mail-fixtures.php`](assets/posters/source/render-mail-fixtures.php); it calls the same [`dial_mail_theme.php`](../theme/includes/dial_mail_theme.php) function used by the installable image. The original message text follows Wallos 5.8.1's renewal message builder. [Inspect the text](assets/posters/source/mail-original-body.txt) and [rendered HTML](assets/posters/source/mail-dial-render.html).

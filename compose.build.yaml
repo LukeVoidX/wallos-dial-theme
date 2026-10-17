@@ -1,7 +1,7 @@
 services:
   wallos:
     build: .
-    image: wallos-dial:0.1.0
+    image: wallos-dial:0.1.1
     container_name: wallos-dial
     ports:
       - "127.0.0.1:8282:80"

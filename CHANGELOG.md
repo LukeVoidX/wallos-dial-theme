@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.1
+
+### Added
+
+- Warm ivory HTML templates for renewal, cancellation, test, verification, and password-reset emails, with plain-text alternatives.
+- English, Simplified Chinese, and Traditional Chinese template labels based on the account language; other locales fall back to English.
+- Email before/after poster made from the original Wallos 5.8.1 plain-text body and the actual Dial template output with the same fictional data.
+
+### Safety and compatibility
+
+- Email action links use the installation's configured Wallos Server URL. Optional links are omitted if it is unavailable; account emails remain queued until a valid URL is configured.
+- Recipient selection, SMTP configuration, and notification schedules are unchanged. The five additional upstream mail entrypoints are protected by the build's exact-file hash gate.
+- Wallos 5.8.1 remains the only tested upstream version.
+
 ## 0.1.0
 
 ### Added

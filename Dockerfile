@@ -2,7 +2,7 @@ FROM bellamy/wallos:5.8.1@sha256:0f049dbab45b9f8e8d43b84fd1b77ef9e55909bd1a384a0
 
 LABEL org.opencontainers.image.title="Wallos Dial" \
       org.opencontainers.image.description="Desktop theme overlay for Wallos v5.8.1" \
-      org.opencontainers.image.version="0.1.0" \
+      org.opencontainers.image.version="0.1.1" \
       org.opencontainers.image.licenses="GPL-3.0-only" \
       org.opencontainers.image.source="https://github.com/LukeVoidX/wallos-dial-theme"
 

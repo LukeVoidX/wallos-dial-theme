@@ -17,9 +17,13 @@ jobs:
       - name: Lint PHP overlay
         run: |
           docker run --rm --entrypoint sh wallos-dial:ci -lc '
-            for file in /var/www/html/index.php /var/www/html/subscriptions.php /var/www/html/calendar.php /var/www/html/stats.php /var/www/html/includes/header.php /var/www/html/includes/dial_logo_map.php /var/www/html/includes/dial_dashboard.php /var/www/html/includes/dial_stat_money.php /var/www/html/includes/list_subscriptions.php /var/www/html/endpoints/subscriptions/get.php /var/www/html/endpoints/user/set_dial_language.php; do
+            for file in /var/www/html/index.php /var/www/html/subscriptions.php /var/www/html/calendar.php /var/www/html/stats.php /var/www/html/includes/header.php /var/www/html/includes/dial_logo_map.php /var/www/html/includes/dial_dashboard.php /var/www/html/includes/dial_stat_money.php /var/www/html/includes/dial_mail_theme.php /var/www/html/includes/list_subscriptions.php /var/www/html/endpoints/subscriptions/get.php /var/www/html/endpoints/user/set_dial_language.php /var/www/html/endpoints/cronjobs/sendnotifications.php /var/www/html/endpoints/cronjobs/sendcancellationnotifications.php /var/www/html/endpoints/cronjobs/sendverificationemails.php /var/www/html/endpoints/cronjobs/sendresetpasswordemails.php /var/www/html/endpoints/notifications/testemailnotifications.php; do
               php -l "$file" || exit 1
             done
           '
+      - name: Test mail rendering
+        run: |
+          docker run --rm --entrypoint php -v "$PWD/tests:/tests:ro" -v "$PWD/theme/includes:/theme/includes:ro" wallos-dial:ci /tests/mail-theme.php
+          docker run --rm --entrypoint php -v "$PWD/tests:/tests:ro" -v "$PWD/theme/includes:/theme/includes:ro" wallos-dial:ci /tests/mail-mime.php
       - name: Smoke test runtime
         run: ./scripts/smoke-image.sh wallos-dial:ci

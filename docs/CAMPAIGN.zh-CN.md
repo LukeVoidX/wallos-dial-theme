@@ -2,7 +2,7 @@
 
 [English](CAMPAIGN.md) · **简体中文**
 
-六张海报分别介绍一个功能。每张图中的软件画面，都直接截取自使用虚构订阅数据运行的 Wallos Dial。ImageGen 只生成主视觉背后的仪器照片；标题、标注与版式均在 [`campaign.html`](assets/posters/source/campaign.html) 中排版。
+前六张海报分别介绍一个功能，使用运行在虚构订阅数据上的 Wallos Dial 截图。第七张展示邮件模板前后对比，由原版纯文本正文和 Dial 0.1.1 实际 HTML 模板渲染而成。ImageGen 只生成海报背景；标题、标注与版式由 HTML 排版。
 
 ## 01 · 总览
 
@@ -28,6 +28,10 @@
 
 ![直接体验真实界面。](assets/posters/campaign-demo-zh.png)
 
+## 07 · 邮件通知
+
+![原版 Wallos 纯文本续费提醒与 Wallos Dial 0.1.1 邮件模板对比](assets/posters/compare-email.png)
+
 ## 设计参考与使用边界
 
 - [Actual Budget](https://actualbudget.org/) 用清楚的产品定位、真实界面和 Demo 入口引导读者。我们借鉴这种展示顺序，并保持 Wallos Dial 自己的视觉语言。
@@ -35,6 +39,6 @@
 - [Immich UI](https://ui.immich.app/introduction) 强调不同产品页面共享同一视觉系统。我们让颜色和字体层级保持一致，同时按功能调整每张海报的构图。
 - [Penpot](https://penpot.app/) 将产品画面与具体能力对应。这里每张海报也只聚焦 Wallos Dial 的一个特点。
 
-参考的是展示方法，没有复制这些项目的图片、界面或文案。中文主视觉与日期刻度使用 30 条虚构订阅的 Demo 截图；分类订阅、十月日历、统计和在线体验也使用该独立公开 Demo 的数据。服务名称、价格、标识与日期均为虚构。海报展示桌面布局；公开 Demo 只读。Wallos Dial 0.1.0 目前仅验证 Wallos 5.8.1。
+参考的是展示方法，没有复制这些项目的图片、界面或文案。中文主视觉与日期刻度使用 30 条虚构订阅的 Demo 截图；分类订阅、十月日历、统计和在线体验也使用该独立公开 Demo 的数据。服务名称、价格、标识与日期均为虚构。邮件图为模板渲染，不是邮箱收件箱截图。海报展示桌面布局；公开 Demo 只读。Wallos Dial 0.1.1 目前仅验证 Wallos 5.8.1。
 
 [View the English posters and notes →](CAMPAIGN.md)

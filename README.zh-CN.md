@@ -6,7 +6,7 @@
 
 Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界面改版。暖白底、黑色数字、细线和少量红色贯穿总览、订阅、日历与统计页面。首页集中显示月度费用、日期刻度、近期付款和倒计时；订阅页增加分类区块。原有搜索、筛选、排序、新增与编辑、通知和设置功能继续由 Wallos 处理。
 
-**Dial 版本：**`0.1.0` · **已验证的 Wallos 版本：**仅 `5.8.1`。这是构建在固定 Wallos 镜像上的源码叠加层，并非 Wallos 内置的可切换主题；它不隶属于 Wallos 官方。
+**Dial 版本：**`0.1.1` · **已验证的 Wallos 版本：**仅 `5.8.1`。这是构建在固定 Wallos 镜像上的源码叠加层，并非 Wallos 内置的可切换主题；它不隶属于 Wallos 官方。
 
 **先体验，再安装：**[打开真实运行的中英文 Demo](https://wallos-demo.mostai.org/)。它在独立容器运行实际 PHP 应用，并放入 30 条虚构订阅。可浏览总览、分类订阅、日历、统计、详情与语言切换。公开环境为只读，账户与编辑功能需自行安装镜像体验。GitHub Pages 的[中文](https://lukevoidx.github.io/wallos-dial-theme/zh-CN/)与[英文](https://lukevoidx.github.io/wallos-dial-theme/)介绍页可先说明主题与兼容范围。[了解真实 Demo 的部署与边界](docs/DEMO.md)。
 
@@ -21,6 +21,10 @@ Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界
 [查看完整中文海报系列](docs/CAMPAIGN.zh-CN.md)，包括日历、统计与真实在线 Demo；也可切换到[英文版](docs/CAMPAIGN.md)。
 
 ![设计思路：清晰层级、时间刻度、分类与克制的红色](docs/assets/posters/design-principles.png)
+
+![同一组虚构订阅在原版纯文本提醒与 Dial 邮件模板中的样式对比](docs/assets/posters/compare-email.png)
+
+邮件对比图由原版 Wallos 5.8.1 的纯文本提醒正文和 Dial 0.1.1 实际生成的 HTML 模板渲染而成，不是邮箱客户端截图。两侧使用同一组虚构数据。[查看制作方法](docs/SHOWCASE.md)。
 
 ## 新安装
 
@@ -65,9 +69,15 @@ ssh -L 8282:127.0.0.1:8282 user@your-server
 
 顶栏提供简体中文、English、繁體中文的快捷选项，也保留 Wallos 其他语言。选择会保存到现有账户语言字段和 Cookie；用户自己录入的订阅名称不会自动翻译。
 
+## 邮件通知
+
+Dial 0.1.1 将续费、取消、SMTP 测试、邮箱验证和密码重置邮件统一为暖白 HTML 模板，并附带纯文本版本。收件人、发送时间、SMTP 配置和原有纯文本提醒内容仍由 Wallos 处理。模板文案根据账户语言显示英文、简体中文或繁体中文；其他语言回退英文，订阅名称和金额保持原样。
+
+提醒邮件中的“打开 Wallos”按钮读取管理设置里的 **Server URL**（或部署管理的 `WALLOS_SERVER_URL`）；未设置或无效时不显示按钮。验证与重置密码邮件必须有有效的 HTTP(S) Server URL，否则保留待发送状态，避免发出无法使用的链接。安装后请按原有方式设置 SMTP，并先发送测试邮件。
+
 ## 更新边界
 
-Dial `0.1.0` 固定在 Wallos `5.8.1`。Wallos 发布新版本后，本主题**不会自动跳到未经验证的上游版本**。维护者需检查被替换文件的差异，更新适配，测试数据副本，然后发布新的 Dial 镜像。现有版本可以继续运行；不要直接把 Dockerfile 的 Wallos 版本号改新就上线。详见[升级和回退](docs/UPGRADING.md)。
+Dial `0.1.1` 固定在 Wallos `5.8.1`。Wallos 发布新版本后，本主题**不会自动跳到未经验证的上游版本**。维护者需检查被替换文件的差异，更新适配，测试数据副本，然后发布新的 Dial 镜像。现有版本可以继续运行；不要直接把 Dockerfile 的 Wallos 版本号改新就上线。详见[升级和回退](docs/UPGRADING.md)。
 
 此版本重点是桌面体验，没有单独承诺手机重新设计，也不承诺未来每次 Wallos 更新都零故障。
 
