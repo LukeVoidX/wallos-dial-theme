@@ -65,6 +65,20 @@ def wait_for_app(name: str) -> None:
     raise RuntimeError(f"Application did not become ready:\n{docker('logs', name, check=False).stderr}")
 
 
+def assert_fixture_owner(name: str) -> None:
+    """The local runner must be able to seed and remove its bind-mounted data."""
+    if os.geteuid() == 0:
+        return
+    actual = (int(docker("exec", name, "id", "-u", "www-data").stdout.strip()),
+              int(docker("exec", name, "id", "-g", "www-data").stdout.strip()))
+    expected = (os.geteuid(), os.getegid())
+    if actual != expected:
+        raise AssertionError(
+            f"Disposable mail fixture runs as {actual}, but its host owner is {expected}; "
+            "the host cannot seed or clean up 0755 bind-mounted data on Linux"
+        )
+
+
 def mailpit_get(name: str, path: str) -> str:
     return docker("exec", name, "wget", "-qO-", f"http://127.0.0.1:8025{path}").stdout
 
@@ -368,10 +382,13 @@ def main() -> None:
                    r"^.+@example\.(test|invalid)$")
             base_args = ("run", "-d", "--name", app, "--network", network,
                          "-e", "TZ=UTC", "-e", "DEMO_MODE=0",
+                         *(("-e", f"PUID={os.geteuid()}", "-e", f"PGID={os.getegid()}")
+                           if os.geteuid() != 0 else ()),
                          "-v", f"{db_dir}:/var/www/html/db",
                          "-v", f"{logos}:/var/www/html/images/uploads/logos")
             docker(*base_args, image)
             wait_for_app(app)
+            assert_fixture_owner(app)
             docker("rm", "-f", app)
             seed(db_dir / "wallos.db")
             password_hash = docker("run", "--rm", "--entrypoint", "php", image,

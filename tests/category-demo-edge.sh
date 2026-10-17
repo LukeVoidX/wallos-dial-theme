@@ -21,6 +21,7 @@ docker network create "$network" >/dev/null
 start_app() {
   local demo=$1
   docker run -d --name "$app" --network "$network" -e "DEMO_MODE=$demo" \
+    -e "PUID=$(id -u)" -e "PGID=$(id -g)" \
     -p 127.0.0.1::80 -v "$scratch/db:/var/www/html/db" \
     -v "$scratch/logos:/var/www/html/images/uploads/logos" "$image" >/dev/null
   origin=$(docker port "$app" 80/tcp | head -1)
@@ -35,7 +36,6 @@ start_app() {
 }
 
 start_app 0
-docker exec "$app" sh -c 'chmod a+rwX /var/www/html/db /var/www/html/db/wallos.db /var/www/html/images/uploads/logos'
 docker rm -f "$app" >/dev/null
 python3 demo/seed.py "$scratch/db/wallos.db" "$scratch/logos"
 printf '<svg xmlns="http://www.w3.org/2000/svg"></svg>\n' > "$scratch/logos/private-mark.svg"

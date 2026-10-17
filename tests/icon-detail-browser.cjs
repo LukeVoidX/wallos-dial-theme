@@ -50,6 +50,9 @@ async function fixture() {
       }
       const icon = page.locator('#details-logo [data-dial-icon-kind="catalog"]');
       await icon.waitFor({ timeout: 10000 });
+      // The modal can render before the SVG image finishes decoding. Wait for
+      // real pixels before checking its intrinsic dimensions.
+      await icon.locator('img').evaluate(image => image.decode());
       const state = await icon.evaluate(element => ({
         presentation: element.dataset.dialIconPresentation,
         treatment: element.dataset.dialIconTreatment,

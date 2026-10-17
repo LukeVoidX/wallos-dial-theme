@@ -10,7 +10,8 @@ trap 'docker rm -f "$name" >/dev/null 2>&1 || true; rm -r "$scratch"' EXIT
 mkdir -p "$scratch/db" "$scratch/logos"
 
 start() {
-  docker run -d --name "$name" -e DEMO_MODE=0 -p 127.0.0.1::80 \
+  docker run -d --name "$name" -e DEMO_MODE=0 \
+    -e "PUID=$(id -u)" -e "PGID=$(id -g)" -p 127.0.0.1::80 \
     -v "$scratch/db:/var/www/html/db" \
     -v "$scratch/logos:/var/www/html/images/uploads/logos" "$image" >/dev/null
   address=$(docker port "$name" 80/tcp | head -1)
@@ -23,7 +24,6 @@ start() {
   exit 1
 }
 start
-docker exec "$name" sh -c 'chmod a+rwX /var/www/html/db /var/www/html/db/wallos.db /var/www/html/images/uploads/logos'
 docker rm -f "$name" >/dev/null
 python3 demo/seed.py "$scratch/db/wallos.db" "$scratch/logos"
 python3 - "$scratch/db/wallos.db" <<'PY'

@@ -30,7 +30,9 @@ const dockerLogs = () => {
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function start(image) {
-  docker('run', '-d', '--name', name, '-p', `127.0.0.1:${port}:80`,
+  docker('run', '-d', '--name', name,
+    '-e', `PUID=${process.getuid()}`, '-e', `PGID=${process.getgid()}`,
+    '-p', `127.0.0.1:${port}:80`,
     '-v', `${scratch}/db:/var/www/html/db`,
     '-v', `${scratch}/logos:/var/www/html/images/uploads/logos`, image);
   for (let n = 0; n < 70; n++) {
@@ -96,7 +98,6 @@ async function awaitStage(page, expectedScript, expectedCache) {
   let context;
   try {
     await start(old);
-    docker('exec', name, 'sh', '-c', 'chmod a+rwX /var/www/html/db /var/www/html/db/wallos.db /var/www/html/images/uploads/logos');
     stop();
     run('python3', ['demo/seed.py', `${scratch}/db/wallos.db`, `${scratch}/logos`]);
     const hash = docker('run', '--rm', '--entrypoint', 'php', old,

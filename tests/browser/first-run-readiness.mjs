@@ -16,6 +16,9 @@ const dbFile = path.join(dbDir, 'wallos.db');
 const name = `dial-first-run-ready-${process.pid}`;
 const corruptName = `${name}-corrupt`;
 const readonlyName = `${name}-readonly`;
+const hostUid = process.getuid?.() ?? 82;
+const hostGid = process.getgid?.() ?? 82;
+const fixtureIdentity = ['-e', `PUID=${hostUid}`, '-e', `PGID=${hostGid}`];
 fs.mkdirSync(evidenceDir, { recursive: true });
 fs.mkdirSync(dbDir);
 fs.mkdirSync(logoDir);
@@ -43,7 +46,7 @@ async function probe(url) {
 
 let started = false;
 try {
-  docker('run', '-d', '--rm', '--name', name, '-e', 'TZ=UTC', '-p', '127.0.0.1::80',
+  docker('run', '-d', '--rm', '--name', name, '-e', 'TZ=UTC', ...fixtureIdentity, '-p', '127.0.0.1::80',
     '-v', `${dbDir}:/var/www/html/db`, '-v', `${logoDir}:/var/www/html/images/uploads/logos`, image);
   started = true;
   const port = docker('port', name, '80/tcp').split(':').at(-1);
@@ -77,17 +80,17 @@ try {
   assert(burst.every(response => response.status === 200 && !/Fatal error/.test(response.text)),
     'concurrent first-run registration requests failed after readiness');
   // A bind mount can report host ownership under Colima even when the mapped
-  // www-data user can write. Exercise real SQLite and Logo writes instead.
+  // application user can write. Exercise real SQLite and Logo writes instead.
   let writable = false;
   for (let attempt = 0; attempt < 12; attempt++) {
     const command = `php -r '$db=new SQLite3("/var/www/html/db/wallos.db"); if (!$db->exec("CREATE TABLE dial_qa_write_check(id INTEGER)")) exit(1); if (!$db->exec("DROP TABLE dial_qa_write_check")) exit(1);' && touch /var/www/html/images/uploads/logos/.dial-qa-write-check && rm /var/www/html/images/uploads/logos/.dial-qa-write-check`;
-    const result = spawnSync('docker', ['exec', '--user', '82:82', name, 'sh', '-ec', command],
+    const result = spawnSync('docker', ['exec', '--user', `${hostUid}:${hostGid}`, name, 'sh', '-ec', command],
     { encoding: 'utf8' });
     writable = result.status === 0;
     if (writable) break;
     await sleep(100);
   }
-  assert(writable, 'mapped www-data cannot write SQLite and Logo volume');
+  assert(writable, 'mapped application user cannot write SQLite and Logo volume');
   console.log(`PASS fresh startup gate: ${events.length} probes, 8 concurrent registration requests`);
 
   const corrupt = fs.mkdtempSync(path.join(root, 'data', 'auth-corrupt-'));
@@ -95,7 +98,7 @@ try {
     fs.mkdirSync(path.join(corrupt, 'db'));
     fs.mkdirSync(path.join(corrupt, 'logos'));
     fs.writeFileSync(path.join(corrupt, 'db', 'wallos.db'), 'not a SQLite database\n');
-    docker('run', '-d', '--name', corruptName, '-p', '127.0.0.1::80',
+    docker('run', '-d', '--name', corruptName, ...fixtureIdentity, '-p', '127.0.0.1::80',
       '-v', `${path.join(corrupt, 'db')}:/var/www/html/db`,
       '-v', `${path.join(corrupt, 'logos')}:/var/www/html/images/uploads/logos`, image);
     const corruptPort = docker('port', corruptName, '80/tcp').split(':').at(-1);
@@ -125,7 +128,7 @@ try {
     fs.writeFileSync(mapping, '<?php\nreturn [];\n');
     fs.copyFileSync(path.join(root, 'theme/images/dial-icon/favicon.svg'),
       path.join(readonly, 'icons', 'qa-neutral.svg'));
-    docker('run', '-d', '--name', readonlyName, '-p', '127.0.0.1::80',
+    docker('run', '-d', '--name', readonlyName, ...fixtureIdentity, '-p', '127.0.0.1::80',
       '-v', `${path.join(readonly, 'db')}:/var/www/html/db`,
       '-v', `${path.join(readonly, 'logos')}:/var/www/html/images/uploads/logos`,
       '-v', `${mapping}:/var/www/html/includes/dial_logo_map.local.php:ro`,

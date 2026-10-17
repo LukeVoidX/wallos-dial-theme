@@ -102,6 +102,7 @@ async function runDemoReadOnly() {
   const logosDir = path.resolve(dbDir, '..', 'logos');
   demoName = `dial-release-demo-${process.pid}`;
   execFileSync('docker', ['run', '-d', '--name', demoName, '-e', 'DEMO_MODE=1',
+    '-e', `PUID=${process.getuid()}`, '-e', `PGID=${process.getgid()}`,
     '-p', '127.0.0.1::80', '-v', `${dbDir}:/var/www/html/db`,
     '-v', `${logosDir}:/var/www/html/images/uploads/logos`, report.image],
   { stdio: 'ignore' });

@@ -155,7 +155,9 @@ async function fixture() {
     }
 
     // The public Demo may preview a choice but must offer no write affordance.
-    execFileSync('docker', ['run', '-d', '--name', demoName, '-e', 'DEMO_MODE=1', '-p', '127.0.0.1::80',
+    execFileSync('docker', ['run', '-d', '--name', demoName, '-e', 'DEMO_MODE=1',
+      '-e', `PUID=${process.getuid()}`, '-e', `PGID=${process.getgid()}`,
+      '-p', '127.0.0.1::80',
       '-v', `${path.dirname(database)}:/var/www/html/db`,
       '-v', `${path.resolve(path.dirname(database), '../logos')}:/var/www/html/images/uploads/logos`, image],
       { cwd: root, encoding: 'utf8' });

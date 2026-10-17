@@ -45,6 +45,7 @@ docker run --rm --entrypoint sh -v "$PWD:/app:ro" -w /app "$image" -ec '
   done
 '
 ./scripts/smoke-image.sh "$image"
+tests/release/fixture-ownership.sh "$image"
 
 # All SMTP routes and local webhook receipts use a Docker --internal network,
 # fictional recipients, and a pinned Mailpit image. No external mail is sent.

@@ -8,7 +8,8 @@ name="dial-security-$$"
 trap 'docker container rm -f "$name" >/dev/null 2>&1 || true; rm -r "$scratch"' EXIT
 mkdir -p "$scratch/db" "$scratch/logos"
 start_image() {
-  docker run -d --name "$name" -p 127.0.0.1::80 \
+  docker run -d --name "$name" -e "PUID=$(id -u)" -e "PGID=$(id -g)" \
+    -p 127.0.0.1::80 \
     -v "$scratch/db:/var/www/html/db" \
     -v "$scratch/logos:/var/www/html/images/uploads/logos" "$@" "$image" >/dev/null
   base="http://$(docker port "$name" 80/tcp | head -1)"
@@ -24,7 +25,7 @@ start_image() {
 }
 start_image
 docker container rm -f "$name" >/dev/null
-ids=$(docker run --rm --entrypoint php \
+ids=$(docker run --rm --user "$(id -u):$(id -g)" --entrypoint php \
   -v "$scratch/db:/var/www/html/db" -v "$PWD/tests/compatibility:/tests:ro" \
   "$image" /tests/seed-security.php /var/www/html/db/wallos.db)
 start_image

@@ -23,6 +23,7 @@ const logs = () => { const result = spawnSync('docker', ['logs', name], { encodi
 function stop() { try { docker('rm', '-f', name); } catch (_) { /* already stopped */ } }
 async function start(demo) {
   docker('run', '-d', '--name', name, '-e', `DEMO_MODE=${demo ? 1 : 0}`,
+    '-e', `PUID=${process.getuid()}`, '-e', `PGID=${process.getgid()}`,
     '-p', `127.0.0.1:${port}:80`,
     '-v', `${scratch}/db:/var/www/html/db`,
     '-v', `${scratch}/logos:/var/www/html/images/uploads/logos`, image);
@@ -50,7 +51,6 @@ async function openManager(page) {
   let context;
   try {
     await start(false);
-    docker('exec', name, 'sh', '-c', 'chmod a+rwX /var/www/html/db /var/www/html/db/wallos.db /var/www/html/images/uploads/logos');
     stop();
     run('python3', ['demo/seed.py', `${scratch}/db/wallos.db`, `${scratch}/logos`]);
     run('python3', ['-c', `import sqlite3,sys

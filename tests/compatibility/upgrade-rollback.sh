@@ -12,7 +12,8 @@ mkdir -p "$scratch/db" "$scratch/logos"
 
 start_image() {
   local image=$1
-  docker run -d --name "$name" -p 127.0.0.1::80 \
+  docker run -d --name "$name" -e "PUID=$(id -u)" -e "PGID=$(id -g)" \
+    -p 127.0.0.1::80 \
     -v "$scratch/db:/var/www/html/db" \
     -v "$scratch/logos:/var/www/html/images/uploads/logos" "$image" >/dev/null
   base="http://$(docker port "$name" 80/tcp | head -1)"
@@ -112,7 +113,6 @@ PY
 
 # Let the historical image create and migrate the schema before seeding it.
 start_image "$old"
-docker exec "$name" sh -c 'chmod a+rwX /var/www/html/db /var/www/html/db/wallos.db /var/www/html/images/uploads/logos'
 stop_image
 python3 demo/seed.py "$scratch/db/wallos.db" "$scratch/logos"
 password_hash=$(docker run --rm --entrypoint php "$old" -r 'echo password_hash("DialFixture-2026!", PASSWORD_DEFAULT);')

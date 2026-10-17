@@ -12,7 +12,8 @@ mkdir -p "$scratch/db" "$scratch/logos"
 
 start() {
   docker run -d --name "$name" -e "DEMO_MODE=$1" \
-    -e "PUID=${DIAL_TEST_PUID:-82}" -e "PGID=${DIAL_TEST_PGID:-82}" -p 127.0.0.1::80 \
+    -e "PUID=${DIAL_TEST_PUID:-$(id -u)}" -e "PGID=${DIAL_TEST_PGID:-$(id -g)}" \
+    -p 127.0.0.1::80 \
     -v "$scratch/db:/var/www/html/db" \
     -v "$scratch/logos:/var/www/html/images/uploads/logos" "$image" >/dev/null
   address=$(docker port "$name" 80/tcp | head -1)
@@ -29,7 +30,6 @@ start() {
 }
 
 start 0
-docker exec "$name" sh -c 'chmod a+rwX /var/www/html/db /var/www/html/db/wallos.db /var/www/html/images/uploads/logos'
 docker rm -f "$name" >/dev/null
 if [[ "$mode" == --serve ]]; then
   python3 demo/seed.py "$scratch/db/wallos.db" "$scratch/logos" --showcase-icons

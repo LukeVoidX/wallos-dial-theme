@@ -11,7 +11,8 @@ mkdir -p "$scratch/db" "$scratch/logos"
 
 start() {
   local container=$1 demo=$2
-  docker run -d --name "$container" -e "DEMO_MODE=$demo" -p 127.0.0.1::80 \
+  docker run -d --name "$container" -e "DEMO_MODE=$demo" \
+    -e "PUID=$(id -u)" -e "PGID=$(id -g)" -p 127.0.0.1::80 \
     -v "$scratch/db:/var/www/html/db" \
     -v "$scratch/logos:/var/www/html/images/uploads/logos" "$image" >/dev/null
   address=$(docker port "$container" 80/tcp | head -1)
@@ -28,7 +29,6 @@ start() {
 }
 
 start "$name" 0
-docker exec "$name" sh -c 'chmod a+rwX /var/www/html/db /var/www/html/db/wallos.db /var/www/html/images/uploads/logos'
 docker rm -f "$name" >/dev/null
 python3 demo/seed.py "$scratch/db/wallos.db" "$scratch/logos"
 python3 - "$scratch/db/wallos.db" <<'PY'

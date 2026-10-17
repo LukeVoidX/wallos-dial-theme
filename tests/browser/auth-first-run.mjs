@@ -15,6 +15,8 @@ const fixture = fs.mkdtempSync(path.join(root, 'data', 'auth-install-'));
 const dbDir = path.join(fixture, 'db');
 const logoDir = path.join(fixture, 'logos');
 const name = `dial-auth-install-${process.pid}`;
+const hostUid = process.getuid?.() ?? 82;
+const hostGid = process.getgid?.() ?? 82;
 const password = 'Dial-QA-Synthetic-2026!';
 const email = 'dial-qa@example.invalid';
 const secret = 'JBSWY3DPEHPK3PXP';
@@ -96,7 +98,8 @@ async function authSurface(page, route, label, expectedForm) {
 let browser;
 let base;
 try {
-  docker('run', '-d', '--rm', '--name', name, '-e', 'TZ=UTC', '-p', '127.0.0.1::80',
+  docker('run', '-d', '--rm', '--name', name, '-e', 'TZ=UTC',
+    '-e', `PUID=${hostUid}`, '-e', `PGID=${hostGid}`, '-p', '127.0.0.1::80',
     '-v', `${dbDir}:/var/www/html/db`, '-v', `${logoDir}:/var/www/html/images/uploads/logos`, image);
   const port = docker('port', name, '80/tcp').split(':').at(-1);
   base = `http://127.0.0.1:${port}`;

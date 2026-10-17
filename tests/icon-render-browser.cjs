@@ -22,7 +22,9 @@ const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 const logs = () => { const r = spawnSync('docker', ['logs', name], { encoding: 'utf8' }); return `${r.stdout || ''}${r.stderr || ''}`; };
 function stop() { try { docker('rm', '-f', name); } catch (_) { /* already stopped */ } }
 async function start() {
-  docker('run', '-d', '--name', name, '-e', 'DEMO_MODE=0', '-p', `127.0.0.1:${port}:80`,
+  docker('run', '-d', '--name', name, '-e', 'DEMO_MODE=0',
+    '-e', `PUID=${process.getuid()}`, '-e', `PGID=${process.getgid()}`,
+    '-p', `127.0.0.1:${port}:80`,
     '-v', `${scratch}/db:/var/www/html/db`,
     '-v', `${scratch}/logos:/var/www/html/images/uploads/logos`, image);
   for (let i = 0; i < 45; i++) {
@@ -37,7 +39,6 @@ async function start() {
   let context;
   try {
     await start();
-    docker('exec', name, 'sh', '-c', 'chmod a+rwX /var/www/html/db /var/www/html/db/wallos.db /var/www/html/images/uploads/logos');
     stop();
     run('python3', ['demo/seed.py', `${scratch}/db/wallos.db`, `${scratch}/logos`]);
     run('python3', ['-c', `import sqlite3,sys

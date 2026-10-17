@@ -70,6 +70,7 @@ for check in \
   'compose.build.yaml' \
   'docker build -t "$image" .' \
   './scripts/smoke-image.sh "$image"' \
+  'tests/release/fixture-ownership.sh "$image"' \
   'python3 tests/release/mail-capture.py "$image"' \
   'tests/mail-theme.php' \
   'tests/mail-mime.php' \
