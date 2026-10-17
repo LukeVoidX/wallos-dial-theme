@@ -1,6 +1,6 @@
 # Wallos Dial 1.0.0 release checklist
 
-**Status: GitHub Release, GHCR image and public Demo published on 2026-10-17.** Luke approved the GitHub, public Demo and product-page scope. The private Wallos installation and community posts are outside this release. Product-page readback remains a separate item below.
+**Status: GitHub Release, GHCR image, public Demo and bilingual product pages published on 2026-10-17.** Luke approved the GitHub, public Demo and product-page scope. The private Wallos installation and community posts are outside this release.
 
 ## Release identity
 
@@ -24,7 +24,7 @@
 | Cache and desktop layout | Old/new service-worker tests passed, including account switch, removal of old cache keys and no cached private images/account pages. Synthetic browser journey passed in English, 简体中文 and 繁體中文 at 900/1440/1920 px and 80/100/125% CSS zoom equivalents, with no horizontal overflow. Native macOS Chrome 80/100/125% zoom also passed on five desktop pages. Screenshots are in `docs/assets/screenshots/dial-1.0-*.png`; ignored manifests are in `data/qa-1.0/`. |
 | Mail and notifications | Five email paths passed in isolated SMTP capture for `en`, `zh_cn`, `zh_tw`: renewal, cancellation, SMTP test, verification and password reset, including HTML/plain and two-account invalid-payer coverage. Nine local receipts passed over Discord, Gotify, Ntfy, Webhook and Mattermost on an internal Docker network. External delivery URLs and Web Push were not exercised end to end. |
 | Multiarchitecture runtime and Demo safety | Exact-tag `linux/amd64` and `linux/arm64` images passed runtime/health/theme and SVG rasterizer smoke. Local Caddy/Nginx/HTTP/browser Demo read-only tests passed; injected reset failures restored the prior synthetic database and Logos. |
-| Documentation contract | Version, package, CI and relative-link checks passed locally before the public cutover. Postrelease product-page URL/content readback must be recorded after its documentation sync. |
+| Documentation contract | Version, package, CI and relative-link checks passed locally. The postrelease documentation commit `47391c53ad74b814e70c0ff0866d9af10083cb74` passed [Linux CI](https://github.com/LukeVoidX/wallos-dial-theme/actions/runs/39030996344) and [GitHub Pages deployment](https://github.com/LukeVoidX/wallos-dial-theme/actions/runs/39030995831). Public English and 简体中文 pages returned HTTP 200 with version 1.0.0, Wallos 5.8.3 JSON-LD, reciprocal language links, Demo link and six loaded images each. Headless Chrome at 1440 px found no horizontal overflow or page errors. |
 
 ## Public Demo change record
 
@@ -42,6 +42,6 @@
 - [x] Luke approved pushing `main`, publishing the `v1.0.0` tag, GHCR image and GitHub Release, and updating the public Demo and product pages.
 - [x] Exact source tag, successful Linux CI runs, GHCR multiarchitecture digest, anonymous pulls and GitHub Release were verified.
 - [x] Public Demo was switched to the pinned 1.0.0 image, backed up, smoke-tested twice, and its two-hour reset timer restarted. The private Wallos installation was not part of the cutover.
-- [ ] Read back the updated English and 简体中文 product pages after the postrelease documentation push; verify version, Demo URL, screenshots, links and language alternates. Record the resulting commit and URLs here.
+- [x] Read back the [English product page](https://lukevoidx.github.io/wallos-dial-theme/) and [简体中文 product page](https://lukevoidx.github.io/wallos-dial-theme/zh-CN/) after commit `47391c53ad74b814e70c0ff0866d9af10083cb74`; version, Demo URL, screenshots, links and language alternates passed public HTTP and browser checks.
 
 NodeSeek, V2EX, X and other community announcements require their own review and authorization.
