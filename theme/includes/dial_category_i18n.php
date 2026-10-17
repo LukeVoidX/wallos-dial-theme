@@ -101,6 +101,10 @@ function dial_category_authorize(string $lang): void
         dial_category_send(false, 'demo_read_only', $lang, [], 403);
         exit;
     }
+    // Wallos opens SQLite before session_start(). Concurrent prefetch requests
+    // can hold SQLite read locks while waiting for this session's file lock.
+    // Releasing the session before BEGIN IMMEDIATE prevents that lock cycle.
+    session_write_close();
 }
 
 function dial_category_positive_id($value): ?int
@@ -108,4 +112,82 @@ function dial_category_positive_id($value): ?int
     if (!is_string($value) && !is_int($value)) return null;
     $id = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
     return $id === false ? null : $id;
+}
+
+function dial_category_copy(string $language): array
+{
+    static $copy = [
+        'en' => [
+            'title' => 'Categories', 'eyebrow' => 'YOUR SYSTEM',
+            'intro' => 'Keep each subscription in a place that makes sense to you.',
+            'manage' => 'Manage categories', 'name' => 'Category name',
+            'add' => 'Add category', 'add_placeholder' => 'New category name',
+            'save' => 'Save', 'move_up' => 'Move up', 'move_down' => 'Move down',
+            'drag' => 'Drag to reorder', 'merge' => 'Merge',
+            'merge_target' => 'Move subscriptions to', 'merge_confirm' => 'Merge categories',
+            'merge_help' => 'All subscriptions in this category move to the selected category. The old category is then removed.',
+            'delete' => 'Delete', 'delete_confirm' => 'Delete empty category',
+            'delete_help' => 'This empty category will be removed.',
+            'starter' => 'Use starter categories', 'starter_confirm' => 'Apply starter categories',
+            'starter_help' => 'Preview the four starter names. Choose any empty categories to remove; none are selected automatically.',
+            'starter_missing' => 'Names to add', 'starter_remove' => 'Empty categories to remove',
+            'starter_none' => 'All starter names already exist.',
+            'readonly' => 'This public demo is read-only. Install Wallos Dial to manage your own categories.',
+            'fixed' => 'Protected default', 'cancel' => 'Cancel',
+            'count' => 'Subscriptions', 'actions' => 'Actions',
+            'saved' => 'Saved.', 'install' => 'Installation guide',
+            'starter_unavailable' => 'Starter categories are available when this account has no subscriptions.',
+        ],
+        'zh_cn' => [
+            'title' => '分类管理', 'eyebrow' => '你的订阅系统',
+            'intro' => '按你的使用方式整理每一项订阅。',
+            'manage' => '管理分类', 'name' => '分类名称',
+            'add' => '新增分类', 'add_placeholder' => '新分类名称',
+            'save' => '保存', 'move_up' => '上移', 'move_down' => '下移',
+            'drag' => '拖动排序', 'merge' => '合并',
+            'merge_target' => '将订阅移至', 'merge_confirm' => '确认合并分类',
+            'merge_help' => '此分类的全部订阅将移到目标分类，原分类随后删除。',
+            'delete' => '删除', 'delete_confirm' => '删除空分类',
+            'delete_help' => '此空分类将被删除。',
+            'starter' => '使用初始分类', 'starter_confirm' => '加入初始分类',
+            'starter_help' => '预览四个初始名称。可自行勾选要删除的空分类；默认不勾选。',
+            'starter_missing' => '将新增的名称', 'starter_remove' => '可删除的空分类',
+            'starter_none' => '四个初始分类均已存在。',
+            'readonly' => '公开演示仅供浏览。安装 Wallos Dial 后即可管理自己的分类。',
+            'fixed' => '受保护的默认分类', 'cancel' => '取消',
+            'count' => '订阅数', 'actions' => '操作',
+            'saved' => '已保存。', 'install' => '安装说明',
+            'starter_unavailable' => '此账户没有订阅时，才能加入初始分类。',
+        ],
+        'zh_tw' => [
+            'title' => '分類管理', 'eyebrow' => '你的訂閱系統',
+            'intro' => '依照你的使用方式整理每一項訂閱。',
+            'manage' => '管理分類', 'name' => '分類名稱',
+            'add' => '新增分類', 'add_placeholder' => '新分類名稱',
+            'save' => '儲存', 'move_up' => '上移', 'move_down' => '下移',
+            'drag' => '拖曳排序', 'merge' => '合併',
+            'merge_target' => '將訂閱移至', 'merge_confirm' => '確認合併分類',
+            'merge_help' => '此分類的全部訂閱將移至目標分類，原分類隨後刪除。',
+            'delete' => '刪除', 'delete_confirm' => '刪除空分類',
+            'delete_help' => '此空分類將被刪除。',
+            'starter' => '使用初始分類', 'starter_confirm' => '加入初始分類',
+            'starter_help' => '預覽四個初始名稱。可自行勾選要刪除的空分類；預設不勾選。',
+            'starter_missing' => '將新增的名稱', 'starter_remove' => '可刪除的空分類',
+            'starter_none' => '四個初始分類均已存在。',
+            'readonly' => '公開展示僅供瀏覽。安裝 Wallos Dial 後即可管理自己的分類。',
+            'fixed' => '受保護的預設分類', 'cancel' => '取消',
+            'count' => '訂閱數', 'actions' => '操作',
+            'saved' => '已儲存。', 'install' => '安裝說明',
+            'starter_unavailable' => '此帳戶沒有訂閱時，才能加入初始分類。',
+        ],
+    ];
+    $language = isset($copy[$language]) ? $language : 'en';
+    $selected = $copy[$language];
+    foreach (['invalid_name', 'foreign_category', 'category_in_use',
+              'immutable_category', 'last_category', 'stale_order',
+              'stale_selection', 'demo_read_only', 'write_failed',
+              'same_category', 'invalid_request'] as $code) {
+        $selected[$code] = dial_category_message($code, $language);
+    }
+    return $selected;
 }

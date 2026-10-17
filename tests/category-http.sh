@@ -58,7 +58,9 @@ def post(path, data, token=csrf, client=opener):
     request = urllib.request.Request(base + path, body, headers)
     try: response = client.open(request)
     except HTTPError as error: response = error
-    return json.loads(response.read().decode())
+    raw = response.read().decode()
+    try: return json.loads(raw)
+    except json.JSONDecodeError: raise AssertionError(f'{path} returned non-JSON: {raw[:1000]}')
 
 category = '/endpoints/categories/category.php'
 manage = '/endpoints/categories/dial_manage.php'
@@ -68,6 +70,9 @@ named = post(category, {'action':'add', 'name':'AI & Tools'})
 assert named['success'] and isinstance(named['categoryId'], int), named
 new_id = named['categoryId']
 assert db.execute('SELECT name FROM categories WHERE id=?',(new_id,)).fetchone()[0] == 'AI &amp; Tools'
+renamed = post(category, {'action':'edit','categoryId':new_id,'name':'AI & Tools revised'})
+assert renamed['success'], renamed
+assert db.execute('SELECT name FROM categories WHERE id=?',(new_id,)).fetchone()[0] == 'AI &amp; Tools revised'
 legacy = post(category, {'action':'add'})
 assert legacy['success'] and legacy['categoryId'], legacy
 assert db.execute('SELECT name FROM categories WHERE id=?',(legacy['categoryId'],)).fetchone()[0] == 'Category'
@@ -92,6 +97,20 @@ merged = post(manage, {'action':'merge','sourceId':source,'targetId':target})
 assert merged['success'] and merged['movedCount'] == sum(cat == source for _,cat in before_subs), merged
 assert db.execute('SELECT count(*) FROM subscriptions WHERE user_id=1 AND category_id=?',(source,)).fetchone()[0] == 0
 assert not post(manage, {'action':'starter','confirm':1})['success']
+manager = opener.open(base + '/categories.php').read().decode()
+for category_id, count in db.execute('SELECT c.id, COUNT(s.id) FROM categories c LEFT JOIN subscriptions s ON s.category_id=c.id AND s.user_id=1 WHERE c.user_id=1 GROUP BY c.id'):
+    assert f'data-category-id="{category_id}"' in manager, category_id
+    assert f'data-category-count="{count}"' in manager, (category_id, count)
+assert '>Private<' not in manager
+assert '>AI &amp; Tools revised</span>' in manager and '>AI &amp;amp; Tools revised</span>' not in manager
+for testid in ('dial-category-manager','dial-category-row','dial-category-new-name',
+               'dial-category-name','dial-category-add','dial-category-save',
+               'dial-category-move-up','dial-category-move-down','dial-category-merge',
+               'dial-category-delete','dial-category-starter','dial-category-merge-dialog',
+               'dial-category-merge-target','dial-category-merge-confirm',
+               'dial-category-starter-dialog','dial-category-starter-delete',
+               'dial-category-starter-confirm','dial-category-delete-confirm','dial-category-status'):
+    assert f'data-testid="{testid}"' in manager, testid
 assert db.execute('PRAGMA integrity_check').fetchone()[0] == 'ok'
 db.close()
 PY
@@ -107,6 +126,10 @@ page = opener.open(base + '/').read().decode()
 match = re.search(r'window\.csrfToken\s*=\s*"([^"]+)"', page)
 assert match, 'synthetic demo did not reach dashboard'
 csrf = match.group(1)
+manager = opener.open(base + '/categories.php').read().decode()
+assert 'data-testid="dial-category-readonly"' in manager
+assert 'data-testid="dial-category-add"' not in manager
+assert 'data-testid="dial-category-save"' not in manager
 for path, data in [
     ('/endpoints/categories/category.php', {'action':'add','name':'Denied'}),
     ('/endpoints/categories/dial_manage.php', {'action':'merge','sourceId':2,'targetId':3})

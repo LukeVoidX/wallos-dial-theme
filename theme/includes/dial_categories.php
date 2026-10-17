@@ -54,17 +54,28 @@ function dial_category_scalar(SQLite3 $db, string $sql, array $parameters = [])
 
 function dial_category_transaction(SQLite3 $db, callable $operation)
 {
-    if (!$db->exec('BEGIN IMMEDIATE')) {
+    // Wallos may write next-payment dates or settings at the same time as a
+    // category edit. Wait for that writer and retry a bounded number of times.
+    // Suppress SQLite warnings so an exhausted lock still returns JSON.
+    $begun = false;
+    for ($attempt = 0; $attempt < 3; $attempt++) {
+        if (@$db->exec('BEGIN IMMEDIATE')) {
+            $begun = true;
+            break;
+        }
+        usleep(150000 * ($attempt + 1));
+    }
+    if (!$begun) {
         throw new DialCategoryError('write_failed');
     }
     try {
         $result = $operation();
-        if (!$db->exec('COMMIT')) {
+        if (!@$db->exec('COMMIT')) {
             throw new DialCategoryError('write_failed');
         }
         return $result;
     } catch (Throwable $error) {
-        $db->exec('ROLLBACK');
+        @$db->exec('ROLLBACK');
         if ($error instanceof DialCategoryError) {
             throw $error;
         }
