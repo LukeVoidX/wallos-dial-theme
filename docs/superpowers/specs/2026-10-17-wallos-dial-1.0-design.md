@@ -1,6 +1,6 @@
 # Wallos Dial 1.0 design
 
-**Status:** architecture approved in conversation; written specification awaiting Luke's review.
+**Status:** architecture and written specification approved by Luke; implementation plan under review.
 
 **Target release:** Dial `1.0.0`, based on the reviewed Wallos `5.8.3` image.
 
