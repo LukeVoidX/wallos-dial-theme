@@ -1,8 +1,8 @@
-FROM bellamy/wallos:5.8.1@sha256:0f049dbab45b9f8e8d43b84fd1b77ef9e55909bd1a384a0f4fe8597ab68a1d5d
+FROM bellamy/wallos:5.8.3@sha256:0006879778f31a962a3873f7682514b92a3c7665dcbc4764fcc241ad968eaccd
 
 LABEL org.opencontainers.image.title="Wallos Dial" \
-      org.opencontainers.image.description="Desktop theme overlay for Wallos v5.8.1" \
-      org.opencontainers.image.version="0.1.1" \
+      org.opencontainers.image.description="Desktop theme overlay for Wallos v5.8.3" \
+      org.opencontainers.image.version="1.0.0-rc.1" \
       org.opencontainers.image.licenses="GPL-3.0-only" \
       org.opencontainers.image.source="https://github.com/LukeVoidX/wallos-dial-theme"
 
