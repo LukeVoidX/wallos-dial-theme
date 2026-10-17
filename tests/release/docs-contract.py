@@ -12,15 +12,24 @@ import re
 
 ROOT = Path(__file__).resolve().parents[2]
 REQUIRED = {
-    "README.md": ("Wallos 5.8.3", "1.0.0", "Manage categories", "My Icons", "read-only"),
-    "README.zh-CN.md": ("5.8.3", "1.0.0", "分类", "我的图标", "只读"),
-    "CHANGELOG.md": ("1.0.0", "5.8.3"),
+    "README.md": ("Wallos 5.8.3", "ghcr.io/lukevoidx/wallos-dial:1.0.0",
+                  "Manage categories", "My Icons", "read-only", "PHP-FPM"),
+    "README.zh-CN.md": ("5.8.3", "ghcr.io/lukevoidx/wallos-dial:1.0.0",
+                        "分类", "我的图标", "只读", "PHP-FPM"),
+    "CHANGELOG.md": ("## 1.0.0", "Released as", "5.8.3"),
     "NOTICE.md": ("5.8.3", "neutral", "GPLv3"),
     "docs/UPGRADING.md": ("0.1.1", "1.0.0", "rollback", "PRAGMA integrity_check", "My Icons"),
-    "docs/DEMO.md": ("5.8.3", "read-only", "categories.php", "synthetic"),
+    "docs/zh-CN/UPGRADING.md": ("0.1.1", "1.0.0", "回退", "PRAGMA integrity_check", "我的图标"),
+    "docs/ICONS.md": ("1.0.0", "Wallos 5.8.3", "My Icons", "read-only"),
+    "docs/zh-CN/ICONS.md": ("1.0.0", "Wallos 5.8.3", "我的图标", "只读"),
+    "docs/DEMO.md": ("1.0.0", "5.8.3", "read-only", "categories.php", "synthetic"),
     "docs/SHOWCASE.md": ("1.0.0", "0.1.1", "synthetic"),
     "docs/RELEASE-NOTES-1.0.0.md": ("# Wallos Dial 1.0.0", "Wallos 5.8.3"),
-    "docs/RELEASE-CHECKLIST-1.0.0.md": ("pending", "Demo", "rollback"),
+    "docs/RELEASE-CHECKLIST-1.0.0.md": ("1.0.0", "Demo", "rollback"),
+    "docs/CAMPAIGN.md": ("historical 0.1.x", "current release", "1.0.0"),
+    "docs/CAMPAIGN.zh-CN.md": ("0.1.x", "当前正式版本", "1.0.0"),
+    "docs/RECOMMENDATION.md": ("Published 1.0.0", "Wallos 5.8.3", "read-only"),
+    "docs/TROUBLESHOOTING.md": ("wallos-dial:1.0.0", "/health.php"),
     "demo/README.md": ("1.0.0", "5.8.3", "synthetic", "read-only"),
 }
 LINK_FILES = {
@@ -88,23 +97,37 @@ def main() -> None:
         content = (ROOT / name).read_text()
         for phrase in ("5.8.3", "1.0.0", "read-only" if name == "docs/index.html" else "只读"):
             check(phrase in content, f"{name}: missing {phrase}")
-        # Pages still describes the published 0.1.1 release until GitHub,
-        # GHCR, and the public Demo have all been verified. The 1.0 source
-        # candidate must not present itself as a released install path.
-        check("0.1.1" in content and "1.0.0" in content and "1.0.0-rc.1" not in content,
-              f"{name}: missing published/candidate split")
-        check("docker compose up -d" not in content,
-              f"{name}: premature 1.0 install command")
+        # This post-publication contract is applied only after v1.0.0, GHCR,
+        # and the separate public Demo switch are verified. Pages must then
+        # describe the release, not an earlier candidate or 0.1.1 Demo.
+        check("0.1.1" not in content and "candidate" not in content.lower()
+              and "候选" not in content, f"{name}: stale pre-release claim")
+        check("docker compose up -d" in content,
+              f"{name}: versioned installation command missing")
+        check("dial-1.0-overview.png" in content and "dial-1.0-icon-chooser.png" in content,
+              f"{name}: 1.0 direct captures missing")
         description = re.search(r'<meta name="description" content="([^"]+)"', content)
         check(description is not None and "5.8.3" in description.group(1), f"{name}: stale meta description")
         structured = re.search(r'<script type="application/ld\+json">(.*?)</script>', content, re.S)
         check(structured is not None, f"{name}: missing JSON-LD")
         graph = json.loads(structured.group(1))["@graph"]
         software = next(item for item in graph if item.get("@type") == "SoftwareSourceCode")
-        check(software.get("version") == "0.1.1" and "5.8.3" in software.get("description", ""),
-              f"{name}: structured version must describe the published release and candidate")
+        check(software.get("version") == "1.0.0" and
+              software.get("softwareRequirements") == "Wallos 5.8.3" and
+              software.get("downloadUrl", "").endswith("/releases/tag/v1.0.0"),
+              f"{name}: structured data must describe the published 1.0 release")
         validate_links(name, content)
-    print("1.0 documentation contract passed")
+    for name in ("CHANGELOG.md", "README.md", "README.zh-CN.md", "docs/DEMO.md",
+                 "docs/ICONS.md", "docs/zh-CN/ICONS.md",
+                 "docs/RECOMMENDATION.md", "docs/CAMPAIGN.md",
+                 "docs/CAMPAIGN.zh-CN.md", "docs/TROUBLESHOOTING.md"):
+        content = (ROOT / name).read_text()
+        check("local candidate" not in content.lower() and
+              "尚未公开发布" not in content and "目前仍是本地候选" not in content,
+              f"{name}: stale pre-release claim")
+    check("wallos-dial:1.0.0" in (ROOT / "demo/compose.yaml").read_text(),
+          "public Demo Compose default must follow verified 1.0.0")
+    print("Published 1.0 documentation contract passed")
 
 
 if __name__ == "__main__":

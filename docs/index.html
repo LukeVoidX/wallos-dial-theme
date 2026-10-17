@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="index,follow,max-image-preview:large">
-  <title>Wallos Dial — 1.0 candidate for Wallos 5.8.3</title>
-  <meta name="description" content="Wallos Dial 1.0 is a local candidate for Wallos 5.8.3, with category management and private icon choices. The read-only public demo still runs Dial 0.1.1 on Wallos 5.8.1.">
+  <title>Wallos Dial 1.0 — A desktop theme for Wallos 5.8.3</title>
+  <meta name="description" content="Wallos Dial 1.0 gives Wallos 5.8.3 a measured desktop interface, editable categories and private icon choices. Explore the real read-only demo.">
   <link rel="canonical" href="https://lukevoidx.github.io/wallos-dial-theme/">
   <link rel="alternate" hreflang="en" href="https://lukevoidx.github.io/wallos-dial-theme/">
   <link rel="alternate" hreflang="zh-CN" href="https://lukevoidx.github.io/wallos-dial-theme/zh-CN/">
@@ -16,11 +16,12 @@
   <meta property="og:site_name" content="Wallos Dial">
   <meta property="og:locale" content="en_US">
   <meta property="og:title" content="Wallos Dial — See every renewal in context">
-  <meta property="og:description" content="Wallos Dial 1.0 for Wallos 5.8.3 is in local testing. Explore the current 0.1.1 read-only demo while the new release is reviewed.">
+  <meta property="og:description" content="A measured desktop interface for recurring costs. Manage categories, choose neutral or personal icons, and try the real read-only demo.">
   <meta property="og:url" content="https://lukevoidx.github.io/wallos-dial-theme/">
   <meta property="og:image" content="https://lukevoidx.github.io/wallos-dial-theme/assets/posters/campaign-hero-en.png">
-  <meta property="og:image:alt" content="Wallos Dial desktop overview with a date dial and upcoming payments">
+  <meta property="og:image:alt" content="Wallos Dial editorial poster with an earlier actual interface capture and fictional data">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://lukevoidx.github.io/wallos-dial-theme/assets/posters/campaign-hero-en.png">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -29,9 +30,11 @@
         "@type": "SoftwareSourceCode",
         "@id": "https://lukevoidx.github.io/wallos-dial-theme/#software",
         "name": "Wallos Dial",
-        "description": "An independent desktop theme overlay for Wallos. Dial 0.1.1 on Wallos 5.8.1 is published; a 1.0 candidate for Wallos 5.8.3 is in local testing.",
-        "version": "0.1.1",
+        "description": "An independent desktop theme overlay for Wallos 5.8.3 with account-scoped category management, original or personal icon choices, and a read-only demonstration using fictional data.",
+        "version": "1.0.0",
         "codeRepository": "https://github.com/LukeVoidX/wallos-dial-theme",
+        "downloadUrl": "https://github.com/LukeVoidX/wallos-dial-theme/releases/tag/v1.0.0",
+        "softwareRequirements": "Wallos 5.8.3",
         "license": "https://github.com/LukeVoidX/wallos-dial-theme/blob/main/LICENSE.md",
         "programmingLanguage": ["PHP", "JavaScript", "CSS"],
         "url": "https://lukevoidx.github.io/wallos-dial-theme/",
@@ -41,8 +44,8 @@
         "@type": "WebPage",
         "@id": "https://lukevoidx.github.io/wallos-dial-theme/#webpage",
         "url": "https://lukevoidx.github.io/wallos-dial-theme/",
-        "name": "Wallos Dial — 1.0 candidate for Wallos 5.8.3",
-        "description": "Overview, compatibility and live demo for Wallos Dial.",
+        "name": "Wallos Dial 1.0 — A desktop theme for Wallos 5.8.3",
+        "description": "Wallos Dial 1.0 features, Wallos 5.8.3 compatibility, installation and live demo.",
         "inLanguage": "en",
         "about": {"@id": "https://lukevoidx.github.io/wallos-dial-theme/#software"}
       }
@@ -66,85 +69,94 @@
   <main id="main">
     <section class="wrap hero" aria-labelledby="hero-title">
       <div>
-        <p class="eyebrow">1.0 candidate · Wallos 5.8.3 target · Not published</p>
+        <p class="eyebrow">Wallos Dial 1.0.0 · For Wallos 5.8.3</p>
         <h1 id="hero-title">See every renewal in context<span class="signal">.</span></h1>
-        <p class="lead">Wallos Dial is an independent desktop theme for <a href="https://github.com/ellite/Wallos">Wallos</a>. Its 1.0 candidate adds category management and icon choices while keeping familiar workflows. The currently published image and Demo are still 0.1.1; the interface images below are historical 0.1.x captures with fictional data.</p>
+        <p class="lead">Wallos Dial brings a measured desktop interface to <a href="https://github.com/ellite/Wallos">Wallos</a>. Read monthly cost, due dates and countdowns at a glance. Organize subscriptions in categories and give each one the icon treatment that fits your ledger.</p>
         <div class="actions">
-          <a class="button primary" href="https://wallos-demo.mostai.org/">Try the current 0.1.1 demo ↗</a>
-          <a class="button secondary" href="https://github.com/LukeVoidX/wallos-dial-theme#install-a-new-instance">Review local candidate guidance ↗</a>
+          <a class="button primary" href="https://wallos-demo.mostai.org/">Try the read-only demo ↗</a>
+          <a class="button secondary" href="#install">Install 1.0.0 ↓</a>
         </div>
       </div>
       <div class="hero-visual">
-        <img src="assets/screenshots/after-dashboard.png" width="1600" height="1000" fetchpriority="high" alt="Actual Wallos Dial overview showing a monthly total, date dial, upcoming payments and countdowns with fictional data">
+        <img src="assets/screenshots/dial-1.0-overview.png" width="1440" height="1435" fetchpriority="high" alt="Actual Wallos Dial 1.0 overview with fictional monthly cost, date dial, upcoming payments and countdowns">
       </div>
     </section>
 
     <div class="wrap facts" aria-label="Project facts">
-      <div class="fact"><b>1.0.0</b><span>Local release candidate; not published</span></div>
-      <div class="fact"><b>5.8.3</b><span>Target Wallos version</span></div>
-      <div class="fact"><b>0.1.1</b><span>Current public Demo</span></div>
+      <div class="fact"><b>1.0.0</b><span>Versioned Docker image</span></div>
+      <div class="fact"><b>5.8.3</b><span>Tested Wallos base</span></div>
+      <div class="fact"><b>30</b><span>Fictional subscriptions in the read-only Demo</span></div>
     </div>
 
     <section class="wrap section" id="design" aria-labelledby="design-title">
       <div class="section-heading">
         <div><p class="eyebrow">The design</p><h2 id="design-title">A clearer rhythm for recurring costs.</h2></div>
-        <p>Warm ivory, dark figures, calibrated dates and a small red signal carry one visual language across the desktop interface.</p>
+        <p>Warm ivory, dark figures, calibrated dates and a small red signal carry one visual language across the desktop application. The captures below show the actual 1.0 interface with fictional records.</p>
       </div>
       <article class="feature">
-        <div class="feature-visual"><img src="assets/posters/campaign-time-en.png" width="1920" height="1080" loading="lazy" alt="Actual dashboard date dial, enlarged in a poster to show renewal timing"></div>
-        <div class="feature-copy"><span class="index">01 / TIME</span><h3>Know what comes next.</h3><p>The dashboard combines monthly cost, a date dial, the next payments and calendar-day countdowns. The red marker gives the timeline a single point of focus.</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/SHOWCASE.md">See the original comparison ↗</a></div>
+        <div class="feature-visual"><a href="assets/screenshots/dial-1.0-subscriptions-grid.png" aria-label="Open the full-size 1.0 subscriptions screenshot"><img src="assets/screenshots/dial-1.0-subscriptions-grid.png" width="1440" height="2925" loading="lazy" style="aspect-ratio:16/10;object-fit:cover;object-position:top center" alt="Actual 1.0 subscription grid grouped into AI, Infra, Domains and Media, with fictional records"></a></div>
+        <div class="feature-copy"><span class="index">01 / ORDER</span><h3>Give the ledger structure.</h3><p>Grouped cards let you scan a longer list. Search, filters, sorting, and list or grid views remain available. In your own installation, create the categories that match your subscriptions.</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/SHOWCASE.md#overview-and-grouped-subscriptions">Open the full-size capture ↗</a></div>
       </article>
       <article class="feature reverse">
-        <div class="feature-visual"><img src="assets/posters/campaign-ledger-en.png" width="1920" height="1080" loading="lazy" alt="Actual Wallos Dial subscriptions grouped into AI, Infra, Domains and Media"></div>
-        <div class="feature-copy"><span class="index">02 / ORDER</span><h3>Find a service without digging.</h3><p>Grouped subscription cards make a longer ledger easier to scan. Search, filtering, sorting, list and grid views remain available in the installable app.</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/CAMPAIGN.md">Explore the poster series ↗</a></div>
+        <div class="feature-visual"><a href="assets/screenshots/dial-1.0-categories.png" aria-label="Open the full-size 1.0 category manager screenshot"><img src="assets/screenshots/dial-1.0-categories.png" width="1440" height="1241" loading="lazy" style="aspect-ratio:16/10;object-fit:cover;object-position:top center" alt="Actual 1.0 account category manager with fictional category counts"></a></div>
+        <div class="feature-copy"><span class="index">02 / CONTROL</span><h3>Make the categories yours.</h3><p>Add, rename, reorder and merge categories without re-entering subscriptions. Empty categories can be removed. The optional starter categories never replace an existing ledger.</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/CATEGORIES.md">How category management works ↗</a></div>
       </article>
       <article class="feature">
-        <div class="feature-visual"><img src="assets/posters/campaign-numbers-en.png" width="1920" height="1080" loading="lazy" alt="Actual Wallos Dial statistics page with fictional monthly costs and forecasts"></div>
-        <div class="feature-copy"><span class="index">03 / PERSPECTIVE</span><h3>Read the numbers calmly.</h3><p>The calendar and statistics pages use the same restrained typography and palette. Totals lead; supporting figures and category splits stay available for closer review.</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/CAMPAIGN.md">See calendar and statistics ↗</a></div>
+        <div class="feature-visual"><a href="assets/screenshots/dial-1.0-icon-chooser.png" aria-label="Open the full-size 1.0 icon chooser screenshot"><img src="assets/screenshots/dial-1.0-icon-chooser.png" width="1440" height="900" loading="lazy" alt="Actual 1.0 icon chooser showing nine neutral pictograms and warm and dark previews"></a></div>
+        <div class="feature-copy"><span class="index">03 / IDENTITY</span><h3>Keep or change each icon.</h3><p>Keep the original Wallos Logo, choose one of nine neutral first-party pictograms, or upload a private image to My Icons. Adjust plain or framed, color or monochrome, and 80–120% size per subscription.</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/ICONS.md">Icon choices and upload limits ↗</a></div>
       </article>
       <article class="feature reverse">
-        <div class="feature-visual"><img src="assets/posters/compare-email.png" width="1920" height="1080" loading="lazy" alt="Original Wallos plain-text renewal body and Dial HTML email template with identical fictional subscriptions"></div>
-        <div class="feature-copy"><span class="index">04 / NOTIFICATIONS</span><h3>One design language, even in email.</h3><p>Renewal, cancellation and account emails use a warm HTML template with a plain-text alternative. The comparison uses fictional data and rendered templates.</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/SHOWCASE.md#email-notifications">See the email comparison ↗</a></div>
+        <div class="feature-visual"><a href="assets/screenshots/dial-1.0-statistics.png" aria-label="Open the full-size 1.0 statistics screenshot"><img src="assets/screenshots/dial-1.0-statistics.png" width="1440" height="2182" loading="lazy" style="aspect-ratio:16/10;object-fit:cover;object-position:top center" alt="Actual 1.0 statistics page showing fictional costs and muted charts"></a></div>
+        <div class="feature-copy"><span class="index">04 / PERSPECTIVE</span><h3>Read the numbers calmly.</h3><p>Calendar and statistics use the same typography and palette as the overview. Totals lead, with category splits and forecasts ready when you need detail.</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/SHOWCASE.md#statistics">See all direct 1.0 captures ↗</a></div>
+      </article>
+      <article class="feature">
+        <div class="feature-visual"><img src="assets/posters/compare-email.png" width="1920" height="1080" loading="lazy" alt="Fictional-data comparison of the original Wallos renewal body and Dial's rendered HTML email template"></div>
+        <div class="feature-copy"><span class="index">05 / NOTIFICATIONS</span><h3>One visual language, even in email.</h3><p>Renewal, cancellation and account messages use a warm HTML template with a plain-text alternative. This comparison uses fictional records and rendered templates, not an inbox capture.</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/SHOWCASE.md#email-notifications">How the email comparison was made ↗</a></div>
       </article>
     </section>
 
     <section class="band" aria-labelledby="demo-title">
       <div class="wrap section">
-        <p class="eyebrow">Real application · Fictional records</p>
+        <p class="eyebrow">Real PHP application · Fictional records</p>
         <h2 id="demo-title">Explore before you install.</h2>
-        <p>The live demo runs the actual Wallos Dial 0.1.1 PHP application on Wallos 5.8.1 with 30 fictional subscriptions. It is public and read-only. Browse the overview, grouped ledger, calendar, statistics and language switch. The 1.0 category manager and icon chooser are available only in the local candidate until release and Demo approval.</p>
-        <div class="actions"><a class="button" href="https://wallos-demo.mostai.org/">Open the current demo ↗</a></div>
+        <p>The public Demo runs Wallos Dial 1.0.0 on Wallos 5.8.3 with 30 fictional subscriptions. It is read-only: browse overview, grouped subscriptions, details, calendar, statistics and a view-only category manager. Switch language for your visit. Adding, editing, icon uploads and account settings require your own installation.</p>
+        <div class="actions"><a class="button" href="https://wallos-demo.mostai.org/">Open the read-only Demo ↗</a></div>
       </div>
     </section>
 
     <section class="wrap section" aria-labelledby="utility-title">
-      <div class="section-heading"><div><p class="eyebrow">What stays familiar</p><h2 id="utility-title">Wallos is still Wallos.</h2></div></div>
+      <div class="section-heading"><div><p class="eyebrow">Use it your way</p><h2 id="utility-title">Familiar workflows, more control.</h2></div></div>
       <div class="utility-grid">
-        <article><h3>Subscription workflows</h3><p>Adding, editing and managing subscriptions remain in the installable Wallos application. <a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/CATEGORIES.md">Manage categories ↗</a></p></article>
-        <article><h3>Your icons</h3><p>The 1.0 candidate keeps each original Logo and adds neutral catalog pictograms and account-private My Icons. <a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/ICONS.md">Preview the guide ↗</a></p></article>
-        <article><h3>Language choice</h3><p>The header offers English, Simplified Chinese, Traditional Chinese and Wallos's other locales. User-entered subscription names stay as entered.</p></article>
-        <article><h3>Versioned compatibility</h3><p>The 1.0 candidate targets Wallos 5.8.3; the current public release is 0.1.1 on Wallos 5.8.1. New upstream versions need a reviewed Dial update.</p></article>
+        <article><h3>Manage categories</h3><p>Add, rename, reorder, merge and remove empty categories in an account-scoped manager. <a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/CATEGORIES.md">Category guide ↗</a></p></article>
+        <article><h3>Make icons your own</h3><p>Original Logos stay intact. Built-in symbols are neutral originals; My Icons are private to your account. <a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/ICONS.md">Icon guide ↗</a></p></article>
+        <article><h3>Keep Wallos workflows</h3><p>Add, edit and manage subscriptions, then search, filter and sort them in list or grid view. Notifications and settings remain available.</p></article>
+        <article><h3>Switch language</h3><p>Choose English, Simplified Chinese, Traditional Chinese or another Wallos locale. Names and notes you entered remain unchanged.</p></article>
+        <article><h3>Back up the right files</h3><p>My Icons live in SQLite; original uploaded Logos live in the Logo volume. Back up both before upgrading.</p></article>
+        <article><h3>Stay on a tested base</h3><p>1.0.0 is pinned to Wallos 5.8.3. A later Wallos release needs another reviewed and tested Dial image.</p></article>
       </div>
     </section>
 
     <section class="wrap section install" id="install" aria-labelledby="install-title">
-      <div><p class="eyebrow">Self-hosted installation</p><h2 id="install-title">Review before you switch.</h2><p>Dial 1.0 is still a local candidate; its final GHCR image is not available yet. For an existing Wallos database, back up both the database and Logo volume, then review migration and rollback on disposable copies.</p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/UPGRADING.md">Upgrade and rollback guide ↗</a></div>
-      <div><p>The current published image is Dial 0.1.1 for Wallos 5.8.1. The repository README explains how to test the 1.0 source candidate locally in an isolated installation. A direct 1.0 pull command will be provided after the reviewed image is published.</p><p><a href="https://github.com/LukeVoidX/wallos-dial-theme#install-a-new-instance">Read the candidate installation notes ↗</a></p></div>
+      <div><p class="eyebrow">Self-hosted installation</p><h2 id="install-title">Start with a versioned image.</h2><p>The repository's Compose file pins <code>ghcr.io/lukevoidx/wallos-dial:1.0.0</code> and binds HTTP to <code>127.0.0.1:8282</code>. You control access, data and updates.</p><p><a href="https://github.com/LukeVoidX/wallos-dial-theme#install-a-new-instance">New installation guide ↗</a></p></div>
+      <div><pre aria-label="New installation commands"><code>git clone https://github.com/LukeVoidX/wallos-dial-theme.git
+cd wallos-dial-theme
+docker compose up -d</code></pre><p>Open <code>http://127.0.0.1:8282</code> on the Docker host. If you already have a Wallos ledger, back up its SQLite database and uploaded Logo volume, check the resolved Compose mounts, and rehearse the upgrade on copies before switching.</p><p><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/UPGRADING.md">Existing data: upgrade and rollback ↗</a></p></div>
     </section>
 
     <section class="wrap section faq" id="questions" aria-labelledby="questions-title">
       <p class="eyebrow">Clear answers</p><h2 id="questions-title">Before you switch.</h2>
       <div class="faq-grid">
-        <article><h3>Is this an official Wallos theme?</h3><p>No. Wallos Dial is an independent GPLv3 source overlay built into a Docker image. It is not affiliated with the Wallos project or an in-app theme setting.</p></article>
-        <article><h3>Will it follow every Wallos update?</h3><p>No. The 1.0 candidate targets Wallos 5.8.3; the published 0.1.1 image was tested with Wallos 5.8.1. A newer upstream version requires compatibility review and a new tested Dial image.</p></article>
-        <article><h3>Can I change data in the public demo?</h3><p>No. The current 0.1.1 demo is read-only and uses 30 fictional subscriptions. The category manager and icon chooser belong to the pending 1.0 candidate; after the approved Demo update, its manager will be view-only.</p></article>
-        <article><h3>What happens to my existing Logos?</h3><p>Dial preserves the original Wallos Logo file. Choosing Original restores it. My Icons live in SQLite, so back up both the database and Logo volume before upgrading.</p></article>
-        <article><h3>Does switching language translate my subscriptions?</h3><p>The interface language changes. Names and notes entered by a user remain in their original text.</p></article>
+        <article><h3>Is this an official Wallos theme?</h3><p>Wallos Dial is an independent GPLv3 source overlay built into a Docker image. It is not affiliated with Wallos or an in-app theme switch.</p></article>
+        <article><h3>Will it follow every Wallos update?</h3><p>1.0.0 is built and tested for Wallos 5.8.3. A newer upstream version requires a compatibility review and a new Dial image.</p></article>
+        <article><h3>Can I change data in the public Demo?</h3><p>No. Its 30 records are fictional and the public routes are read-only. You can inspect categories there; category edits and icon uploads require your own installation.</p></article>
+        <article><h3>What happens to my existing Logos?</h3><p>The original Wallos Logo file remains available. Select Original to display it again. Back up the Logo volume and SQLite database before upgrading.</p></article>
+        <article><h3>Can I upload SVG files?</h3><p>My Icons accepts constrained SVG, PNG, JPEG and WebP uploads. SVG files are validated and converted to PNG; the account library has size and count limits. <a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/ICONS.md">Read the limits ↗</a></p></article>
+        <article><h3>Does language switching translate my data?</h3><p>The interface language changes. User-entered subscription names, categories and notes remain as entered.</p></article>
       </div>
     </section>
   </main>
   <footer class="site-footer">
-    <div class="wrap footer-inner"><span>Wallos Dial · Independent GPLv3 project · 0.1.1 public · 1.0 candidate</span><nav aria-label="Footer navigation"><a href="https://github.com/LukeVoidX/wallos-dial-theme">GitHub</a><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/CAMPAIGN.md">Posters</a><a href="https://wallos-demo.mostai.org/">Demo</a><a href="sitemap.xml">Sitemap</a></nav></div>
+    <div class="wrap footer-inner"><span>Wallos Dial 1.0.0 · Wallos 5.8.3 · Independent GPLv3 project</span><nav aria-label="Footer navigation"><a href="https://github.com/LukeVoidX/wallos-dial-theme">GitHub</a><a href="https://github.com/LukeVoidX/wallos-dial-theme/blob/main/docs/CAMPAIGN.md">Posters</a><a href="https://wallos-demo.mostai.org/">Demo</a><a href="sitemap.xml">Sitemap</a></nav></div>
   </footer>
 </body>
 </html>

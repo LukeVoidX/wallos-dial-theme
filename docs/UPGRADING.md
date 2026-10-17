@@ -1,6 +1,6 @@
 # Updating and rollback
 
-Wallos Dial 1.0.0 targets **Wallos 5.8.3** using a digest-pinned source overlay. This guide covers a move from **Dial 0.1.1 / Wallos 5.8.1** to 1.0.0. At the time this source candidate was prepared, 1.0.0 had not been published; use a disposable source build until the release and GHCR tag are verified. The earlier 0.1.1 image remains the rollback image.
+Wallos Dial 1.0.0 is a [versioned release](https://github.com/LukeVoidX/wallos-dial-theme/releases/tag/v1.0.0) for **Wallos 5.8.3**, using a digest-pinned source overlay. This guide covers a move from **Dial 0.1.1 / Wallos 5.8.1** to 1.0.0. Rehearse the published 1.0.0 image on disposable data copies before touching a live installation. The earlier 0.1.1 image remains the rollback image.
 
 Dial is a Docker image, not an in-app Wallos theme selector. Wallos migrations and new Dial icon tables run when the new image starts. A newer upstream Wallos tag is not automatically compatible with this overlay.
 
@@ -33,13 +33,15 @@ An existing installation may use a different container or Compose project name. 
    test "$(sqlite3 "$DIAL_BACKUP_DIR/wallos.db" 'PRAGMA integrity_check;')" = ok
    ```
 
-4. Restore **copies** of `wallos.db` and `logos.tar` into a disposable directory, point the 1.0 candidate at those copies, and test login, category management, original Logos, icon selection, My Icons upload, add/edit/clone/delete, dashboard, calendar, statistics and settings. Check all five email types through a local SMTP capture, including HTML and plain text, before relying on notifications. Do not send test mail to real recipients.
+4. Restore **copies** of `wallos.db` and `logos.tar` into a disposable directory, point the 1.0.0 image at those copies, and test login, category management, original Logos, icon selection, My Icons upload, add/edit/clone/delete, dashboard, calendar, statistics and settings. Check all five email types through a local SMTP capture, including HTML and plain text, before relying on notifications. Do not send test mail to real recipients.
    Dial skips and logs cancellation notices for a legacy subscription whose selected payer belongs to another account. Review those logs on the copy and set a valid payer through the subscription editor before relying on that reminder.
-5. Stop that candidate and start the **0.1.1** image against another copy of the pre-upgrade backup. Confirm the old UI sees the original Logos and can add/edit/delete a synthetic subscription. This is the rollback rehearsal; do not perform it on the live volumes.
+5. Stop that test container and start the **0.1.1** image against another copy of the pre-upgrade backup. Confirm the old UI sees the original Logos and can add/edit/delete a synthetic subscription. This is the rollback rehearsal; do not perform it on the live volumes.
 
 ## One-container cutover
 
-After the disposable test passes, verify that the 1.0.0 GHCR tag actually exists, or use the reviewed local source build. Update only your Dial image reference and any deliberate deployment settings. Check `docker compose config` again, including the absolute database and Logo mounts, then start the new container. Never mount the same live database into a second running Wallos container.
+After the disposable test passes, pull the published `ghcr.io/lukevoidx/wallos-dial:1.0.0` image, or use a reviewed local source build. Update only your Dial image reference and any deliberate deployment settings. Check `docker compose config` again, including the absolute database and Logo mounts, then start the new container. Never mount the same live database into a second running Wallos container.
+
+The first start completes the Wallos database and Dial migrations and waits for the PHP-FPM listener before opening Nginx. `/health.php` returns `OK` only after the Dial migration is recorded. Wait for that response before testing login or registration; if it does not arrive, read container logs and retain the old stopped container plus matching backups for rollback.
 
 Read back the image version, `/health.php`, login, subscription count, category assignments, uploaded Logos, My Icons, dashboard, search/filter/sort, calendar, statistics, settings, language switch and notification configuration. Run `PRAGMA integrity_check` again after the container has stopped or use SQLite's safe read-only connection. If any of these checks fails, follow the rollback below. A healthy container alone does not prove the data and workflows survived.
 
@@ -55,7 +57,7 @@ Do not point 0.1.1 at an unknown migrated 1.0 database as a general rollback met
 
 1. The scheduled upstream checker reports a new Wallos release. It does not approve an update.
 2. Change `WALLOS_VERSION` and the pinned digest on a branch. `compat/upstream-files.sha256` checks every overwritten upstream file before the Dial overlay is copied. Review each changed upstream file and update the hash manifest only after reading the diff.
-3. Run the full candidate gate on fresh and populated synthetic databases, including upstream security checks, category/icon ownership checks, five mail flows, service-worker upgrade, browser layout and a 0.1.1 rollback rehearsal.
+3. Run the full release gate on fresh and populated synthetic databases, including upstream security checks, category/icon ownership checks, five mail flows, first-run readiness, account flows, service-worker upgrade, browser layout and a 0.1.1 rollback rehearsal.
 4. Publish a new versioned image only after the new Wallos base and both architectures have been tested. Update both READMEs and the product pages with the **exact** supported Wallos version. Keep the previous image available.
 
 No compatibility guarantee is made for an upstream release that has not been reviewed. The version pin keeps working installations on their tested base.

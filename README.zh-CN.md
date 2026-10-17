@@ -6,13 +6,13 @@
 
 Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界面改版。暖白底、黑色数字、细线和少量红色贯穿总览、订阅、日历与统计页面。首页集中显示月度费用、日期刻度、近期付款和倒计时；订阅页增加分类区块。原有搜索、筛选、排序、新增与编辑、通知和设置功能继续由 Wallos 处理。
 
-**Dial 1.0.0 目标版本：**仅适配 Wallos 5.8.3。当前源码是已在本地测试的 1.0.0 发布候选版，Git 标签与镜像尚未发布；已公开的镜像和 Demo 仍是基于 Wallos 5.8.1 的 0.1.1，直至 1.0 审核、发布和部署完成。GitHub 与 GHCR 出现正式版本前，请勿尝试拉取 `1.0.0` 镜像。Dial 是固定 Wallos 镜像上的源码叠加层，并非应用内置的可切换主题，也不隶属于 Wallos 官方。
+**Dial 1.0.0：**仅验证适配 Wallos 5.8.3。可通过[固定版本的正式发布](https://github.com/LukeVoidX/wallos-dial-theme/releases/tag/v1.0.0)安装 `ghcr.io/lukevoidx/wallos-dial:1.0.0`。公开 Demo 使用相同的 Dial 和 Wallos 版本，数据均为虚构。Dial 是构建在固定 Docker 镜像中的源码叠加层，并非应用内置主题，也不隶属于 Wallos 官方。
 
-**先体验，再安装：**[打开真实运行的中英文 Demo](https://wallos-demo.mostai.org/)。它在独立容器运行实际 PHP 应用，并放入 30 条虚构订阅。可浏览总览、分类订阅、日历、统计、详情与语言切换。公开环境只读；Demo 会在 1.0 发布获批后另行更新，进入时请先核对显示的版本。[了解真实 Demo 的部署与边界](docs/DEMO.md)。
+**先体验，再安装：**[打开真实运行的中英文 Demo](https://wallos-demo.mostai.org/)。独立容器运行实际的 1.0 PHP 应用，放入 30 条虚构订阅。可浏览总览、分类订阅、仅供查看的分类管理页、日历、统计、详情与语言切换。公开环境只读；要新增、编辑数据或图标，请自行安装。[了解真实 Demo 的部署与边界](docs/DEMO.md)。
 
 ![Wallos Dial 总览展示：内嵌真实运行界面的截图](docs/assets/posters/showcase-overview.png)
 
-这张海报中的界面来自早期版本的隔离示例账号，名称、金额和标识均为虚构。ImageGen 只用于海报背景，内嵌界面保持真实浏览器截图。[查看 1.0 本地候选版的直接截图](docs/SHOWCASE.md)：首页、分类订阅、分类管理、图标选择器及统计页面使用同一组 30 条虚构订阅。公开 Demo 目前仍为 0.1.1；这些候选版截图不代表已公开部署。
+这张海报中的界面来自早期版本的隔离示例账号，名称、金额和标识均为虚构。ImageGen 只用于海报背景，内嵌界面保持真实浏览器截图。[查看 1.0 直接截图](docs/SHOWCASE.md)：首页、分类订阅、分类管理、图标选择器及统计页面使用另一组 30 条虚构订阅。截图展示可安装的 1.0 界面，不含私人账户资料。
 
 ![Wallos Dial 分类订阅展示](docs/assets/posters/campaign-ledger-zh.png)
 
@@ -30,7 +30,7 @@ Wallos Dial 是为 [Wallos](https://github.com/ellite/Wallos) 设计的桌面界
 
 需要 Docker、Compose，以及本机空闲的 `8282` 端口：
 
-**1.0 尚未发布时：**请只在隔离实例使用 `docker compose -f compose.build.yaml up -d --build` 构建本地候选版。以下直接拉取镜像的命令适用于 `compose.yaml` 和 GHCR 都升至正式 `1.0.0` 之后。
+仓库中的 `compose.yaml` 已固定使用正式的 `1.0.0` 镜像。以下命令建立新的实例和本地数据目录：
 
 ```bash
 git clone https://github.com/LukeVoidX/wallos-dial-theme.git
@@ -47,7 +47,7 @@ ssh -L 8282:127.0.0.1:8282 user@your-server
 
 随后在自己的电脑打开 `http://127.0.0.1:8282`。需要公开访问时，请自行配置 HTTPS 反向代理和访问控制。数据库和上传的 Logo 分别保存在 `./data/db` 与 `./data/logos`，不会提交进 Git。时区可在本地 `.env` 中设置 `TZ=Asia/Taipei` 等有效值。
 
-用 `curl -fsS http://127.0.0.1:8282/health.php` 检查服务。遇到端口、权限、Logo 或缓存问题，先看[故障排查](docs/TROUBLESHOOTING.md)。
+用 `curl -fsS http://127.0.0.1:8282/health.php` 检查服务。首次启动时，数据库与 Dial 迁移完成、PHP-FPM 监听就绪后，Nginx 才开始接受请求；`/health.php` 只有在 Dial 迁移存在时才返回 `OK`。请等服务就绪后再注册首个账户。若一直未就绪，或遇到端口、权限、Logo、缓存问题，请看[故障排查](docs/TROUBLESHOOTING.md)。
 
 若使用 Colima 或远程 Docker，首次注册前还要确认主机上确实出现 `./data/db/wallos.db`；未出现时先停止容器，核对目录共享与挂载位置。容器内部的数据库不能代替主机备份。
 
@@ -77,6 +77,8 @@ ssh -L 8282:127.0.0.1:8282 user@your-server
 
 顶栏提供简体中文、English、繁體中文的快捷选项，也保留 Wallos 其他语言。选择会保存到现有账户语言字段和 Cookie；用户自己录入的订阅名称不会自动翻译。
 
+注册、登录、TOTP、邮箱验证和密码重置页面也采用 Dial 的暖白视觉与深色模式；账户表单和处理逻辑仍沿用 Wallos 原有流程。
+
 ## 邮件通知
 
 Dial 1.0 沿用 0.1.1 引入的邮件设计，将续费、取消、SMTP 测试、邮箱验证和密码重置邮件统一为暖白 HTML 模板，并附带纯文本版本。收件人、发送时间和 SMTP 配置仍沿用 Wallos 原有规则；续费、取消及可选的期初摘要纯文本会按收件人账户语言显示英文、简体中文或繁体中文。续费、取消、邮箱验证与密码重置的邮件主题行也按该语言显示。其他语言回退英文，用户录入的订阅名称和金额保持原样。
@@ -85,7 +87,7 @@ Dial 1.0 沿用 0.1.1 引入的邮件设计，将续费、取消、SMTP 测试�
 
 ## 更新边界
 
-Dial `1.0.0` 的目标基底固定为 Wallos `5.8.3`；目前仍在本地候选阶段。Wallos 发布新版本后，本主题**不会自动跳到未经验证的上游版本**。维护者需检查被替换文件的差异，更新适配，测试数据副本，然后发布新的 Dial 镜像。现有版本可以继续运行；不要直接把 Dockerfile 的 Wallos 版本号改新就上线。详见[升级和回退](docs/zh-CN/UPGRADING.md)。
+Dial `1.0.0` 的基底固定为 Wallos `5.8.3`。Wallos 发布新版本后，本主题**不会自动跳到未经验证的上游版本**。维护者需检查被替换文件的差异，更新适配，测试数据副本，然后发布新的 Dial 镜像。现有版本可以继续运行；不要直接把 Dockerfile 的 Wallos 版本号改新就上线。详见[升级和回退](docs/zh-CN/UPGRADING.md)。
 
 此版本重点是桌面体验，没有单独承诺手机重新设计，也不承诺未来每次 Wallos 更新都零故障。
 

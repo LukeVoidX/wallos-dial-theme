@@ -8,9 +8,9 @@ Wallos Dial keeps each subscription's original Wallos Logo. You can choose its *
 
 Open **Subscriptions → Add subscription** or **Edit**, then use the **Icon** section. A card's **Change icon** action opens the same chooser. Select **Original**, **Catalog**, or **My Icons**; compare the 60 px preview on light and dark surfaces; then choose plain or framed, color or monochrome, and a size from 80% to 120%. Save the subscription to persist the choice. A quick Change action updates only that subscription's icon preference.
 
-![Dial 1.0 local icon chooser with nine neutral symbols and light and dark previews](assets/screenshots/dial-1.0-icon-chooser.png)
+![Dial 1.0 icon chooser with nine neutral symbols and light and dark previews](assets/screenshots/dial-1.0-icon-chooser.png)
 
-This direct browser capture uses a fictional local account on the **unpublished 1.0 candidate**. The nine service names identify neutral, original symbols; they are not third-party brand logos. The [full local-candidate gallery](SHOWCASE.md) also shows the dashboard, grouped cards, category manager and statistics. The [public Demo](https://wallos-demo.mostai.org/) still runs 0.1.1 until 1.0 is approved and deployed.
+This direct browser capture uses a fictional local account on **Dial 1.0.0 / Wallos 5.8.3**. The nine service names identify neutral, original symbols; they are not third-party brand logos. The [full 1.0 gallery](SHOWCASE.md) also shows the dashboard, grouped cards, category manager and statistics. The [public Demo](https://wallos-demo.mostai.org/) runs the same version with separate fictional data and remains read-only.
 
 **Original** deliberately restores the subscription's Wallos Logo. Its optional light/dark variant remains intact. Deleting a catalog or personal selection does not delete the original upload. If an asset is missing after a restore, Dial falls back to the original Logo or the subscription's initial.
 
@@ -32,4 +32,4 @@ My Icons live in the Wallos **SQLite database**. Original Wallos Logo uploads an
 
 A personal `WALLOS_DIAL_LOGO_MAP` can continue to map original upload filenames to SVGs in a privately mounted `images/dial-logos/` directory. Dial applies that map only when a subscription has **no explicit icon choice**. Choosing Original overrides the map for that subscription. Private maps and SVGs are not included in the public source or image; import images into My Icons for a per-account choice that survives a normal SQLite backup.
 
-The [public Demo](https://wallos-demo.mostai.org/) currently runs Dial 0.1.1 with fictional subscriptions. The 1.0 icon chooser is available in this local candidate; after release, the Demo will show its appearance but will not accept uploads or saved selections.
+The [public Demo](https://wallos-demo.mostai.org/) runs Dial 1.0 with fictional subscriptions. Its public routes do not permit icon uploads or saved selections. Install your own instance to use Original, Catalog and My Icons controls.

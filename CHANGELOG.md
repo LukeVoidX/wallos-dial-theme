@@ -1,8 +1,8 @@
 # Changelog
 
-## 1.0.0 — local release candidate
+## 1.0.0
 
-Target base: Wallos 5.8.3. The local source has been promoted to version `1.0.0` for final review. This entry does not assert that a GitHub Release, GHCR image, or Demo update has occurred.
+Released as [v1.0.0](https://github.com/LukeVoidX/wallos-dial-theme/releases/tag/v1.0.0) for Wallos 5.8.3. The versioned image is `ghcr.io/lukevoidx/wallos-dial:1.0.0`; the separate public Demo runs the same release with fictional records in read-only mode.
 
 ### Added
 
@@ -10,13 +10,14 @@ Target base: Wallos 5.8.3. The local source has been promoted to version `1.0.0`
 - Per-subscription Icon chooser with Original, nine first-party neutral catalog pictograms, and My Icons, plus plain/framed, color/monochrome, and 80–120% optical adjustment.
 - Private My Icons library in the account's SQLite database, including normalized image uploads, owner-checked retrieval, quota controls, and safe fallback to the original Wallos Logo.
 - Consistent icon resolution across the subscription list, dashboard and detail view. Existing uploaded Logo files and optional private legacy SVG mappings remain available.
-- Real read-only category-manager view for the isolated synthetic Demo, subject to the separate Demo deployment approval.
+- View-only category manager for the isolated synthetic public Demo. Category and icon changes require a personal installation.
+- Unified warm/dark registration, login, TOTP, verification and password-reset pages with the original Wallos account handlers. First-run database and Dial migrations complete before Nginx opens; `/health.php` checks the Dial migration.
 
-### Compatibility and release boundary
+### Compatibility and verification
 
 - Rebased the pinned source overlay and exact-file hash gate to Wallos 5.8.3; upstream security and mail behavior is included in the reviewed overlay.
 - The 0.1.1 email templates and language switch continue in 1.0. Renewal/cancellation plain text and optional period summaries now follow the recipient language. Dynamic account pages and uploaded Logos are no longer stored by the Service Worker. A new upstream Wallos release still requires a reviewed Dial image.
-- The final combined security, upgrade/rollback, browser, dual-architecture, Demo and publication checks are recorded in [the 1.0 checklist](docs/RELEASE-CHECKLIST-1.0.0.md) before release. Unchecked items are not release claims.
+- The combined security, upgrade/rollback, browser, first-run, dual-architecture, Demo and publication checks are recorded in [the 1.0 checklist](docs/RELEASE-CHECKLIST-1.0.0.md). The public Demo and GHCR digest have separate readback evidence from local tests.
 
 ## 0.1.1
 

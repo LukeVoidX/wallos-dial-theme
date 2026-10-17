@@ -6,13 +6,13 @@
 
 A precise, warm, desktop-focused interface for [Wallos](https://github.com/ellite/Wallos). The theme adds an instrument-style dashboard timeline, a restrained type and color system, grouped subscription cards, clearer statistics, focused interaction states, a persistent language switch, and matching HTML email notifications. Wallos's subscription, calendar, settings, search, and notification features remain available.
 
-**Dial 1.0.0 target:** Wallos 5.8.3 only. This source tree is a locally tested 1.0.0 release candidate; its tag and image have not been published. The last published image and public Demo remain 0.1.1 on Wallos 5.8.1 until the reviewed release is approved and deployed. Do not pull a `1.0.0` image until the release appears on GitHub and GHCR.
+**Dial 1.0.0:** tested with Wallos 5.8.3 only. Install the [versioned release](https://github.com/LukeVoidX/wallos-dial-theme/releases/tag/v1.0.0) through `ghcr.io/lukevoidx/wallos-dial:1.0.0`. The public Demo runs the same Dial and Wallos versions with fictional data. Dial is a source overlay built into a fixed Docker image, not an in-app Wallos theme option or an official Wallos project.
 
-**Try it before installing:** [Open the live bilingual demo](https://wallos-demo.mostai.org/). It runs the actual PHP application in an isolated container with 30 fictional subscriptions. Browse the overview, grouped subscriptions, calendar, statistics, details, and language switch. The public environment is read-only. The Demo is updated to 1.0 only after release approval; check its displayed version before assuming it shows this candidate. [How the live demo works](docs/DEMO.md).
+**Try it before installing:** [Open the live bilingual demo](https://wallos-demo.mostai.org/). It runs the actual 1.0 PHP application in an isolated container with 30 fictional subscriptions. Browse the overview, grouped subscriptions, view-only category manager, calendar, statistics, details, and language switch. The public environment is read-only; install your own instance to add or edit data and icons. [How the live demo works](docs/DEMO.md).
 
 ![Wallos Dial dashboard showcase with an actual interface capture](docs/assets/posters/showcase-overview.png)
 
-The UI inside this poster is a direct browser capture from an earlier isolated Dial demo account. Its subscription names, prices, and marks use fictional data. The [1.0 local-candidate gallery](docs/SHOWCASE.md) now shows direct captures of the new overview, grouped cards, category manager, icon chooser, and statistics using 30 fictional subscriptions. These candidate captures are not images of the current public Demo, which still runs 0.1.1.
+The UI inside this poster is a direct browser capture from an earlier isolated Dial demo account. Its subscription names, prices, and marks use fictional data. The [1.0 direct-capture gallery](docs/SHOWCASE.md) shows the current overview, grouped cards, category manager, icon chooser, and statistics using a separate 30-record fictional fixture. These screenshots document the installable 1.0 interface; they are not captures of a private account.
 
 Compatibility is published per Wallos version. An upstream release does not automatically make an older Dial image compatible. The build checks the exact upstream files it replaces and stops on a mismatch; a newly tested Dial image is then published.
 
@@ -41,6 +41,7 @@ The design uses warm off-white, dark numerals, fine lines, and a small red signa
 | Icon chooser and My Icons | Keep each original Wallos Logo, select one of nine neutral catalog pictograms, or upload a private image to an account-scoped library. [Read the guide](docs/ICONS.md). |
 | Unified calendar and statistics | Move between dates and costs without a change in visual language. |
 | Quick language selector | Switch between English, Simplified Chinese, Traditional Chinese, and Wallos's other locales. |
+| Matching account screens | Registration, login, TOTP, verification, and password reset use Dial's warm visual language while retaining Wallos's handlers. |
 | Matching email templates | Renewal, cancellation, test, verification, and password-reset emails share Dial's typography and warm palette. |
 
 ![Original Wallos versus Wallos Dial dashboard, same synthetic data](docs/assets/posters/compare-dashboard.png)
@@ -55,7 +56,7 @@ The email comparison shows the original Wallos 5.8.1 plain-text renewal body and
 
 Requirements: Docker with Compose, an available local port `8282`, and a recent browser.
 
-**Before 1.0 is published:** build this candidate locally with `docker compose -f compose.build.yaml up -d --build` in a disposable installation. The pull-only command below is for the approved `1.0.0` release, after `compose.yaml` and GHCR have been promoted to that tag.
+The pull-only `compose.yaml` pins the published `1.0.0` image. These commands create a new instance with its own local data volumes:
 
 ```bash
 git clone https://github.com/LukeVoidX/wallos-dial-theme.git
@@ -67,7 +68,7 @@ Open `http://127.0.0.1:8282` from the same machine. The Compose file pulls a pre
 
 For a server you access by SSH, keep the loopback binding and forward the port: `ssh -L 8282:127.0.0.1:8282 user@your-server`. Then open `http://127.0.0.1:8282` locally. Complete Wallos's normal first-run registration there.
 
-Verify the container with `docker compose ps` and `curl -fsS http://127.0.0.1:8282/health.php`. If startup or assets fail, see [Troubleshooting](docs/TROUBLESHOOTING.md).
+Verify the container with `docker compose ps` and `curl -fsS http://127.0.0.1:8282/health.php`. On first start, the database and Dial migration finish and the PHP-FPM listener becomes available before Nginx accepts requests. `/health.php` returns `OK` only after the Dial migration is present; wait for it before registering the first account. If the service remains unready or assets fail, check [Troubleshooting](docs/TROUBLESHOOTING.md).
 
 With Colima or a remote Docker daemon, confirm `./data/db/wallos.db` actually appears on the host before registering. If it does not, stop the container and correct directory sharing or the bind mount; a database visible only inside the VM is not a host backup.
 
@@ -87,7 +88,7 @@ Contributors can build the same source locally with `docker compose -f compose.b
 3. Run `docker compose config` and check the resolved mounts. Stop the old container before starting Dial on the same port; then run `docker compose up -d`.
 4. Check login, subscription count, logos, dashboard, calendar, statistics, settings, and notifications. Do not re-enter subscriptions.
 
-The theme does not seed or rewrite existing subscriptions. Wallos and Dial run database migrations on startup, so test the candidate against a disposable copy of both volumes first. If your existing service uses other environment variables, proxy rules, or a different port, carry them into your deployment configuration deliberately. [Use the full backup and rollback procedure](docs/UPGRADING.md).
+The theme does not seed or rewrite existing subscriptions. Wallos and Dial run database migrations on startup, so test the 1.0 image against a disposable copy of both volumes first. If your existing service uses other environment variables, proxy rules, or a different port, carry them into your deployment configuration deliberately. [Use the full backup and rollback procedure](docs/UPGRADING.md).
 
 Do not mount a live database into a second running Wallos container. Stop the old container after backing up and validating your Dial Compose mounts.
 
@@ -117,7 +118,7 @@ The optional button in renewal, cancellation, and test emails uses the **Server 
 
 | Dial | Tested Wallos | Install image |
 |---|---|---|
-| 1.0.0 target, local candidate | 5.8.3 | Local source build; GHCR tag pending release approval |
+| 1.0.0 | 5.8.3 | `ghcr.io/lukevoidx/wallos-dial:1.0.0` |
 | 0.1.1 | 5.8.1 | `ghcr.io/lukevoidx/wallos-dial:0.1.1` |
 | 0.1.0 | 5.8.1 | `ghcr.io/lukevoidx/wallos-dial:0.1.0` |
 
@@ -139,7 +140,7 @@ Use a versioned Dial image; avoid `latest`. A weekly workflow detects new upstre
 - `README.zh-CN.md`: Simplified Chinese installation guide.
 - `LICENSE.md`: GPLv3, matching the upstream project's license.
 
-`./scripts/check-package.sh` validates the package. `docker build -t wallos-dial:local .` and `./scripts/smoke-image.sh wallos-dial:local` check a local image. The 1.0 release gate also exercises security, migration, rollback, browser, icon and category tests. Publication of `linux/amd64` and `linux/arm64` images remains pending final review.
+`./scripts/check-package.sh` validates the package. `docker build -t wallos-dial:local .` and `./scripts/smoke-image.sh wallos-dial:local` check a local image. The 1.0 release gate also exercises security, migration, rollback, startup readiness, account flows, browser layout, icons and categories. The release image is published for `linux/amd64` and `linux/arm64`; verify its tag and digest before an upgrade.
 
 ## Credits and license
 
