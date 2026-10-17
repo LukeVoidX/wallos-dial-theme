@@ -65,4 +65,66 @@ $db->exec('INSERT INTO categories (id,name,"order",user_id) VALUES (100,"Only",1
 rejects('last_category', fn() => dial_category_delete_empty($db, 3, 100));
 must((int) $db->querySingle('SELECT count(*) FROM categories WHERE user_id=3') === 1, 'last category kept');
 must($db->querySingle('PRAGMA integrity_check') === 'ok', 'SQLite integrity');
+
+$db = fixture();
+dial_category_sort($db, 1, [4, 3, 2]);
+must(array_column(dial_category_rows($db, 1), 'id') === [1, 4, 3, 2], 'id 1 stays first');
+$before = json_encode(dial_category_rows($db, 1));
+rejects('stale_order', fn() => dial_category_sort($db, 1, [4, 4, 2]));
+rejects('stale_order', fn() => dial_category_sort($db, 1, [4, 3, 6]));
+must(json_encode(dial_category_rows($db, 1)) === $before, 'bad sort made no write');
+rejects('foreign_category', fn() => dial_category_merge($db, 1, 2, 6));
+rejects('immutable_category', fn() => dial_category_merge($db, 1, 1, 3));
+rejects('same_category', fn() => dial_category_merge($db, 1, 2, 2));
+rejects('foreign_category', fn() => dial_category_merge($db, 1, 999, 3));
+must(json_encode(dial_category_rows($db, 1)) === $before, 'bad merge made no write');
+$moved = dial_category_merge($db, 1, 2, 3);
+must($moved === 2, 'inactive and one-time subscriptions move');
+must((int) $db->querySingle('SELECT count(*) FROM subscriptions WHERE user_id=1 AND category_id=3') === 2, 'rows preserved');
+must((int) $db->querySingle('SELECT count(*) FROM subscriptions WHERE user_id=2 AND category_id=6') === 1, 'other account unchanged');
+must(array_column(dial_category_rows($db, 1), 'display_order') === [1, 2, 3], 'merge renumbers order');
+
+$db = fixture();
+$db->exec("CREATE TRIGGER reject_category_delete BEFORE DELETE ON categories
+           WHEN OLD.id=2 BEGIN SELECT RAISE(ABORT, 'fixture failure'); END");
+rejects('write_failed', fn() => dial_category_merge($db, 1, 2, 3));
+must((int) $db->querySingle('SELECT count(*) FROM subscriptions WHERE user_id=1 AND category_id=2') === 2,
+    'subscription move rolled back after delete failure');
+
+$db = fixture();
+dial_category_sort($db, 2, [6, 5]);
+must(array_column(dial_category_rows($db, 2), 'id') === [6, 5], 'user 2 may sort own rows');
+must(array_column(dial_category_rows($db, 2), 'display_order') === [1, 2], 'user 2 has no protected id 1');
+
+$db = fixture();
+$db->exec('DELETE FROM subscriptions WHERE user_id=1');
+$before = json_encode(dial_category_rows($db, 1));
+rejects('stale_selection', fn() => dial_category_apply_starter($db, 1,
+    [['id' => 4, 'expectedName' => 'Old Empty']]));
+must(json_encode(dial_category_rows($db, 1)) === $before, 'stale starter preview rolled back');
+rejects('immutable_category', fn() => dial_category_apply_starter($db, 1,
+    [['id' => 1, 'expectedName' => 'No category']]));
+rejects('stale_selection', fn() => dial_category_apply_starter($db, 1,
+    [['id' => 6, 'expectedName' => 'Private']]));
+must(json_encode(dial_category_rows($db, 1)) === $before, 'invalid starter selection made no write');
+$result = dial_category_apply_starter($db, 1, [['id' => 4, 'expectedName' => 'Empty']]);
+must(count($result['addedIds']) === 3 && $result['deletedIds'] === [4], 'adds missing starter names and deletes only selected empty');
+$names = array_column(dial_category_rows($db, 1), 'name');
+must(in_array('AI &amp; Tools', $names, true) && in_array('Infra', $names, true), 'unselected custom and existing starter retained');
+must(in_array('AI', $names, true) && in_array('Domains', $names, true) && in_array('Media', $names, true), 'missing starter names added');
+must((int) $db->querySingle('SELECT count(*) FROM categories WHERE user_id=2') === 2, 'starter does not touch another account');
+
+$db = fixture();
+$before = json_encode(dial_category_rows($db, 1));
+rejects('category_in_use', fn() => dial_category_apply_starter($db, 1, []));
+must(json_encode(dial_category_rows($db, 1)) === $before, 'nonempty account unchanged');
+
+$db = fixture();
+$db->exec('INSERT INTO categories (id,name,"order",user_id) VALUES
+    (100,"Old Empty",1,3),(101,"Custom",2,3)');
+$result = dial_category_apply_starter($db, 3, [['id' => 100, 'expectedName' => 'Old Empty']]);
+must(count($result['addedIds']) === 4 && $result['deletedIds'] === [100], 'fresh account gets starter set');
+must(in_array('Custom', array_column(dial_category_rows($db, 3), 'name'), true), 'unselected custom row survives');
+must(array_column(dial_category_rows($db, 3), 'display_order') === [1, 2, 3, 4, 5], 'starter order contiguous');
+must($db->querySingle('PRAGMA integrity_check') === 'ok', 'SQLite integrity after transactions');
 echo "Category name, ownership, and basic operation checks passed.\n";
